@@ -55,7 +55,10 @@ key_mgmt=WPA-PSK
 
 [无线连接](https://www.waveshare.net/study/portal.php?mod=view&aid=743)
 
-
+如果用ssh连接过相同的ip地址，会出现ssh认证失败的提示，此时使用命令移除之前的密钥，重新接受新的密钥即可。
+```
+ssh-keygen -R <hostname>
+```
 
 ## 修改启动参数
 这一步是为了启动一个真正的32位系统，更真实的模拟软件运行的环境。
@@ -102,4 +105,6 @@ kernel=kernel7l.img
 [arm几个指令集的区别](https://www.163.com/dy/article/F8BVU5JM0531AFNT.html)
 
 [arm指令集的区别（另外一篇）](https://www.cnblogs.com/kin-zhang/p/15031633.html)
+
+[树莓派资源大全](https://github.com/1021683053/awesome-raspberry-pi-zh)
 # 编译树莓派系统内核
