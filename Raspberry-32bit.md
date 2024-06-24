@@ -108,3 +108,4 @@ kernel=kernel7l.img
 
 [树莓派资源大全](https://github.com/1021683053/awesome-raspberry-pi-zh)
 # 编译树莓派系统内核
+参考[官方文档](https://www.raspberrypi.com/documentation/computers/linux_kernel.html#cross-compile-the-kernel)拉通一遍流程即可
