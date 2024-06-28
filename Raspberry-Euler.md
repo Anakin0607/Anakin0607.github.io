@@ -6,4 +6,156 @@
 # 安装32位OpenEuler
 Euler官网不提供32位版本的树莓派镜像，因此需要自己参考文档构建
 ## 构造镜像
-### 编译内核
+
+### 交叉编译内核
+
+#### 下载内核源码
+先新建一个工作目录euler
+```
+mkdir euler
+```
+此处选择openEuler 22.03 LTS SP1
+```
+git clone https://gitee.com/openeuler/raspberrypi-kernel.git -b openEuler-22.03-LTS-SP1 && cd raspberrypi-kernel
+```
+如果需要其他版本，请参考官网自行选择
+
+#### 设置环境变量
+32位版本：
+```
+export ARCH=arm
+export CROSS_COMPILE=arm-linux-gnueabihf-
+```
+64位版本：
+```
+export ARCH=aarch64
+export CROSS_COMPILE=aarch64-linux-gnu-
+```
+其中ARCH代表处理器架构，CROSS_COMPILE代表使用的交叉编译工具
+
+#### 设置内核参数
+此处硬件为树莓派4B，故选择bcm2711
+```
+make bcm2711_defconfig
+```
+如果需要其他版本的硬件，则参考[官网](https://www.raspberrypi.com/documentation/computers/linux_kernel.html#cross-compile-the-kernel)
+
+如果需要手动设置内核参数，在运行完上面的命令后运行（如果你不知道是否需要手动设置，那跳过即可）
+```
+make manuconfig
+```
+即可根据需求手动更改参数
+
+#### 编译内核
+```
+make -j10
+```
+j后面的参数为线程数，一般设置为cpu核心的1.5倍，cpu的核心数量可以用lscpu命令查看
+
+#### 编译内核模块
+```
+mkdir output
+make INSTALL_MOD_PATH=output/ modules_install
+```
+在 ${WORKDIR}/output 文件夹下会生成 lib 文件夹。
+
+#### 收集编译结果
+
+##### 内核
+32位：
+```
+cp arch/arm/boot/zImage output/
+```
+64位:
+```
+cp arch/arm/boot/Image output/
+```
+##### 设备树文件等
+32位:
+1. 6.4及以前版本的内核
+```
+cp arch/arm/boot/dts/bcm271*.dtb output/
+mkdir output/overlays
+cp arch/arm/boot/dts/overlays/*.dtb* output/overlays
+```
+2. 6.5及以上版本的内核
+```
+cp arch/arm/boot/dts/broadcom/bcm271*.dtb output/
+mkdir output/overlays
+cp arch/arm/boot/dts/overlays/*.dtb* output/overlays
+```
+
+64位：
+```
+cp arch/arm64/boot/dts/broadcom/*.dtb output/
+mkdir ${WORKDIR}/output/overlays
+cp arch/arm64/boot/dts/overlays/*.dtb* output/overlays/
+```
+##### 把编译结果移动到上一级目录下
+```
+cd ..
+mkdir output
+mv raspberrypi-kernel/output/* output/
+sudo rm -r raspberry-kernel/output
+```
+
+### 验证新编译的内核
+使用一个之前刷好openEuler树莓派镜像的SD卡，直接插到Linux主机上，SD 会默认挂载其 boot分区和根目录分区。
+
+运行lsblk命令，查看挂载情况，如果sdc代表你的启动媒体（也可能是sdb），如果不知道的话，把sd卡拔了运行一下lsblk，插上等一会儿再运行一遍lsblk，多出来的那个就是。
+```
+sdc      
+├─sdc1  
+├─sdc2   
+└─sdc3   
+```
+我的里面是这样的结构，后面带boot的就是格式化的启动分区，一般是sdc1，另外一个带说明的就是ext4根分区，我的是sdc3，没有说明的那个不用管。
+在euler系统里面，一般sdc1是boot引导分区，sdc2是swap交换分区，sdc3是根文件系统root
+
+将这些分区挂载位mnt/boot和/mnt/root，并调整字母和数字以匹配启动分区的位置
+```
+mkdir mnt
+mkdir mnt/boot
+mkdir mnt/root
+sudo mount /dev/sdc1 mnt/boot
+sudo mount /dev/sdc3 mnt/root
+```
+
+#### 将内核模块放到根分区里
+```
+cp -r output/lib/modules mnt/root/lib/
+```
+#### 将内核放到boot启动分区
+32位：
+```
+cp output/zImage mnt/boot/kernel7l.img
+```
+64位：
+```
+cp output/Image mnt/boot/kernel8.img
+```
+
+#### 将设备树文件放到boot启动分区
+
+```
+cp output/*.dtb mnt/boot/
+cp output/overlays/* mnt/boot/overlays
+```
+
+#### 设置config.txt
+打开树莓派的启动设置文件config.txt
+```
+vim mnt/boot/config.txt
+```
+在文件末尾加入
+```
+arm_64bit=0
+kernel=kernel7l.img
+```
+
+#### 卸载分区
+输入以下命令，将分区卸载，然后将SD卡插入树莓派运行系统
+```
+sudo umount mnt/boot
+sudo umount mnt/root
+```
