@@ -223,8 +223,8 @@ tar xvf busybox-1.36.1.tar.bz2
 如果使用busybox默认配置直接编译的话，使用ssh远程登录时，中文字符显示是不正常的，因为busybox中的shell命令对中文显示做了一些限制，所以在此处需要对busybox源码做出修改，取消busybox对中文现实的限制。（如果你不需要中文的话可以跳过这一步）
 打开文件busybox-1.36.1/libbb/printable_string.c，找到函数 printable_string2
 函数长下面这样，观察第20行和第21行，和34，35行处，所有大于0x7f的内容全都被替换成了?，因此需要改掉。（下面注释掉的是源码，添加或修改的是支持unicode的样子）
-``` C {.line-numbers}
 
+```C {.line-numbers}
 const char* FAST_FUNC printable_string2(uni_stat_t *stats, const char *str)
 {
 	char *dst;
