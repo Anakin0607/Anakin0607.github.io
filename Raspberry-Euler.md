@@ -565,15 +565,9 @@ UUID=2b20721a-1321-41f6-bf6d-a2c65fa7584d  swap swap    defaults,noatime 0 0
 #### 将rootfs和boot复制到镜像
 ```
 rsync -avHAXq rootfs/* mnt/root
-```
-
-```
 cd ${WORKDIR}/boot
-
 tar cf ${WORKDIR}/boot.tar ./
-
 cd ${WORKDIR}/mnt/boot
-
 tar xf ${WORKDIR}/boot.tar -C .
 ```
 
