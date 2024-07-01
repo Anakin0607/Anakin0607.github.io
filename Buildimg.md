@@ -224,7 +224,7 @@ tar xvf busybox-1.36.1.tar.bz2
 打开文件busybox-1.36.1/libbb/printable_string.c，找到函数 printable_string2
 函数长下面这样，观察第20行和第21行，和34，35行处，所有大于0x7f的内容全都被替换成了?，因此需要改掉。（下面注释掉的是源码，添加或修改的是支持unicode的样子）
 
-```C :line-numbers
+```C 
 const char* FAST_FUNC printable_string2(uni_stat_t *stats, const char *str)
 {
 	char *dst;
@@ -248,7 +248,6 @@ const char* FAST_FUNC printable_string2(uni_stat_t *stats, const char *str)
 		//	break;
 		s++;
 	}
-
 #if ENABLE_UNICODE_SUPPORT
 	dst = unicode_conv_to_printable(stats, str);
 #else
