@@ -2,6 +2,7 @@
 一个完整的Linux系统由内核，文件系统和应用程序组成，本文使用OpenEuler内核和BusyBox工具箱为例，构建了一个Linux-5.10内核的，具有ext4根文件系统和常用命令应用程序的armv7l架构的32位简易操作系统
 
 构建环境为Ubuntu20.04-x86_64
+
 目标机为树莓派4B
 
 ## 交叉编译内核
@@ -132,7 +133,7 @@ sudo rm -r raspberrypi-kernel/output
 ```
 
 ## 测试新编译的内核
-使用一个之前刷好32位raspbian镜像或者其他32位系统的SD卡（至于为什么用这个，是因为没有现成的32位openeuler文件系统，只能暂时杂交一下），直接插到Linux主机上，SD会默认挂载其 boot分区和根目录分区。
+使用一个之前刷好对应位数raspbian镜像或者其他系统的SD卡（只替换内核，啥系统都行，而且openeuler没有32位官方镜像，如果你编译的32位内核，装个32位的raspbian就行），直接插到Linux主机上，SD会默认挂载其 boot分区和根目录分区。
 
 运行lsblk命令，查看挂载情况，如果sdc代表你的启动媒体（也可能是sdb），如果不知道的话，把sd卡拔了运行一下lsblk，插上等一会儿再运行一遍lsblk，多出来的那个就是。
 如果是respbian，应该是这样的结构
@@ -142,7 +143,7 @@ sdc
 └─sdc2   
 
 ```
-也有的可能是这样的结构
+也有的可能是这样的结构（Euler或者centos）
 ```
 sdc      
 ├─sdc1  
@@ -224,7 +225,7 @@ tar xvf busybox-1.36.1.tar.bz2
 打开文件busybox-1.36.1/libbb/printable_string.c，找到函数 printable_string2
 函数长下面这样，观察第20行和第21行，和34，35行处，所有大于0x7f的内容全都被替换成了?，因此需要改掉。（下面注释掉的是源码，添加或修改的是支持unicode的样子）
 
-```C 
+```c {.line-numbers}
 const char* FAST_FUNC printable_string2(uni_stat_t *stats, const char *str)
 {
 	char *dst;
