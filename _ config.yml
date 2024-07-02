@@ -59,6 +59,11 @@ liquid:
   strict_filters    : false
   strict_variables  : false
 
+#Theme
+remote_theme: pages-themes/cayman@v0.2.0
+plugins:
+- jekyll-remote-theme 
+
 # Markdown Processors
 #krmarkdown:
 #  auto_ids          : true
