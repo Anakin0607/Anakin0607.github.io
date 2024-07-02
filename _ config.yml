@@ -29,8 +29,7 @@ unpublished         : false
 
 # Plugins
 whitelist           : []
-plugins             : 
-- jekyll-remote-theme 
+plugins             : [jekyll-remote-theme]
 
 # Conversion
 markdown            : GFM
