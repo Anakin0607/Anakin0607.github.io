@@ -5,6 +5,54 @@
 
 目标机为树莓派4B
 
+- [从源码构建树莓派系统镜像](#从源码构建树莓派系统镜像)
+	- [交叉编译内核](#交叉编译内核)
+		- [安装依赖](#安装依赖)
+		- [下载内核源码](#下载内核源码)
+		- [设置环境变量](#设置环境变量)
+		- [设置内核参数](#设置内核参数)
+			- [默认设置](#默认设置)
+			- [手动设置](#手动设置)
+		- [编译内核，模块，设备树文件](#编译内核模块设备树文件)
+		- [收集编译结果](#收集编译结果)
+			- [内核模块](#内核模块)
+			- [内核](#内核)
+			- [设备树文件和overlay文件](#设备树文件和overlay文件)
+			- [把编译结果移动到上一级目录下](#把编译结果移动到上一级目录下)
+	- [测试新编译的内核](#测试新编译的内核)
+		- [将内核模块放到根分区里](#将内核模块放到根分区里)
+		- [将内核放到boot启动分区](#将内核放到boot启动分区)
+		- [将设备树文件放到boot启动分区](#将设备树文件放到boot启动分区)
+		- [设置config.txt](#设置configtxt)
+		- [卸载分区](#卸载分区)
+		- [启动树莓派](#启动树莓派)
+	- [构建rootfs](#构建rootfs)
+		- [下载busybox工具](#下载busybox工具)
+		- [设置支持中文](#设置支持中文)
+		- [配置编译选项](#配置编译选项)
+		- [编译busybox中的工具](#编译busybox中的工具)
+	- [完善rootfs](#完善rootfs)
+		- [添加动态链接库](#添加动态链接库)
+		- [创建其他的所需文件夹](#创建其他的所需文件夹)
+	- [构建引导](#构建引导)
+		- [下载引导](#下载引导)
+		- [替换文件](#替换文件)
+		- [将boot移动出来](#将boot移动出来)
+		- [添加配置文件](#添加配置文件)
+	- [构建镜像](#构建镜像)
+		- [计算镜像大小](#计算镜像大小)
+		- [创建空镜像](#创建空镜像)
+		- [镜像分区](#镜像分区)
+		- [将磁盘镜像文件虚拟成块设备](#将磁盘镜像文件虚拟成块设备)
+		- [创建分区表设备映射](#创建分区表设备映射)
+		- [格式化分区](#格式化分区)
+		- [挂载根目录分区和boot分区](#挂载根目录分区和boot分区)
+		- [修改fstab使系统能正确挂载分区](#修改fstab使系统能正确挂载分区)
+			- [获取blkid](#获取blkid)
+			- [修改fstab](#修改fstab)
+		- [将rootfs和boot复制到镜像](#将rootfs和boot复制到镜像)
+		- [卸载镜像](#卸载镜像)
+  
 ## 交叉编译内核
 内核是操作系统的核心，负责和硬件直接交互，管理计算机运行所用的资源。
 ### 安装依赖
@@ -307,6 +355,7 @@ Location:
 ![](img_folder/Raspberry/busybox_config1.png)
 
 3. 设备支持
+这一步设置确保系统能正确创建dev目录下的设备节点，mdev是busybox自带的一个简化版的udev，适合于嵌入式的应用场合。其具有使用简单的特点。它的作用，就是在系统启动和热插拔或动态加载驱动程序时，自动产生驱动程序所需的节点文件。
 ```
 Location:
     -> Linux System Utilities
@@ -314,7 +363,7 @@ Location:
 ```
 ![](img_folder/Raspberry/busybox_config2.png)
 
-4. 支持Unicode
+1. 支持Unicode
 
 ```
 Location:
@@ -326,7 +375,7 @@ Location:
 
 至此busybox的配置都完成了，下面开始编译busybox
 
-### 编译busybox
+### 编译busybox中的工具
 
 先设置交叉编译工具和架构，此处的设置要与内核相同
 32位：
@@ -377,14 +426,14 @@ cp /usr/arm-linux-gnueabihf/lib/*.a rootfs/usr/lib
 ### 创建其他的所需文件夹
 创建根文件系统中所需的其他文件夹，如
 ```
-mkdir dev proc mnt sys tmp root etc
+mkdir boot dev etc mnt proc root sys tmp   
 ```
 最终完成后rootfs目录下应该有这么几个目录
 ```
-bin  dev etc lib  linuxrc  mnt  proc  root  sbin  sys  tmp  usr
+bin  dev  etc  lib linuxrc  mnt  proc  root  sbin  sys  tmp  usr
 ```
 至此根文件系统已经构建的差不多了，但还需要引导，才能完成内核和根文件系统的启动
-这里只做一个初步的教程，只能构建一个只读的，并且只具备基本应用程序和配置文件的rootfs，如果想继续添加功能和配置可以参考[这里](rootfs.md)
+这里只做一个初步的教程，只构建一个只具备基本应用程序和配置文件的rootfs，如果想继续添加功能和配置可以参考[这里](rootfs.md)
 
 ## 构建引导
 树莓派的启动流程为：引导程序->内核->rootfs中init进程，init进程为系统中所有进程的父进程，负责再运行其他程序。其中引导程序和硬件绑定，内核会自动选择rootfs中的程序，因此我们只需要让引导程序装入我们自己构建的内核，并正确执行，即可使树莓派正确运行。因此这一步选择用树莓派官方提供的引导程序，来构建整个引导目录boot/
@@ -432,8 +481,9 @@ touch cmdline.txt
 ```
 复制进去下面的内容
 ```
-console=serial0,115200 console=tty1 root=/dev/mmcblk0p3 rootfstype=ext4 elevator=deadline rootwait
+console=serial0,115200 console=tty1 root=/dev/mmcblk0p3 rootfstype=ext4 rw elevator=deadline rootwait
 ```
+其含义分别为控制台串口和波特率；根文件系统位置；根文件系统类型；可读写（如果不加rw，整个系统为readonly）；I/O调度算法为deadline，即对每个I/O操作施加一个截止日期，以防止请求耗尽；等待根文件系统准备好后再启动终端
 
 如果是32位镜像，则需要再添加config.txt
 ```
@@ -495,14 +545,14 @@ dd if=/dev/zero of=openEuler_raspi.img bs=1M count=1280 #将1280替换为SIZE
 28. 输入 p，查看当前分区情况，可以看到当前有三个分区。
 29. 输入 w，写入并退出。
 
-### 使用 losetup 将磁盘镜像文件虚拟成块设备
+### 将磁盘镜像文件虚拟成块设备
 ```
-losetup -f --show openEuler_raspi.img
+sudo losetup -f --show openEuler_raspi.img
 ```
 我这里显示的结果为/dev/loop12
-### 使用 kpartx 创建分区表 /dev/loop12 的设备映射
+### 创建分区表设备映射
 ```
-kpartx -va /dev/loop12
+sudo kpartx -va /dev/loop12
 ```
 得到结果将三个分区挂载
 ```
@@ -551,17 +601,16 @@ sudo blkid
 ```
 
 #### 修改fstab
-
 ```
-mkdir rootfs/etc
 sudo vim rootfs/etc/fstab
 ```
 内容
 ```
 UUID=dc983371-7543-481d-acd2-a936e59c177c  / ext4    defaults,noatime 0 0
-UUID=6B1C-CEEF  /boot vfat    defaults,noatime 0 0
+UUID=6B1C-CEEF	/boot vfat    defaults,noatime 0 0
 UUID=2b20721a-1321-41f6-bf6d-a2c65fa7584d  swap swap    defaults,noatime 0 0
 ```
+剩下三个分区为上面创建的boot，交换分区和根文件系统。
 其中ext4的UUID对应p3，swap对应p2，boot对应p1
 
 ### 将rootfs和boot复制到镜像
