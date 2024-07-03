@@ -555,6 +555,8 @@ sudo losetup -f --show openEuler_raspi.img
 ```
 sudo kpartx -va /dev/loop12
 ```
+这里loop12换成上一步显示的你自己对应的设备
+
 得到结果将三个分区挂载
 ```
 add map loop12p1 (253:0): 0 585728 linear 7:12 8192
