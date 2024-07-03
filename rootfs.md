@@ -10,7 +10,7 @@ Linux系统就是一个内核加各种程序组成，这些常用的如ls, mkdir
   - [添加设备文件](#添加设备文件)
   - [配置dhcp自动获取ip地址](#配置dhcp自动获取ip地址)
     - [使用BusyBox下的simple.script配置文件](#使用busybox下的simplescript配置文件)
-  - [添加openssh和sftp](#添加openssh和sftp)
+  - [添加openssh](#添加openssh)
   - [添加用户管理](#添加用户管理)
   - [添加包管理器](#添加包管理器)
 
@@ -52,6 +52,7 @@ umask 022
 mount -n -t proc proc /proc
 mount -n -t sysfs sysfs /sys 
 mount -n -t tmpfs tmpfs /tmp
+mount -a
 
 hostname euler
 
@@ -87,7 +88,7 @@ cp busybox-1.36.1/examples/udhcp/simple.script rootfs/usr/share/udhcpc/default.s
 ```
 
 
-## 添加openssh和sftp
+## 添加openssh
 
 ## 添加用户管理
 
