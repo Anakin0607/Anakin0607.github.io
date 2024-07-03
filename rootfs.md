@@ -9,6 +9,7 @@ Linux系统就是一个内核加各种程序组成，这些常用的如ls, mkdir
   - [创建/etc/fstab文件](#创建etcfstab文件)
   - [添加设备文件](#添加设备文件)
   - [配置dhcp自动获取ip地址](#配置dhcp自动获取ip地址)
+    - [使用BusyBox下的simple.script配置文件](#使用busybox下的simplescript配置文件)
   - [添加openssh和sftp](#添加openssh和sftp)
   - [添加用户管理](#添加用户管理)
   - [添加包管理器](#添加包管理器)
@@ -77,6 +78,14 @@ sysfs           /sys            sysfs   defaults        0       0
 busybox中自动利用mdev管理设备，在编译时已经设置好，其工作过程参考这个[博客](http://www.360doc.com/content/10/0428/11/496343_25245348.shtml)
 
 ## 配置dhcp自动获取ip地址
+### 使用BusyBox下的simple.script配置文件
+将busybox的默认配置复制到根文件系统中，以正确使用udhcpc获取ip地址
+https://www.cnblogs.com/arnoldlu/p/13567937.html
+```
+mkdir rootfs/usr/share/udhcpc
+cp busybox-1.36.1/examples/udhcp/simple.script rootfs/usr/share/udhcpc/default.script
+```
+
 
 ## 添加openssh和sftp
 

@@ -1,6 +1,6 @@
 # 从源码构建树莓派系统镜像
 一个完整的Linux系统由内核，文件系统和应用程序组成，本文使用OpenEuler内核和BusyBox工具箱为例，构建了一个Linux-5.10内核的，具有ext4根文件系统和常用命令应用程序的armv7l架构的32位简易操作系统
-
+如果需要其他版本的内核，可以参考本文，然后自行替换即可。
 构建环境为Ubuntu20.04-x86_64
 
 目标机为树莓派4B
@@ -235,6 +235,7 @@ cp output/overlays/* mnt/boot/overlays
 ```
 
 ### 设置config.txt
+如果是32位系统，则需要通过设置config.txt来保证cpu以32位指令集启动，如果是64位则可以跳过这一步。
 打开树莓派的启动设置文件config.txt
 ```
 vim mnt/boot/config.txt
