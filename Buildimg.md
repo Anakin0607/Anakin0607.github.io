@@ -427,14 +427,17 @@ cp /usr/arm-linux-gnueabihf/lib/*.a rootfs/usr/lib
 ### 创建其他的所需文件夹
 创建根文件系统中所需的其他文件夹，如
 ```
-mkdir boot dev etc mnt proc root sys tmp   
+mkdir boot dev etc mnt home proc root sys tmp   
 ```
 最终完成后rootfs目录下应该有这么几个目录
 ```
-bin  dev  etc  lib linuxrc  mnt  proc  root  sbin  sys  tmp  usr
+bin  dev  etc  lib linuxrc mnt home proc  root  sbin  sys  tmp  usr
 ```
+
+
+
 至此根文件系统已经构建的差不多了，但还需要引导，才能完成内核和根文件系统的启动
-这里只做一个初步的教程，只构建一个只具备基本应用程序和配置文件的rootfs，如果想继续添加功能和配置可以参考[这里](rootfs.md)
+这里只做一个初步的教程，只构建一个只具备基本应用程序和配置文件的rootfs，如果想继续添加如联网，远程连接，用户登录等功能和配置可以参考[这里](rootfs.md)
 
 ## 构建引导
 树莓派的启动流程为：引导程序->内核->rootfs中init进程，init进程为系统中所有进程的父进程，负责再运行其他程序。其中引导程序和硬件绑定，内核会自动选择rootfs中的程序，因此我们只需要让引导程序装入我们自己构建的内核，并正确执行，即可使树莓派正确运行。因此这一步选择用树莓派官方提供的引导程序，来构建整个引导目录boot/
