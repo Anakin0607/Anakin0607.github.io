@@ -11,9 +11,11 @@ Linux系统就是一个内核加各种程序组成，这些常用的如ls, mkdir
     - [rcS文件](#rcs文件)
     - [fstab文件](#fstab文件)
     - [rc.local文件](#rclocal文件)
+    - [profile文件](#profile文件)
   - [添加设备文件](#添加设备文件)
   - [配置dhcp自动获取ip地址](#配置dhcp自动获取ip地址)
     - [加入default.script配置文件](#加入defaultscript配置文件)
+    - [开机自动启动dhcp服务](#开机自动启动dhcp服务)
     - [实现网线热插拔](#实现网线热插拔)
   - [添加用户管理](#添加用户管理)
     - [添加用户相关文件](#添加用户相关文件)
@@ -21,7 +23,11 @@ Linux系统就是一个内核加各种程序组成，这些常用的如ls, mkdir
       - [用户组文件](#用户组文件)
     - [设置开机自动登录](#设置开机自动登录)
     - [加强密码安全性](#加强密码安全性)
-  - [添加openssh](#添加openssh)
+  - [配置远程](#配置远程)
+    - [telnet](#telnet)
+    - [ftp](#ftp)
+    - [ssh](#ssh)
+    - [开机自动启动远程服务](#开机自动启动远程服务)
   - [添加包管理器](#添加包管理器)
 
 ## rootfs中的常用目录
@@ -55,7 +61,7 @@ inittab文件是初始进程init的配置文件，内核引导完成后，内核
 |----|-------|----|
 |sysinit|系统启动后执行|只执行一次，init进程等它结束之后执行其他动作|
 |wait|系统执行完sysinit进程后|只执行一次，init进程等待它结束后执行其他动作|
-|once|系统执行完wait进城后|只执行一次，init不等他结束|
+|once|系统执行完wait进程后|只执行一次，init不等他结束|
 |respawn|启动完once进程后|init进程发现其退出后，重新启动它|
 |askfirst|启动完respawn后|与respawn类似，但init进程先输出Please Enter to activate this console，等用户按下回车后才启动子进程|
 |shutdown|当系统关机时|重启，关闭系统命令时|
@@ -169,7 +175,18 @@ echo "*                                                *"
 echo "*                 2024-07-03                     *"
 echo "*                                                *"
 echo "**************************************************"
+```
 
+### profile文件
+profile文件在每个用户登录时被执行一次，用于设置每个用户的环境信息，root用户的环境信息由init进程设置，而其他用户则通过login进程读取profile文件设置
+```sh
+PATH=/bin:/sbin:/usr/bin:/usr/sbin
+LD_LIBRARY_PATH=/lib:/usr/lib
+
+HOSTNAME=`/bin/hostname`
+PS1='\u@\h:\w\$ '
+
+export PATH LD_LIBRARY_PATH HOSTNAME PS1
 ```
 ## 添加设备文件
 busybox中自动利用mdev管理设备，在编译时已经设置好，其工作过程参考这个[博客](http://www.360doc.com/content/10/0428/11/496343_25245348.shtml)
@@ -185,7 +202,11 @@ udhcpc的[工作过程](https://www.cnblogs.com/arnoldlu/p/13567937.html)
 mkdir rootfs/usr/share/udhcpc
 cp busybox-1.36.1/examples/udhcp/simple.script rootfs/usr/share/udhcpc/default.script
 ```
-
+### 开机自动启动dhcp服务
+在rcS文件的末尾添加
+```sh
+udhcpc
+```
 ### 实现网线热插拔
 http://blog.chinaunix.net/uid-16759545-id-4891833.html
 https://blog.csdn.net/xuesong10210/article/details/113858728
@@ -236,17 +257,39 @@ root:x:0:root
 至此系统中已经默认自带root用户，并且可以在系统运行之后新建，切换用户。但在开机时依然不会登录，直接选择进入命令行
 
 ### 设置开机自动登录
-开机自动登录功能需要修改inittab文件来实现，即在运行shell之前先运行一个login程序，将inittab中的askfirst:/bin/sh替换为
+开机自动登录功能需要修改inittab文件来实现，即在运行shell之前先运行一个login程序，将inittab中的askfirst:/bin/sh替换为，即先启动getty，然后再运行login进程来进行登录
 ```sh
 console::respawn:/sbin/getty -L -n -l /etc/autologin console 0 vt100
 ```
 然后添加autologin脚本
-```
+```sh
 #!/bin/sh
 /bin/login -f root
 ```
 其中选项-f表示不对root用户进行验证
+系统的登录流程如下：
+
 ### 加强密码安全性
-## 添加openssh
+
+## 配置远程
+### telnet
+telnet服务器由busybox中的telnetd程序来实现，默认端口为23端口
+### ftp
+ftp服务为ftpd
+
+
+### ssh
+### 开机自动启动远程服务
+既然都使用远程了，我们肯定不希望先连接显示器键盘，输入命令开启远程服务后，再进行远程连接，因此远程服务需要在开机时自动启动。
+在inittab中设置一个once，来启动telnet和ftp，其中网络的基本设置在sysinit中完成，而telnet和ftp服务器进程需要等网络基本设置完成后启动，并且持续运行，因此使用once活动来实现
+```sh
+::once:/etc/initremote
+```
+/etc/initremote内容如下：
+```sh
+#!bin/sh
+telnetd
+tcpsvd -vE 0.0.0.0 21 ftpd -w /home/euler &
+```
 
 ## 添加包管理器
