@@ -610,7 +610,7 @@ sudo blkid
 ```
 sudo vim rootfs/etc/fstab
 ```
-内容
+在里面添加内容
 ```
 UUID=dc983371-7543-481d-acd2-a936e59c177c  / ext4    defaults,noatime 0 0
 UUID=6B1C-CEEF	/boot vfat    defaults,noatime 0 0

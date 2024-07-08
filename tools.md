@@ -6,6 +6,9 @@
   - [运行linux命令](#运行linux命令)
 - [截图工具](#截图工具)
 - [全盘搜索工具](#全盘搜索工具)
+- [vscode插件](#vscode插件)
+  - [tabnine](#tabnine)
+  - [Draw.io Intergration](#drawio-intergration)
 
 
 # 在word中使用bib插入参考文献
@@ -48,3 +51,11 @@ ShareX
 
 # 全盘搜索工具
 listary
+
+# vscode插件
+
+## tabnine
+一款AI自动补全代码插件
+
+## Draw.io Intergration
+在vscode里面画draw.io
