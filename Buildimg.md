@@ -323,7 +323,41 @@ const char* FAST_FUNC printable_string2(uni_stat_t *stats, const char *str)
 	return auto_string(dst);
 }
 ```
-
+以及/libbb/unicode.c文件中，找到static char* FAST_FUNC
+```c
+if (unicode_status != UNICODE_ON) {
+		char *d;
+		if (flags & UNI_FLAG_PAD) {
+			d = dst = xmalloc(width + 1);
+			while ((int)--width >= 0) {
+				unsigned char c = *src;
+				if (c == '\0') {
+					do
+						*d++ = ' ';
+					while ((int)--width >= 0);
+					break;
+				}
+				*d++ = (c >= ' ' && c < 0x7f) ? c : '?';
+				src++;
+			}
+			*d = '\0';
+		} else {
+			d = dst = xstrndup(src, width);
+			while (*d) {
+				unsigned char c = *d;
+				if (c < ' ' || c >= 0x7f)
+					*d = '?';
+				d++;
+			}
+		}
+		if (stats) {
+			stats->byte_count = (d - dst);
+			stats->unicode_count = (d - dst);
+			stats->unicode_width = (d - dst);
+		}
+		return dst;
+	}
+```
 ### 配置编译选项
 
 先进入busybox目录
@@ -364,7 +398,7 @@ Location:
 ```
 ![](img_folder/Raspberry/busybox_config2.png)
 
-1. 支持Unicode
+4. 支持Unicode
 
 ```
 Location:
@@ -391,7 +425,7 @@ export CROSS_COMPILE=aarch64-linux-gnu-
 ```
 设置好之后开始编译并安装
 ```
-make
+make -j10
 mkdir rootfs
 make install CONFIG_PREFIX=rootfs
 ```
