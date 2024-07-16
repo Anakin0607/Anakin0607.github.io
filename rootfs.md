@@ -30,6 +30,11 @@ Linux系统就是一个内核加各种程序组成，这些常用的如ls, mkdir
     - [开机自动启动远程服务](#开机自动启动远程服务)
   - [添加包管理器](#添加包管理器)
   - [安装ffmpeg](#安装ffmpeg)
+    - [包管理器安装](#包管理器安装)
+    - [从源码构建](#从源码构建)
+      - [下载源码](#下载源码)
+      - [配置编译参数](#配置编译参数)
+      - [安装](#安装)
   - [文件系统扩容](#文件系统扩容)
     - [分区扩容](#分区扩容)
     - [文件系统扩容](#文件系统扩容-1)
@@ -123,12 +128,12 @@ ifconfig lo 127.0.0.1
 ### fstab文件
 这个文件是供mount读取设备所用，在rcS中有mount -a命令，负责挂载系统所用到的设备，mount -a从fstab中读取参数
 先加入三个内核自带的三个虚拟文件系统
+
 ```
 #<file system>  <mount point>   <type>  <options>       <dump>  <pass>
 proc            /proc           proc    defaults        0       0
 tmpfs           /tmp            tmpfs   defaults        0       0
 sysfs           /sys            sysfs   defaults        0       0
-
 ```
 这三个目录为linux内核文件系统，存在于内存中
 + proc用于在系统运行时访问内核内部数据结构，改变内核设置，proc只存在于内存当中，以文件系统的方式为访问内核数据提供接口，其被挂在于根目录的/proc目录下。
@@ -300,18 +305,108 @@ tcpsvd -vE 0.0.0.0 21 ftpd -w /home/euler &
 ## 添加包管理器
 
 ## 安装ffmpeg
+### 包管理器安装
+ffmpeg是一个开源的音视频编解码工具，官方文档在[这里](https://trac.ffmpeg.org/)如果有包管理工具可以直接通过包管理工具安装
+```sh
+sudo apt install ffmpeg
+```
+如果没有包管理器，也可以通过源码构建
+
+### 从源码构建
+#### 下载源码
+新建一个工作目录ffmpeg，然后下载源码。
+```sh
+git clone https://git.ffmpeg.org/ffmpeg.git ffmpeg
+```
+下载好后还有一个ffmpeg目录，进入这个目录
+```sh
+cd ffmpeg
+```
+#### 配置编译参数
+   
+ffmpeg的编译参数通过configure脚本设置，先执行一下，发现输入--help命令可以查看帮助，查看一下这些参数的含义，根据需求选择，在此处我们往32位的树莓派上交叉编译。
+```sh
+./configure --arch=arm\
+ --cross-prefix=arm-linux-gnueabihf-\
+ --target-os=linux\
+ --prefix=/home/anakin/Data/code/euler/rootfs/usr\
+ --disable-ffprobe\
+ --enable-mmal\
+ --enable-omx-rpi\
+ --enable-gpl\
+ --enable-nonfree
+```
+  首先先设置目标架构arm，交叉编译工具armhf，目标系统Linux。
+
+  --prefix为euler系统的根文件系统的/usr目录，这一步非常重要，否则后面会安装到自己的电脑上。
+
+  然后裁剪掉一些不需要的库，比如媒体分析工具ffprobe
+
+  最后新加入一些需要的库：
++ --enable-mmal：Braodcom的多媒体硬件优化层，可以为树莓派开启硬件加速
++ --enable-omx-rpi：开启树莓派的OpenMAX加速
++ --enable-gpl:启用gpl许可的编码器
++ --enable-nonfree：启用非自由的编码器
+
+
+如果提示
+>WARNING: arm-linux-gnueabihf-pkg-config not found, library detection may fail.
+则安装pkg-config即可
+```sh
+sudo apt install pkg-config-arm-linux-gnueabihf
+```
+都完成后开始编译
+```sh
+make -j10
+```
+#### 安装
+编译完成之后，用make install命令安装即可
+```sh
+make install
+```
 
 ## 文件系统扩容
 从镜像刷写到SD卡后，rootfs的容量和镜像中的划分大小是一样的，也就是只有500多M的空间可用，因此需要将root分区扩容至SD卡剩余的所有空间。
 
-[参考](https://ost.51cto.com/posts/1673)
 以下操作都需要离线进行，即将树莓派系统的SD卡插到电脑上进行。
 ### 分区扩容
 用fdisk -l命令查看SD卡的物理空间和分区表。
-用fdisk命令，将磁盘逻辑分区扩容至所有剩余空间
+```sh
+fdisk -l
+```
+根据容量找到SD卡的盘符，可以看到我的是/dev/sdc，并且/dev/sdc3分区是root分区，但是只有502M的可用空间，显然没有占满整个SD卡
+![](img_folder/Raspberry/fdisk.png)
+
+下面需要用fdisk工具，将root对应的分区扩容至所有剩余空间，整个操作思路为，删除原有分区，然后再新建一个和原root分区起始块号相同，大小为SD卡中全部可用块的分区。
+```sh
+sudo fdisk /dev/sdc #sdc换成你对应的设备号
+```
+进入菜单之后：
+1. 按p，查看分区表，会看到一个和上面图片差不多的内容，比如我的是这样
+```
+Device     Boot   Start     End Sectors  Size Id Type
+/dev/sdc1  *       8192  593919  585728  286M  c W95 FAT32 (LBA)
+/dev/sdc2        593920 1593343  999424  488M 82 Linux swap / Solaris
+/dev/sdc3       1593344 2621439 1028096  502M 83 Linux
+```
+
+记下Linux类型分区的Start块号，后面有用
+
+2. 按d，删除分区3
+   
+3. 按n，新建分区，分区类型选择主分区p，分区号为3，起点为上面记录的起始块号，终点为默认（最后一块），最后移除签名选N
+   
+4. 输入w保存分区
+
+现在就完成了磁盘逻辑分区的调整，可以再次使用fdisk -l命令查看分区表
 ### 文件系统扩容
+磁盘分区扩容完成后，需要修改文件系统数据结构，使其能识别全部的分区块
+
 先用e2fsck命令检查分区表
 
+```sh
+sudo e2fsck /dev/sdc3
+```
 e2fsck工具常用选项如下：
 ```
 -a：不询问使用者意见，便自动修复文件系统；
@@ -334,4 +429,10 @@ e2fsck工具常用选项如下：
 -V：显示版本信息；
 -y：采取非互动方式执行，所有的问题均设置以"yes"回答。
 ```
-用resize2fs命令扩容ext4文件系统索引至所有逻辑分区
+
+用resize2fs工具修改ext4文件系统索引
+```sh
+sudo resize2fs /dev/sdc3
+```
+
+至此便完成了扩容，可以将/dev/sdc3挂载后，使用df -h命令查看分区的大小验证操作是否成功。

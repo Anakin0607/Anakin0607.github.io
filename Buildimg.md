@@ -294,6 +294,7 @@ const char* FAST_FUNC printable_string2(uni_stat_t *stats, const char *str)
 		}
 		if (c < ' ')
 			break;
+		/*-----修改这里-----*/
 		//if (c >= 0x7f)
 		//	break;
 		s++;
@@ -307,6 +308,7 @@ const char* FAST_FUNC printable_string2(uni_stat_t *stats, const char *str)
 			unsigned char c = *d;
 			if (c == '\0')
 				break;
+			/*-----修改这里-----*/
 			//if (c < ' ' || c >= 0x7f)
 			//	*d = '?';
 			if(c < ' ')
@@ -324,6 +326,7 @@ const char* FAST_FUNC printable_string2(uni_stat_t *stats, const char *str)
 }
 ```
 以及/libbb/unicode.c文件中，找到static char* FAST_FUNC
+
 ```c
 if (unicode_status != UNICODE_ON) {
 		char *d;
@@ -337,7 +340,8 @@ if (unicode_status != UNICODE_ON) {
 					while ((int)--width >= 0);
 					break;
 				}
-				*d++ = (c >= ' ' && c < 0x7f) ? c : '?';
+				/*-----修改这里-----*/
+				*d++ = (c >= ' ') ? c : '?';
 				src++;
 			}
 			*d = '\0';
@@ -345,7 +349,8 @@ if (unicode_status != UNICODE_ON) {
 			d = dst = xstrndup(src, width);
 			while (*d) {
 				unsigned char c = *d;
-				if (c < ' ' || c >= 0x7f)
+				/*-----修改这里-----*/
+				if (c < ' ')
 					*d = '?';
 				d++;
 			}
@@ -358,6 +363,8 @@ if (unicode_status != UNICODE_ON) {
 		return dst;
 	}
 ```
+将其中的>=0x7f都删掉即可
+
 ### 配置编译选项
 
 先进入busybox目录
@@ -405,8 +412,24 @@ Location:
     -> Settings
         -> Support Unicode //选中
             -> Check $LC_ALL, $LC_CTYPE and $LANG environment variables //选中
+
 ```
-![](img_folder/Raspberry/busybox_config3.png)
+![](img_folder/Raspberry/busybox_unicode.png)
+
+以及挨着他的两个
+```
+(65536)Character code to substitete unprintable characters with //将不可打印的字符替换成占位符
+(300000)Range of supported Unicode characters //支持到的Unicode字符范围
+```
+查阅资料知，汉字主要出现在Unicode字符的19968-40869中，而这里最大支持到767，肯定是不行的，因此需要修改成一个比较大的数，我修改成了195102，Unicode字符对应的字符可以参考[这里](https://jrgraphix.net/research/unicode_blocks.php)
+
+最后还有编辑器选项，
+```
+Location:
+    -> Editors
+        -> Allow to display 8-bit chars (otherwise shows dots)  //选中
+```
+![](img_folder/Raspberry/busybox_unicode2.png)
 
 至此busybox的配置都完成了，下面开始编译busybox
 
@@ -467,8 +490,6 @@ mkdir boot dev etc mnt home proc root sys tmp
 ```
 bin  dev  etc  lib linuxrc mnt home proc  root  sbin  sys  tmp  usr
 ```
-
-
 
 至此根文件系统已经构建的差不多了，但还需要引导，才能完成内核和根文件系统的启动
 这里只做一个初步的教程，只构建一个只具备基本应用程序和配置文件的rootfs，如果想继续添加如联网，远程连接，用户登录等功能和配置可以参考[这里](rootfs.md)
@@ -674,3 +695,22 @@ sudo kpartx -d /dev/loop12
 sudo losetup -d /dev/loop12
 ```
 这样最终就生成了img镜像文件，可以刷写至树莓派尝试
+
+如果后续想继续更新rootfs到镜像，这里写了一个脚本可以一键更新
+```sh
+#!/bin/bash
+#update_rootfs.sh
+echo "Parting the img"
+sudo losetup -f --show openEuler_raspi.img
+sudo kpartx -va /dev/loop12
+echo "Start to mount the device"
+sudo mount -t ext4 /dev/mapper/loop12p3 mnt/root/
+echo "Start sync file system"
+sudo rsync -avHAXq rootfs/* mnt/root
+echo "Sync Successful!"
+echo "Umount the device"
+sudo umount mnt/root
+sudo kpartx -d /dev/loop12
+sudo losetup -d /dev/loop12
+echo "End!"
+```
