@@ -35,8 +35,13 @@ Linux系统就是一个内核加各种程序组成，这些常用的如ls, mkdir
       - [下载源码](#下载源码)
       - [配置编译参数](#配置编译参数)
       - [安装](#安装)
+  - [安装Valgrind](#安装valgrind)
+    - [下载源码](#下载源码-1)
+    - [修改配置](#修改配置)
+    - [编译和安装](#编译和安装)
+    - [测试valgrind](#测试valgrind)
   - [文件系统扩容](#文件系统扩容)
-    - [分区扩容](#分区扩容)
+    - [磁盘分区扩容](#磁盘分区扩容)
     - [文件系统扩容](#文件系统扩容-1)
 
 ## rootfs中的常用目录
@@ -364,12 +369,108 @@ make -j10
 ```sh
 make install
 ```
+## 安装Valgrind 
+Valgrind 是一款用于内存调试，内存泄漏检测以及性能分析，检测线程错误的开发工具。
+
+### 下载源码
+在[官网](https://valgrind.org/downloads/)下载对应的包，然后解压，得到一个目录valgrind，进入这个目录
+```
+wget https://sourceware.org/pub/valgrind/valgrind-3.23.0.tar.bz2
+tar -xvf valgrind-3.23.0.tar.bz2
+cd valgrind-3.23.0
+```
+### 修改配置
+查看目录里面的README和README.aarch64（没有arm32的，看着这俩猜一猜怎么设置交叉编译工具链），然后再打开configure脚本看看。
+看到大概有这样一段和交叉编译相关的内容
+```
+Development so far was however done by cross compiling, viz:
+  export CC=aarch64-linux-gnu-gcc
+  export LD=aarch64-linux-gnu-ld
+  export AR=aarch64-linux-gnu-ar
+
+  ./autogen.sh
+  ./configure --prefix=`pwd`/Inst --host=aarch64-unknown-linux \
+              --enable-only64bit
+  make -j4
+  make -j4 install
+
+Doing this assumes that the install path (`pwd`/Inst) is valid on
+both host and target, which isn't normally the case.  To avoid
+this limitation, do instead:
+
+  ./configure --prefix=/install/path/on/target \
+              --host=aarch64-unknown-linux \
+              --enable-only64bit
+  make -j4
+  make -j4 install DESTDIR=/a/temp/dir/on/host
+  # and then copy the contents of DESTDIR to the target.
+```
+大概意思就是，先设置交叉编译工具链，然后运行autogen，然后利用configure配置
+
+我们首先需要修改交叉编译工具为arm32位的交叉编译工具：
+```sh
+export CC=arm-linux-gnueabihf-gcc
+export LD=arm-linux-gnueabihf-ld
+export AR=arm-linux-gnueabihf-ar
+```
+然后修改configure里面的host为arm-linux，并且去掉only64bit，因为我们是32bit。
+
+注意这个--prefix参数，这里要填写的是在目标机器上的安装路径，在这里我们安装到/usr路径下，所以可以得到命令
+```sh
+./autogen.sh
+./configure --prefix=/usr --host=arm-linux
+```
+至此就完成了编译前配置，设置完后会列出相应的配置：
+```
+ Version: 3.23.0
+         Maximum build arch: arm
+         Primary build arch: arm
+       Secondary build arch:
+                   Build OS: linux
+     Link Time Optimisation: no
+       Primary build target: ARM_LINUX
+     Secondary build target:
+           Platform variant: vanilla
+      Primary -DVGPV string: -DVGPV_arm_linux_vanilla=1
+         Default supp files: ./xfree-3.supp ./xfree-4.supp glibc-2.X-drd.supp glibc-2.X-helgrind.supp glibc-2.X.supp
+```
+确认无误后开始编译
+### 编译和安装
+```sh
+make -j4
+make -j4 install DESTDIR={$ROOTFS_DIR} #直接放到rootfs里面，因为自带前缀/usr，故不用带/usr路径
+```
+如果编译过程中出现问题：
+>sorry, unimplemented: Thumb-1 hard-float VFP ABI
+
+打开configure文件，把里面的-march=armv6修改成-marm即可
+
+上下文大概如下：
+```sh
+case "${host_cpu}" in
+...)
+  ......
+arm*)
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok (${host_cpu})" >&5
+$as_echo "ok (${host_cpu})" >&6; }
+        VGCONF_PLATFORM_ARM_ARCH="-marm" #这里原来是-march=armv6
+        ARCH_MAX="arm"
+        ;;
+```
+将rootfs同步到树莓派，进行测试即可
+
+### 测试valgrind
+参考这几篇博客
+
+http://blog.chinaunix.net/uid-23629988-id-3033741.html
+https://blog.csdn.net/weixin_45518728/article/details/119865117
+
 
 ## 文件系统扩容
-从镜像刷写到SD卡后，rootfs的容量和镜像中的划分大小是一样的，也就是只有500多M的空间可用，因此需要将root分区扩容至SD卡剩余的所有空间。
+从镜像刷写到SD卡后，rootfs的容量和镜像中的划分大小是一样的，也就是只有500多M的空间可用，因此需要将root分区扩容至SD卡剩余的所有空间。因此需要将磁盘逻辑分区扩大，然后将文件系统也调整至相应容量
 
 以下操作都需要离线进行，即将树莓派系统的SD卡插到电脑上进行。
-### 分区扩容
+### 磁盘分区扩容
 用fdisk -l命令查看SD卡的物理空间和分区表。
 ```sh
 fdisk -l
