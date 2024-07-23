@@ -50,7 +50,9 @@ cpu-z hwmonitor wiztree `
 ShareX
 
 # 全盘搜索工具
-listary
+[listary](https://www.listary.com/download)（Windows）
+
+[Albert](https://github.com/albertlauncher/albert)（Linux下的Listary）
 
 # vscode插件
 
