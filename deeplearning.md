@@ -35,7 +35,7 @@ def train(model, device, dataLoader, criterion, optimizer, epoch):
     tensor = torch.rand(4, 1)
     train_loss = criterion(tensor, tensor) # 随便给loss赋一个初值
     bar = tqdm(dataLoader) # 定义一个进度条
-    bar.desc = "Epoch {} train:".format(epoch + 1) # 进度条前面显示的内容
+    bar.desc = "Epoch {} train".format(epoch + 1) # 进度条前面显示的内容
     for wav, label in bar:
         
         # 将数据和标签装载到设备
@@ -66,7 +66,7 @@ def val(model, device, dataLoader, criterion, epoch):
     loss_val = []
     model.eval() # 将模型设置为验证模式，其中dropout等层会被关闭，可以加快推理速度
     bar = tqdm(dataLoader)
-    bar.set_description("Epoch {} validate ".format(epoch + 1))
+    bar.set_description("Epoch {} validate".format(epoch + 1))
     for wav, label in bar:
         # 将数据和标签装载到设备
         wav = wav.to(device)
