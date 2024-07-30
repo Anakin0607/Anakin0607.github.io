@@ -20,20 +20,24 @@ https://blog.csdn.net/zyw2002/article/details/128175177
 criterion = nn.CrossEntropyLoss() #选择损失函数
 optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=0.01) # 选择优化器
 scheduler = torch.optim.lr_scheduler.StepLR(optimizer = optimizer, step_size=10, gamma=0.1) # 逐轮下降学习率
-def train(model, dataLoader, criterion, optimizer):
+def train(model, device, dataLoader, criterion, optimizer, epoch):
     r"""模型训练函数
     Args:
         model: 要训练的模型
+        device: 训练的设备
         dataLoader: 训练集
         criterion: 损失函数
         optimizer: 优化器
+        epoch: 当前训练的轮数，给进度条用
     """
     model.train() #将模型设置为训练模式
 
     tensor = torch.rand(4, 1)
     train_loss = criterion(tensor, tensor) # 随便给loss赋一个初值
-
-    for i, (wav, label) in enumerate(dataLoader):
+    bar = tqdm(dataLoader) # 定义一个进度条
+    bar.desc = "Epoch {} train:".format(epoch + 1) # 进度条前面显示的内容
+    for wav, label in bar:
+        
         # 将数据和标签装载到设备
         wav = wav.to(device)
         label = label.to(device)
@@ -42,22 +46,28 @@ def train(model, dataLoader, criterion, optimizer):
         # 计算损失函数
         loss = criterion(out, label)
         train_loss = loss.data #记录训练loss
+        bar.set_postfix(loss = "{:.5f}".format(train_loss)) # 更新进度条后面显示的内容
         optimizer.zero_grad()
         loss.backward()
-        
+
         # 迭代
         optimizer.step()
+    return train_loss
 
-def val(model, dataLoader, criterion):
+def val(model, device, dataLoader, criterion, epoch):
     r"""验证模型泛化情况
     Args:
         model: 要验证的模型
+        device: 验证使用的设备
         dataLoader: 验证数据集
         criterion: 损失函数
+        epoch: 当前轮数，给进度条显示使用
     """
     loss_val = []
     model.eval() # 将模型设置为验证模式，其中dropout等层会被关闭，可以加快推理速度
-    for i (wav, label) in enumerate(dataLoader):
+    bar = tqdm(dataLoader)
+    bar.set_description("Epoch {} validate ".format(epoch + 1))
+    for wav, label in bar:
         # 将数据和标签装载到设备
         wav = wav.to(device)
         label = label.to(device)
@@ -69,7 +79,7 @@ def val(model, dataLoader, criterion):
     
     return np.mean(loss_val)
     
-def fit(model, train_data, val_data, criterion, optimizer, scheduler=None):
+def fit(model, train_data, val_data, device, criterion, optimizer, scheduler=None, epochs = 60):
     r"""拟合数据集
     Args:
         model: 要拟合的模型
@@ -80,17 +90,17 @@ def fit(model, train_data, val_data, criterion, optimizer, scheduler=None):
         scheduler: 超参数修改管理器
     """
     for e in range(epochs):
-        loss_train = train(model, train_data, criterion, optimizer)
-        loss_val = val(model, train_data, criterion)
+        loss_train = train(model, device, train_data, criterion, optimizer, e)
+        loss_val = val(model, device, val_data, criterion, e)
 
         """这里可以根据两个loss评估本轮训练情况，进行一些操作
         如：保存模型，修改超参数，停止训练等
         """
-
+        print("train_loss: {:.5f} val_loss: {:.5f}".format(loss_train, loss_val)) # 输出当前结果
         torch.save(model, 'model.pkl') # 保存模型
         print("model saved!")
 ```
-
+[进度条设置](https://blog.csdn.net/qq_41554005/article/details/117297861)
 # torch利用模型进行推理
 
 # 转onnx
