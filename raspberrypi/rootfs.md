@@ -27,6 +27,8 @@ Linux系统就是一个内核加各种程序组成，这些常用的如ls, mkdir
     - [telnet](#telnet)
     - [ftp](#ftp)
     - [ssh](#ssh)
+      - [编译依赖](#编译依赖)
+      - [编译OpenSSH](#编译openssh)
     - [开机自动启动远程服务](#开机自动启动远程服务)
   - [添加包管理器](#添加包管理器)
   - [安装ffmpeg](#安装ffmpeg)
@@ -294,6 +296,50 @@ ftp服务为ftpd
 
 
 ### ssh
+OpenSSH（OpenBSD Secure Shell）是使用SSH透过计算机网络加密通信的实现。它是取代由SSH Communications Security所提供的商用版本的开放源代码方案。目前OpenSSH是OpenBSD的子项目。
+OpenSSH常常被误认以为与OpenSSL有关系，但实际上这两个项目有不同的目的，不同的发展团队，名称相近只是因为两者有同样的软件发展目标──提供开放源代码的加密通信软件。
+而目前最经常的应用：SSH远程连接。相比telnet远程连接，SSH更安全
+
+下面将从源码构建OpenSSH
+
+#### 编译依赖
+
+[OpenSSL](https://openssl-library.org/source/)
+
+[zlib](https://www.zlib.net/)
+
+**编译Zlib**
+```sh
+export WORK_DIR `pwd`
+export CHOST arm-linux-gnueabihf #配置交叉编译选项
+./configure --prefix=${WORK_DIR}/../zlib_install
+make -j10
+make install
+```
+这一步很多教程让自己修改Makefile，但是修改Makefile很麻烦还容易出错，故不推荐使用这种方法。阅读zlib的configure文件发现其通过CHOST环境变量来控制交叉编译选项，因此只需将CHOST设置为交叉编译前缀即可。
+
+下面是configure文件中控制交叉编译的部分：
+```sh
+# set command prefix for cross-compilation
+if [ -n "${CHOST}" ]; then
+    uname=${CHOST}
+    mname=${CHOST}
+    CROSS_PREFIX="${CHOST}-"
+else
+    mname=`(uname -a || echo unknown) 2>/dev/null`
+fi
+```
+
+**编译OpenSSL**
+```sh
+
+./Configure --prefix=${WORK_DIR}/../openssl_install --cross-compile-prefix=arm-linux-gnueabihf- no-asm no-shared linux-armv4
+make -j10
+make install
+```
+#### 编译OpenSSH
+
+
 ### 开机自动启动远程服务
 既然都使用远程了，我们肯定不希望先连接显示器键盘，输入命令开启远程服务后，再进行远程连接，因此远程服务需要在开机时自动启动。
 在inittab中设置一个once，来启动telnet和ftp，其中网络的基本设置在sysinit中完成，而telnet和ftp服务器进程需要等网络基本设置完成后启动，并且持续运行，因此使用once活动来实现
@@ -476,7 +522,7 @@ https://blog.csdn.net/weixin_45518728/article/details/119865117
 fdisk -l
 ```
 根据容量找到SD卡的盘符，可以看到我的是/dev/sdc，并且/dev/sdc3分区是root分区，但是只有502M的可用空间，显然没有占满整个SD卡
-![](img_folder/Raspberry/fdisk.png)
+![](../img_folder/Raspberry/fdisk.png)
 
 下面需要用fdisk工具，将root对应的分区扩容至所有剩余空间，整个操作思路为，删除原有分区，然后再新建一个和原root分区起始块号相同，大小为SD卡中全部可用块的分区。
 ```sh

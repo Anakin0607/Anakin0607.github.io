@@ -8,7 +8,7 @@
 ### 开启ssh服务
 树莓派中ssh服务是默认关闭的，因此我们需要手动开启，手动开启的方式为，在bootfs目录下新建一个文件，文件名为ssh（不带任何后缀）
 
-![](img_folder/Raspberry/ssh.png)
+![](../../img_folder/Raspberry/ssh.png)
 
 ### 设置默认用户名和密码
 注意现在的树莓派系统出于安全考虑，已不再预设用户名和密码（2022年之前的版本有默认用户名pi和默认密码raspberry），所以安装好系统后，第一次启动有两种方法：
@@ -77,8 +77,8 @@ kernel=kernel7l.img
 
 如果不添加上面两句设置，直接启动官方的32位树莓派系统，查看cpu架构和系统内核，可以得到以下结果
 
-![](img_folder/Raspberry/v8-uname.png)
-![](img_folder/Raspberry/v8-cpu.png)
+![](../img_folder/Raspberry/v8-uname.png)
+![](../img_folder/Raspberry/v8-cpu.png)
 1. 使用uname命令查看内核版本，发现架构为aarch64，即armv8的64位执行模式
 2. 使用getconf LONG_BIT查看操作系统位数，为32位
 3. 查看包管理器的运行架构，得到armhf，带有硬件浮点的armv7（32位）指令集
@@ -86,8 +86,8 @@ kernel=kernel7l.img
 
 如果添加了命令，则得到以下结果：
 
-![](img_folder/Raspberry/v7-uname.png)
-![](img_folder/Raspberry/v7-cpu.png)
+![](../img_folder/Raspberry/v7-uname.png)
+![](../img_folder/Raspberry/v7-cpu.png)
 
 1. 使用uname命令查看内核版本，发现架构为armv7l，即armv7（32位）的小端序指令集
 2. 使用getconf LONG_BIT查看操作系统位数，为32位

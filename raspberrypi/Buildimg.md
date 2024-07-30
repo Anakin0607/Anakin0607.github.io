@@ -394,7 +394,7 @@ Location:
         -> Simplified modutils
 ```
 将Simplified modutils取消勾选
-![](img_folder/Raspberry/busybox_config1.png)
+![](../img_folder/Raspberry/busybox_config1.png)
 
 3. 设备支持
 这一步设置确保系统能正确创建dev目录下的设备节点，mdev是busybox自带的一个简化版的udev，适合于嵌入式的应用场合。其具有使用简单的特点。它的作用，就是在系统启动和热插拔或动态加载驱动程序时，自动产生驱动程序所需的节点文件。
@@ -403,7 +403,7 @@ Location:
     -> Linux System Utilities
         -> mdev (17 kb) //确保下面的全部选中，默认都是选中的
 ```
-![](img_folder/Raspberry/busybox_config2.png)
+![](../img_folder/Raspberry/busybox_config2.png)
 
 4. 支持Unicode
 
@@ -414,7 +414,7 @@ Location:
             -> Check $LC_ALL, $LC_CTYPE and $LANG environment variables //选中
 
 ```
-![](img_folder/Raspberry/busybox_unicode.png)
+![](../img_folder/Raspberry/busybox_unicode.png)
 
 以及挨着他的两个
 ```
@@ -429,7 +429,7 @@ Location:
     -> Editors
         -> Allow to display 8-bit chars (otherwise shows dots)  //选中
 ```
-![](img_folder/Raspberry/busybox_unicode2.png)
+![](../img_folder/Raspberry/busybox_unicode2.png)
 
 至此busybox的配置都完成了，下面开始编译busybox
 
