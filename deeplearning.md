@@ -14,6 +14,8 @@ Dataloader负责将Dataset中的数据组合
 https://blog.csdn.net/zyw2002/article/details/128175177
 
 # torch训练模型
+
+## 单机单卡训练
 一般用下面的模板就行
 
 ```python
@@ -101,6 +103,9 @@ def fit(model, train_data, val_data, device, criterion, optimizer, scheduler=Non
         print("model saved!")
 ```
 [进度条设置](https://blog.csdn.net/qq_41554005/article/details/117297861)
+
+## 单机多卡训练
+https://www.cnblogs.com/liyier/p/18135209
 # torch利用模型进行推理
 
 # 转onnx
