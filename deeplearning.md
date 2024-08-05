@@ -112,6 +112,8 @@ https://www.cnblogs.com/liyier/p/18135209
 
 https://mmdeploy.readthedocs.io/zh-cn/latest/tutorial/03_pytorch2onnx.html
 
+gpu训练的模型用cpu推理https://github.com/Anakin0607/Anakin0607.github.io.git
+
 # keras中的mel层
 ```python
 def get_melspectrogram_layer(
