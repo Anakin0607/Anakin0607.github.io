@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="完善rootfsLinux系统就是一个内核加各种程序组成，这些常用的如ls, mkdir, ifconfi g命令都是一个个小程序，构建树莓派镜像一文中使用的busybox工具是一个工具集合，里面包含了一些最常用的小程序。源码分析如果想选择默认功能更为丰富的rootfs构建工具，可以选择debian系的工具debootstrap，或者使用buildroot  完善rootfs rootfs中的常用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2024/09/19/raspberrypi/rootfs/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="完善rootfsLinux系统就是一个内核加各种程序组成，这些常用的如ls, mkdir, ifconfi g命令都是一个个小程序，构建树莓派镜像一文中使用的busybox工具是一个工具集合，里面包含了一些最常用的小程序。源码分析如果想选择默认功能更为丰富的rootfs构建工具，可以选择debian系的工具debootstrap，或者使用buildroot  完善rootfs rootfs中的常用">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/img_folder/Raspberry/fdisk.png">
+<meta property="article:published_time" content="2024-09-19T02:49:57.837Z">
+<meta property="article:modified_time" content="2024-09-19T02:49:57.837Z">
+<meta property="article:author" content="Anakin">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img_folder/Raspberry/fdisk.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-raspberrypi/rootfs" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/09/19/raspberrypi/rootfs/" class="article-date">
+  <time class="dt-published" datetime="2024-09-19T02:49:57.837Z" itemprop="datePublished">2024-09-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="完善rootfs"><a href="#完善rootfs" class="headerlink" title="完善rootfs"></a>完善rootfs</h1><p>Linux系统就是一个内核加各种程序组成，这些常用的如ls, mkdir, ifconfi g命令都是一个个小程序，<a href="Raspberry-Euler.md">构建树莓派镜像</a>一文中使用的busybox工具是一个工具集合，里面包含了一些最常用的小程序。<br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/zhuangquan/p/11557781.html">源码分析</a><br>如果想选择默认功能更为丰富的rootfs构建工具，可以选择debian系的工具debootstrap，或者使用buildroot</p>
+<ul>
+<li><a href="#%E5%AE%8C%E5%96%84rootfs">完善rootfs</a><ul>
+<li><a href="#rootfs%E4%B8%AD%E7%9A%84%E5%B8%B8%E7%94%A8%E7%9B%AE%E5%BD%95">rootfs中的常用目录</a></li>
+<li><a href="#etc%E4%B8%AD%E7%9A%84%E5%B8%B8%E7%94%A8%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">&#x2F;etc中的常用配置文件</a><ul>
+<li><a href="#inittab%E6%96%87%E4%BB%B6">inittab文件</a></li>
+<li><a href="#rcs%E6%96%87%E4%BB%B6">rcS文件</a></li>
+<li><a href="#fstab%E6%96%87%E4%BB%B6">fstab文件</a></li>
+<li><a href="#rclocal%E6%96%87%E4%BB%B6">rc.local文件</a></li>
+<li><a href="#profile%E6%96%87%E4%BB%B6">profile文件</a></li>
+</ul>
+</li>
+<li><a href="#%E6%B7%BB%E5%8A%A0%E8%AE%BE%E5%A4%87%E6%96%87%E4%BB%B6">添加设备文件</a></li>
+<li><a href="#%E9%85%8D%E7%BD%AEdhcp%E8%87%AA%E5%8A%A8%E8%8E%B7%E5%8F%96ip%E5%9C%B0%E5%9D%80">配置dhcp自动获取ip地址</a><ul>
+<li><a href="#%E5%8A%A0%E5%85%A5defaultscript%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">加入default.script配置文件</a></li>
+<li><a href="#%E5%BC%80%E6%9C%BA%E8%87%AA%E5%8A%A8%E5%90%AF%E5%8A%A8dhcp%E6%9C%8D%E5%8A%A1">开机自动启动dhcp服务</a></li>
+<li><a href="#%E5%AE%9E%E7%8E%B0%E7%BD%91%E7%BA%BF%E7%83%AD%E6%8F%92%E6%8B%94">实现网线热插拔</a></li>
+</ul>
+</li>
+<li><a href="#%E6%B7%BB%E5%8A%A0%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86">添加用户管理</a><ul>
+<li><a href="#%E6%B7%BB%E5%8A%A0%E7%94%A8%E6%88%B7%E7%9B%B8%E5%85%B3%E6%96%87%E4%BB%B6">添加用户相关文件</a><ul>
+<li><a href="#%E8%B4%A6%E5%8F%B7%E6%96%87%E4%BB%B6">账号文件</a></li>
+<li><a href="#%E8%AE%BE%E7%BD%AE%E5%AF%86%E7%A0%81">设置密码</a></li>
+<li><a href="#%E7%94%A8%E6%88%B7%E7%BB%84%E6%96%87%E4%BB%B6">用户组文件</a></li>
+</ul>
+</li>
+<li><a href="#%E8%AE%BE%E7%BD%AE%E5%BC%80%E6%9C%BA%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95">设置开机自动登录</a></li>
+<li><a href="#%E5%8A%A0%E5%BC%BA%E5%AF%86%E7%A0%81%E5%AE%89%E5%85%A8%E6%80%A7">加强密码安全性</a></li>
+</ul>
+</li>
+<li><a href="#%E9%85%8D%E7%BD%AE%E8%BF%9C%E7%A8%8B">配置远程</a><ul>
+<li><a href="#telnet">telnet</a></li>
+<li><a href="#ftp">ftp</a></li>
+<li><a href="#ssh">ssh</a><ul>
+<li><a href="#%E7%BC%96%E8%AF%91%E4%BE%9D%E8%B5%96">编译依赖</a></li>
+<li><a href="#%E7%BC%96%E8%AF%91openssh">编译OpenSSH</a></li>
+<li><a href="#%E9%85%8D%E7%BD%AEopenssh">配置OpenSSH</a></li>
+<li><a href="#ssh%E6%98%BE%E7%A4%BA%E6%AC%A2%E8%BF%8E%E7%95%8C%E9%9D%A2">ssh显示欢迎界面</a></li>
+</ul>
+</li>
+<li><a href="#%E5%BC%80%E6%9C%BA%E8%87%AA%E5%8A%A8%E5%90%AF%E5%8A%A8%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1">开机自动启动远程服务</a></li>
+</ul>
+</li>
+<li><a href="#%E5%AE%89%E8%A3%85alsa">安装Alsa</a><ul>
+<li><a href="#%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91alsa-libs">交叉编译alsa-libs</a></li>
+<li><a href="#%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91alsa-utils">交叉编译alsa-utils</a></li>
+<li><a href="#%E5%AE%89%E8%A3%85%E5%88%B0%E5%BC%80%E5%8F%91%E6%9D%BF">安装到开发板</a></li>
+</ul>
+</li>
+<li><a href="#%E5%AE%89%E8%A3%85ffmpeg">安装ffmpeg</a><ul>
+<li><a href="#%E5%8C%85%E7%AE%A1%E7%90%86%E5%99%A8%E5%AE%89%E8%A3%85">包管理器安装</a></li>
+<li><a href="#%E4%BB%8E%E6%BA%90%E7%A0%81%E6%9E%84%E5%BB%BA">从源码构建</a><ul>
+<li><a href="#%E4%B8%8B%E8%BD%BD%E6%BA%90%E7%A0%81">下载源码</a></li>
+<li><a href="#%E9%85%8D%E7%BD%AE%E7%BC%96%E8%AF%91%E5%8F%82%E6%95%B0">配置编译参数</a></li>
+<li><a href="#%E5%AE%89%E8%A3%85">安装</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E5%AE%89%E8%A3%85valgrind">安装Valgrind</a><ul>
+<li><a href="#%E4%B8%8B%E8%BD%BD%E6%BA%90%E7%A0%81-1">下载源码</a></li>
+<li><a href="#%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE">修改配置</a></li>
+<li><a href="#%E7%BC%96%E8%AF%91%E5%92%8C%E5%AE%89%E8%A3%85">编译和安装</a></li>
+<li><a href="#%E6%B5%8B%E8%AF%95valgrind">测试valgrind</a></li>
+</ul>
+</li>
+<li><a href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E6%89%A9%E5%AE%B9">文件系统扩容</a><ul>
+<li><a href="#%E7%A3%81%E7%9B%98%E5%88%86%E5%8C%BA%E6%89%A9%E5%AE%B9">磁盘分区扩容</a></li>
+<li><a href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E6%89%A9%E5%AE%B9-1">文件系统扩容</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="rootfs中的常用目录"><a href="#rootfs中的常用目录" class="headerlink" title="rootfs中的常用目录"></a>rootfs中的常用目录</h2><table>
+<thead>
+<tr>
+<th>目录</th>
+<th>含义</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&#x2F;bin</td>
+<td>重要的二进制 (binary) 应用程序</td>
+<td>包含二进制文件，系统的所有用户使用的命令都在这个目录下。</td>
+</tr>
+<tr>
+<td>&#x2F;boot</td>
+<td>启动 (boot) 配置文件</td>
+<td>包含引导加载程序相关的文件</td>
+</tr>
+<tr>
+<td>&#x2F;dev</td>
+<td>设备 (device) 文件</td>
+<td>包含设备文件，包括终端设备，USB或连接到系统的任何设备</td>
+</tr>
+<tr>
+<td>&#x2F;etc</td>
+<td>配置文件、启动脚本等(etc)</td>
+<td>包含所有程序所需的配置文件，也包含了用于启动&#x2F;停止单个程序的启动和关闭shell脚本</td>
+</tr>
+<tr>
+<td>&#x2F;home</td>
+<td>本地用户主 (home) 目录</td>
+<td>所有用户用home目录来存储他们的个人档案</td>
+</tr>
+<tr>
+<td>&#x2F;lib</td>
+<td>系统库 (libraries) 文件</td>
+<td>包含支持位于&#x2F;bin和&#x2F;sbin下的二进制文件的库文件</td>
+</tr>
+<tr>
+<td>&#x2F;lost+found</td>
+<td>在根 (&#x2F;) 目录下提供一个遗失+查找(lost+found) 系统</td>
+<td>必须在root用户下才可以查看当前目录下的内容</td>
+</tr>
+<tr>
+<td>&#x2F;media</td>
+<td>挂载可移动介质 (media)</td>
+<td>，诸如 CD、数码相机等	用于挂载可移动设备的临时目录</td>
+</tr>
+<tr>
+<td>&#x2F;mnt</td>
+<td>挂载 (mounted) 文件系统</td>
+<td>临时安装目录，系统管理员可以挂载文件系统</td>
+</tr>
+<tr>
+<td>&#x2F;opt</td>
+<td>提供一个供可选的 (optional) 应用程序安装目录</td>
+<td>包含从各个厂商的附加应用程序，附加的应用程序应该安装在&#x2F;opt或者&#x2F;opt的子目录下</td>
+</tr>
+<tr>
+<td>&#x2F;proc</td>
+<td>特殊的动态目录，用以维护系统信息和状态，包括当前运行中进程 (processes) 信息</td>
+<td>包含系统进程的相关信息，是一个虚拟的文件系统，包含有关正在运行的进程的信息，系统资源以文本信息形式存在</td>
+</tr>
+<tr>
+<td>&#x2F;root</td>
+<td>root (root) 用户主文件夹</td>
+<td>读作“slash-root”</td>
+</tr>
+<tr>
+<td>&#x2F;sbin</td>
+<td>重要的系统二进制 (system binaries) 文件</td>
+<td>也是包含的二进制可执行文件。在这个目录下的linux命令通常都是由系统管理员使用的，对系统进行维护</td>
+</tr>
+<tr>
+<td>&#x2F;sys</td>
+<td>系统 (system) 文件</td>
+<td></td>
+</tr>
+<tr>
+<td>&#x2F;tmp</td>
+<td>临时(temporary)文件</td>
+<td>包含系统和用户创建的临时文件。当系统重启时，这个目录下的文件将都被删除</td>
+</tr>
+<tr>
+<td>&#x2F;usr</td>
+<td>包含绝大部分所有用户(users)都能访问的应用程序和文件</td>
+<td>包含二进制文件，库文件。文档和二级程序的源代码</td>
+</tr>
+<tr>
+<td>&#x2F;var</td>
+<td>经常变化的(variable)文件，诸如日志或数据库等</td>
+<td>代表变量文件。在这个目录下可以找到内容可能增长的文件</td>
+</tr>
+</tbody></table>
+<h2 id="etc中的常用配置文件"><a href="#etc中的常用配置文件" class="headerlink" title="&#x2F;etc中的常用配置文件"></a>&#x2F;etc中的常用配置文件</h2><p>Linux系统的配置文件都放置在&#x2F;etc目录下，下面介绍几个常用的配置文件</p>
+<h3 id="inittab文件"><a href="#inittab文件" class="headerlink" title="inittab文件"></a>inittab文件</h3><p>inittab文件是初始进程init的配置文件，内核引导完成后，内核会启动初始化进程init（用户级进程）来进行 系统的各项配置。init是系统第一个进程，它是系统上运行的所有其他进程的父进程，他会观察其子进程，并在需要时启动、停止、重启它们。init主要是 用来完成系统的各项配置。init从&#x2F;etc&#x2F;inittab获取所有信息。想了解BusyBox init及其inittab基本原理的，可以看<a target="_blank" rel="noopener" href="https://www.cnblogs.com/arnoldlu/p/10868354.html">这篇文章</a><br>其中有几个action，定义方法如下表：</p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>执行条件</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>sysinit</td>
+<td>系统启动后执行</td>
+<td>只执行一次，init进程等它结束之后执行其他动作</td>
+</tr>
+<tr>
+<td>wait</td>
+<td>系统执行完sysinit进程后</td>
+<td>只执行一次，init进程等待它结束后执行其他动作</td>
+</tr>
+<tr>
+<td>once</td>
+<td>系统执行完wait进程后</td>
+<td>只执行一次，init不等他结束</td>
+</tr>
+<tr>
+<td>respawn</td>
+<td>启动完once进程后</td>
+<td>init进程发现其退出后，重新启动它</td>
+</tr>
+<tr>
+<td>askfirst</td>
+<td>启动完respawn后</td>
+<td>与respawn类似，但init进程先输出Please Enter to activate this console，等用户按下回车后才启动子进程</td>
+</tr>
+<tr>
+<td>shutdown</td>
+<td>当系统关机时</td>
+<td>重启，关闭系统命令时</td>
+</tr>
+<tr>
+<td>restart</td>
+<td>Busybox中配置CONFIG_FEATURE_USE_INITTAB，并且init进程收到SIGHUP信号时</td>
+<td>先重新读取，解析inittab文件，再执行restart程序</td>
+</tr>
+<tr>
+<td>ctrlaltdel</td>
+<td>按下ctrl+alt+del时</td>
+<td>-</td>
+</tr>
+</tbody></table>
+<p>格式如下：</p>
+<ul>
+<li>#开始的行是注释</li>
+<li>冒号在里面是分隔符，分隔开各个部分。</li>
+<li>inittab内容是以行为单位的，行与行之间没有关联，每行都是一个独立的配置项，每一个 配置项表示一个具体的含义。</li>
+<li>每一行的配置项都是由3个冒号分隔开的4个配置值共同确定的。这四个配置值就是id:runlevels:action:process 值得注意得是有些配置值可以空缺，空缺后冒号不能空缺，所以有时候会看到连续2个冒号。</li>
+<li>每一行的配置项中4个配置值中最重要的是action和process，action是一个条件&#x2F;状态，process是一个可被执行的程序的pathname。合起来的意思就是：当满足action的条件时就会执行process这个程序。</li>
+</ul>
+<p>busybox官方给出的说明以及样例在&#x2F;examples&#x2F;inittab文件中<br>如果没有inittab，busybox会按照以下默认配置运行init</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">::sysinit:/etc/init.d/rcS <span class="comment"># 执行rcS</span></span><br><span class="line">::askfirst:/bin/sh <span class="comment">#执行命令行</span></span><br><span class="line">::ctrlaltdel:/sbin/reboot</span><br><span class="line">::shutdown:/sbin/swapoff -a</span><br><span class="line">::shutdown:/bin/umount -a -r</span><br><span class="line">::restart:/sbin/init</span><br><span class="line">tty2::askfirst:/bin/sh</span><br><span class="line">tty3::askfirst:/bin/sh</span><br><span class="line">tty4::askfirst:/bin/sh</span><br></pre></td></tr></table></figure>
+<p>inittab的关键就是：“当满足action的条件时就会执行process这个程序”。</p>
+<h3 id="rcS文件"><a href="#rcS文件" class="headerlink" title="rcS文件"></a>rcS文件</h3><p>可以看到inittab的第一步即解析rcS文件，其在系统初始化阶段会被init进程调用，并且执行里面的命令，因此该文件用于执行一些系统初始化指令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir rootfs/etc/init.d</span><br><span class="line">sudo vim rootfs/etc/init.d/rcS</span><br></pre></td></tr></table></figure>
+
+<p>内容为：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line">PATH=/sbin:/bin:/usr/sbin:/usr/bin</span><br><span class="line"><span class="built_in">export</span> PATH</span><br><span class="line"><span class="built_in">umask</span> 022</span><br><span class="line"></span><br><span class="line">mount -a</span><br><span class="line"><span class="built_in">mkdir</span> /dev/pts</span><br><span class="line">mount -t devpts devpts /dev/pts</span><br><span class="line"></span><br><span class="line">hostname euler</span><br><span class="line"></span><br><span class="line">ifconfig lo 127.0.0.1</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="fstab文件"><a href="#fstab文件" class="headerlink" title="fstab文件"></a>fstab文件</h3><p>这个文件是供mount读取设备所用，在rcS中有mount -a命令，负责挂载系统所用到的设备，mount -a从fstab中读取参数<br>先加入三个内核自带的三个虚拟文件系统</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#&lt;file system&gt;  &lt;mount point&gt;   &lt;type&gt;  &lt;options&gt;       &lt;dump&gt;  &lt;pass&gt;</span><br><span class="line">proc            /proc           proc    defaults        0       0</span><br><span class="line">tmpfs           /tmp            tmpfs   defaults        0       0</span><br><span class="line">sysfs           /sys            sysfs   defaults        0       0</span><br></pre></td></tr></table></figure>
+<p>这三个目录为linux内核文件系统，存在于内存中</p>
+<ul>
+<li><p>proc用于在系统运行时访问内核内部数据结构，改变内核设置，proc只存在于内存当中，以文件系统的方式为访问内核数据提供接口，其被挂在于根目录的&#x2F;proc目录下。</p>
+</li>
+<li><p>sysfs将系统中的设备组织成层次结构，并向用户模式程序提供详细的内核数据结构信息</p>
+</li>
+<li><p>tmpfs用于存储临时文件，这些文件通常是由操作系统或应用程序创建的。这些文件可以是日志文件、临时缓存文件、程序临时文件、打印队列文件等</p>
+</li>
+</ul>
+<p>除这三个目录外，通常还需要再根据物理设备以及分区情况，加入其他文件系统。</p>
+<h3 id="rc-local文件"><a href="#rc-local文件" class="headerlink" title="rc.local文件"></a>rc.local文件</h3><p>&#x2F;etc&#x2F;rc.local是被init.d&#x2F;rcS 文件调用执行的特殊文件，与Linux 系统硬件平台相关，如安装核心模块、进行网络配置、运行应用程序、启动图形界面等。<br>因此可以将rcS文件中非核心操作的内容移动到rc.local中，使得配置文件更加清晰</p>
+<p>rcS文件修改如下：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">umask</span> 022</span><br><span class="line"></span><br><span class="line">PATH=/sbin:/bin:/usr/sbin:/usr/bin</span><br><span class="line"><span class="built_in">export</span> PATH</span><br><span class="line"></span><br><span class="line">mount -a</span><br><span class="line"><span class="built_in">mkdir</span> /dev/pts</span><br><span class="line">mount -t devpts devpts /dev/pts</span><br><span class="line"></span><br><span class="line"><span class="built_in">exec</span> /etc/rc.local</span><br></pre></td></tr></table></figure>
+<p>rc.local中的内容如下：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line"></span><br><span class="line">hostname Euler</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> /sbin/mdev &gt; /proc/sys/kernel/hotplug</span><br><span class="line">mdev -s</span><br><span class="line"></span><br><span class="line">ifconfig lo 127.0.0.1</span><br><span class="line">telnetd <span class="comment"># 启动telnet服务供远程登录</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;**************************************************&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;*                                                *&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;*                 Openeuler-22.04                *&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;*                                                *&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;*          Linux Kernel version 5.10.0           *&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;*                                                *&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;*                 2024-07-03                     *&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;*                                                *&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;**************************************************&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="profile文件"><a href="#profile文件" class="headerlink" title="profile文件"></a>profile文件</h3><p>profile文件在每个用户登录时被执行一次，用于设置每个用户的环境信息，root用户的环境信息由init进程设置，而其他用户则通过login进程读取profile文件设置</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">PATH=/bin:/sbin:/usr/bin:/usr/sbin</span><br><span class="line">LD_LIBRARY_PATH=/lib:/usr/lib</span><br><span class="line"></span><br><span class="line">HOSTNAME=`/bin/hostname`</span><br><span class="line">PS1=<span class="string">&#x27;\u@\h:\w\$ &#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> PATH LD_LIBRARY_PATH HOSTNAME PS1</span><br></pre></td></tr></table></figure>
+<h2 id="添加设备文件"><a href="#添加设备文件" class="headerlink" title="添加设备文件"></a>添加设备文件</h2><p>busybox中自动利用mdev管理设备，在编译时已经设置好，其工作过程参考这个<a target="_blank" rel="noopener" href="http://www.360doc.com/content/10/0428/11/496343_25245348.shtml">博客</a></p>
+<h2 id="配置dhcp自动获取ip地址"><a href="#配置dhcp自动获取ip地址" class="headerlink" title="配置dhcp自动获取ip地址"></a>配置dhcp自动获取ip地址</h2><p>udhcpc的<a target="_blank" rel="noopener" href="https://www.cnblogs.com/arnoldlu/p/13567937.html">工作过程</a></p>
+<h3 id="加入default-script配置文件"><a href="#加入default-script配置文件" class="headerlink" title="加入default.script配置文件"></a>加入default.script配置文件</h3><p>将busybox的默认配置复制到根文件系统中，以正确使用udhcpc获取ip地址<br>具体解析可以看这个<a target="_blank" rel="noopener" href="https://www.cnblogs.com/arnoldlu/p/13567937.html">博客</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir rootfs/usr/share/udhcpc</span><br><span class="line">cp busybox-1.36.1/examples/udhcp/simple.script rootfs/usr/share/udhcpc/default.script</span><br></pre></td></tr></table></figure>
+<h3 id="开机自动启动dhcp服务"><a href="#开机自动启动dhcp服务" class="headerlink" title="开机自动启动dhcp服务"></a>开机自动启动dhcp服务</h3><p>在rcS文件的末尾添加</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">udhcpc</span><br></pre></td></tr></table></figure>
+<h3 id="实现网线热插拔"><a href="#实现网线热插拔" class="headerlink" title="实现网线热插拔"></a>实现网线热插拔</h3><p><a target="_blank" rel="noopener" href="http://blog.chinaunix.net/uid-16759545-id-4891833.html">http://blog.chinaunix.net/uid-16759545-id-4891833.html</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/xuesong10210/article/details/113858728">https://blog.csdn.net/xuesong10210/article/details/113858728</a></p>
+<h2 id="添加用户管理"><a href="#添加用户管理" class="headerlink" title="添加用户管理"></a>添加用户管理</h2><h3 id="添加用户相关文件"><a href="#添加用户相关文件" class="headerlink" title="添加用户相关文件"></a>添加用户相关文件</h3><p>linux中，用户管理涉及到两个文件：账号文件 &#x2F;etc&#x2F;passwd和用户组文件 &#x2F;etc&#x2F;group。</p>
+<h4 id="账号文件"><a href="#账号文件" class="headerlink" title="账号文件"></a>账号文件</h4><p>首先先创建账号文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/passwd</span><br></pre></td></tr></table></figure>
+<p>添加内容</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root:x:0:0:root:/root:/bin/sh</span><br></pre></td></tr></table></figure>
+<h4 id="设置密码"><a href="#设置密码" class="headerlink" title="设置密码"></a>设置密码</h4><p>如果需要设置用户初始密码，可以通过修改x字段的值来实现</p>
+<p>密码生成方式为：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl passwd -1 -salt [username] <span class="comment">#passwd代表设置密码，-1代表使用MD5加密 -salt代表加盐 username替换成要设置密码的用户名</span></span><br></pre></td></tr></table></figure>
+<p>然后输入密码，将生成的内容复制，替换x字段即可为用户设置密码</p>
+<p>账号文件的每一行是一个用户和其对应的设置，用”:”隔开，每字段的含义为</p>
+<blockquote>
+<p>用户名称：用户密码：USER ID：GROUP ID：相关注释：主目录：使用的shell</p>
+</blockquote>
+<ol>
+<li>用户名称：在Linux系统中用唯一的字符串区分不同的用户，用户名可以由字母、数字、下划线组成。注意Linux系统中对字母大小写是敏感的。 比如USERNAME1 和username1是两个不同的用户。</li>
+<li>用户密码：在用户校验时验证用户的合法性。超级用户root可以更改系统中所有用户的密码，普通用户登陆后可以使用 pawwd 命令来更改自己的密码。在 &#x2F;etc&#x2F;passwd 文件中该字段一般为 x ，或加密存储的密码，处于安全考虑，一些高级发行版中该字段加密后的密码数据已经移至 &#x2F;etc&#x2F;shadow 中。 &#x2F;etc&#x2F;shadow 文件不能被普通用户读取，只有超级用户才有权读取。而此处使用的busybox依然在此字段存放加密的密码。</li>
+<li>用户标识号(USER ID)：USER ID，简称UID，是一个数值，用于唯一标识Linux系统中的用户。在Linux系统中最多可使用65535个用户名，用户名和UID都可以用于标识用户。相同UID的用户可以认为是同一用户，同时他们也具有相同的权限，当然对于使用者来说用户名更容易记忆和使用。</li>
+<li>组标识号(GROUP ID)：GROUP ID，检查GID，这是当前用户所属的默认用户组标识。当添加用户时，系统会默认建立一个和用户名一样的用户组，多个用户可以属于相同的用户组。用户可以同时属于多个组，每个组也可以有多个用户。除了在 &#x2F;etc&#x2F;passwd 文件中指定其归属的基本组外，&#x2F;etc&#x2F;group 文件中也指明一个组所包含的用户。</li>
+<li>相关注释：用于存放一些用户的其它信息，比如用户含义说明、用户地址信息等。</li>
+<li>主目录：该字段定义了用户的主目录，登录后shell将把该目录作为用户的工作目录。登录系统后可以使用 pwd 命令查看。超级用户 root的工作目录为 &#x2F;root。每个用户都有自己的主目录，默认一般在 &#x2F;home 下建立与用户名一致的目录，同时建立目录时可以指定其它目录作为用户的主目录。</li>
+<li>使用的shell：shell是当前用户登录系统是运行的程序的名称，通常是 &#x2F;bin&#x2F;bash。同时系统中可能存在其它的shell，比如 tsh。用户可以自己指定shell，也可以随时更改，比较流行的就行 &#x2F;bin&#x2F;bash，在busybox中一般是&#x2F;bin&#x2F;sh</li>
+</ol>
+<h4 id="用户组文件"><a href="#用户组文件" class="headerlink" title="用户组文件"></a>用户组文件</h4><p>创建文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/group</span><br></pre></td></tr></table></figure>
+<p>添加内容</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root:x:0:root</span><br></pre></td></tr></table></figure>
+<p>该文件用于保存用户组的所有信息，通过它可以更好地对系统中的用户进行管理。对用户分组是一种有效的手段，用户组和用户之间属于多对多的关系，一个用户可以属于多个组，一个组也可以包含多个用户。用户登录时默认的组存放在 &#x2F;etc&#x2F;passwd 中。</p>
+<p>用户组文件也是每行代表一个用户组的信息，含义为</p>
+<blockquote>
+<p>用户组名：用户组密码：用户组标识号：组内用户列表</p>
+</blockquote>
+<ol>
+<li>用户组名：可以由字母、数字、下划线组成，用户组名是唯一的，和用户名一样不可重复。</li>
+<li>用户组密码：该字段存放的是用户组加密后的密码，这一字段基本不使用，Linux系统的用户组都没有密码。</li>
+<li>用户组标识号：GROUP ID 简称GID，和用户标识号UID类似，也是一个整数，用于唯一标识一个用户组。</li>
+<li>组内用户列表：是属于这个组的所有用户的列表，不同用户之间用逗号分隔，不能有空格。这个用户组可能是用户的主组，也可能是附加组。</li>
+</ol>
+<p>至此系统中已经默认自带root用户，并且可以在系统运行之后新建，切换用户。但在开机时依然不会登录，直接选择进入命令行</p>
+<h3 id="设置开机自动登录"><a href="#设置开机自动登录" class="headerlink" title="设置开机自动登录"></a>设置开机自动登录</h3><p>开机自动登录功能需要修改inittab文件来实现，即在运行shell之前先运行一个login程序，将inittab中的askfirst:&#x2F;bin&#x2F;sh替换为，即先启动getty，然后再运行login进程来进行登录</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">console::respawn:/sbin/getty -L -n -l /etc/autologin console 0 vt100</span><br></pre></td></tr></table></figure>
+<p>然后添加autologin脚本</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line">/bin/login -f root</span><br></pre></td></tr></table></figure>
+<p>其中选项-f表示不对root用户进行验证</p>
+<h3 id="加强密码安全性"><a href="#加强密码安全性" class="headerlink" title="加强密码安全性"></a>加强密码安全性</h3><h2 id="配置远程"><a href="#配置远程" class="headerlink" title="配置远程"></a>配置远程</h2><h3 id="telnet"><a href="#telnet" class="headerlink" title="telnet"></a>telnet</h3><p>telnet服务器由busybox中的telnetd程序来实现，默认端口为23端口</p>
+<h3 id="ftp"><a href="#ftp" class="headerlink" title="ftp"></a>ftp</h3><p>ftp服务为ftpd</p>
+<h3 id="ssh"><a href="#ssh" class="headerlink" title="ssh"></a>ssh</h3><p>OpenSSH（OpenBSD Secure Shell）是使用SSH透过计算机网络加密通信的实现。它是取代由SSH Communications Security所提供的商用版本的开放源代码方案。目前OpenSSH是OpenBSD的子项目。<br>OpenSSH常常被误认以为与OpenSSL有关系，但实际上这两个项目有不同的目的，不同的发展团队，名称相近只是因为两者有同样的软件发展目标──提供开放源代码的加密通信软件。<br>而目前最经常的应用：SSH远程连接。相比telnet远程连接，SSH更安全</p>
+<p>下面将从源码构建OpenSSH</p>
+<h4 id="编译依赖"><a href="#编译依赖" class="headerlink" title="编译依赖"></a>编译依赖</h4><p><a target="_blank" rel="noopener" href="https://openssl-library.org/source/">OpenSSL</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.zlib.net/">zlib</a><br>首先新建一个文件夹，将源码下载到这个文件夹中，并将其作为工作目录<br><strong>编译Zlib</strong></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> WORK_DIR=<span class="variable">$&#123;PWD&#125;</span></span><br><span class="line"><span class="built_in">cd</span> zlib-1.3.1</span><br><span class="line"><span class="built_in">export</span> CHOST arm-linux-gnueabihf <span class="comment">#配置交叉编译选项</span></span><br><span class="line">./configure --prefix=<span class="variable">$&#123;WORK_DIR&#125;</span>/zlib_install</span><br><span class="line">make -j10</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
+<p>这一步很多教程让自己修改Makefile，但是修改Makefile很麻烦还容易出错，故不推荐使用这种方法。阅读zlib的configure文件发现其通过CHOST环境变量来控制交叉编译选项，因此只需将CHOST设置为交叉编译前缀即可。</p>
+<p>下面是configure文件中控制交叉编译的部分：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># set command prefix for cross-compilation</span></span><br><span class="line"><span class="keyword">if</span> [ -n <span class="string">&quot;<span class="variable">$&#123;CHOST&#125;</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">uname</span>=<span class="variable">$&#123;CHOST&#125;</span></span><br><span class="line">    mname=<span class="variable">$&#123;CHOST&#125;</span></span><br><span class="line">    CROSS_PREFIX=<span class="string">&quot;<span class="variable">$&#123;CHOST&#125;</span>-&quot;</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    mname=`(<span class="built_in">uname</span> -a || <span class="built_in">echo</span> unknown) 2&gt;/dev/null`</span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>编译OpenSSL</strong></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">./Configure --prefix=<span class="variable">$&#123;WORK_DIR&#125;</span>/openssl_install --cross-compile-prefix=arm-linux-gnueabihf- no-asm linux-armv4 -fPIC</span><br><span class="line">make -j10</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
+<p>这里一定要加-fPIC，以生成位置无关代码，否则后面编译OpenSSH时会找不到相应的库</p>
+<h4 id="编译OpenSSH"><a href="#编译OpenSSH" class="headerlink" title="编译OpenSSH"></a>编译OpenSSH</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">./configure --host=arm-linux-gnueabihf --with-libs --with-zlib=<span class="variable">$&#123;WORK_DIR&#125;</span>/zlib_install/ --with-ssl-dir=<span class="variable">$&#123;WORK_DIR&#125;</span>/openssl_install/ --disable-etc-default-login CC=arm-linux-gnueabihf-gcc AR=arm-linux-gnueabihf-ar</span><br><span class="line">make -j10</span><br></pre></td></tr></table></figure>
+<p>编译好后不着急install，先生成四个key文件</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa -f ssh_host_rsa_key -N <span class="string">&quot;&quot;</span></span><br><span class="line">ssh-keygen -t dsa -f ssh_host_dsa_key -N <span class="string">&quot;&quot;</span></span><br><span class="line">ssh-keygen -t ecdsa -f ssh_host_ecdsa_key -N <span class="string">&quot;&quot;</span></span><br><span class="line">ssh-keygen -t dsa -f ssh_host_ed25519_key -N <span class="string">&quot;&quot;</span></span><br></pre></td></tr></table></figure>
+<p>然后准备复制到rootfs中，切换工作目录到${rootfs}，创建下面三个文件夹</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> /usr/libexec  </span><br><span class="line"><span class="built_in">mkdir</span> /usr/local/etc  </span><br><span class="line"><span class="built_in">mkdir</span> /usr/local/bin</span><br><span class="line"><span class="built_in">mkdir</span> /usr/local/libexec</span><br></pre></td></tr></table></figure>
+<p>复制文件到相应目录</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> scp sftp ssh sshd ssh-add ssh-agent ssh-keygen ssh-keyscan <span class="variable">$&#123;ROOTFS_WORKDIR&#125;</span>/usr/local/bin</span><br><span class="line"></span><br><span class="line"><span class="comment">#这四个key文件需要确保权限为600</span></span><br><span class="line"><span class="comment">#ssh_host_rsa_key、ssh_host_dsa_key、ssh_host_ecdsa_key和ssh_host_ed25519_key</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">cp</span> moduli ssh_config sshd_config ssh_host_rsa_key ssh_host_dsa_key ssh_host_ecdsa_key ssh_host_ed25519_key <span class="variable">$&#123;ROOTFS_WORKDIR&#125;</span>/usr/local/etc</span><br><span class="line"></span><br><span class="line"><span class="built_in">cp</span> sftp-server ssh-keysign <span class="variable">$&#123;ROOTFS_WORKDIR&#125;</span>/usr/libexec</span><br><span class="line"><span class="built_in">cp</span> sshd-session <span class="variable">$&#123;ROOTFS_WORKDIR&#125;</span>/usr/local/libexec</span><br></pre></td></tr></table></figure>
+
+<p>然后再&#x2F;etc&#x2F;passwd文件中增加两行</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sshd:x:74:74:Privilege-separated</span><br><span class="line">SSH:/var/empty/sshd:/sbin/nologin</span><br></pre></td></tr></table></figure>
+<p>在&#x2F;etc&#x2F;group文件中添加</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sshd:x:74:</span><br></pre></td></tr></table></figure>
+<p>最后将相应的库复制到rootfs中</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cp libssl.so.3 libcrypto.so.3 $&#123;ROOTFS_WORKDIR&#125;/lib</span><br><span class="line">cp libz.so.1.3.1 $&#123;ROOTFS_WORKDIR&#125;/lib</span><br></pre></td></tr></table></figure>
+
+<h4 id="配置OpenSSH"><a href="#配置OpenSSH" class="headerlink" title="配置OpenSSH"></a>配置OpenSSH</h4><p>ssh_config，sshd_config配置文件在&#x2F;usr&#x2F;local&#x2F;etc&#x2F;中，不同于常规ubuntu位于&#x2F;etc&#x2F;ssh中，其他具体配置可参考网上的教程</p>
+<h4 id="ssh显示欢迎界面"><a href="#ssh显示欢迎界面" class="headerlink" title="ssh显示欢迎界面"></a>ssh显示欢迎界面</h4><ol>
+<li>在sshd_config中设置banner字段<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># sshd_config</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#Banner</span></span><br><span class="line">banner /etc/banner <span class="comment"># 这个文件中的内容会在SSH登录请求时显示</span></span><br></pre></td></tr></table></figure></li>
+<li>在&#x2F;etc&#x2F;motd文件中添加内容，这个文件中的内容会在登录成功时显示<br>motd是message of to day（今日信息）的缩写，在Ubuntu系统中，会开机自动生成，而其他系统中，一般为固定内容</li>
+</ol>
+<h3 id="开机自动启动远程服务"><a href="#开机自动启动远程服务" class="headerlink" title="开机自动启动远程服务"></a>开机自动启动远程服务</h3><p>既然都使用远程了，我们肯定不希望先连接显示器键盘，输入命令开启远程服务后，再进行远程连接，因此远程服务需要在开机时自动启动。<br>在inittab中设置一个once，来启动telnet和ftp，其中网络的基本设置在sysinit中完成，而telnet和ftp服务器进程需要等网络基本设置完成后启动，并且持续运行，因此使用once活动来实现</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">::once:/etc/initremote</span><br></pre></td></tr></table></figure>
+<p>&#x2F;etc&#x2F;initremote内容如下：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!bin/sh</span></span><br><span class="line">telnetd</span><br><span class="line">tcpsvd -vE 0.0.0.0 21 ftpd -w /home/euler &amp;</span><br><span class="line">/usr/local/bin/sshd</span><br></pre></td></tr></table></figure>
+
+<h2 id="安装Alsa"><a href="#安装Alsa" class="headerlink" title="安装Alsa"></a>安装Alsa</h2><p>ALSA，全称是Advanced Linux Sound Architecture，是Linux中提供声音设备驱动的内核组件，应用可以通过ALSA接口实现音频播放、录音、设备通路控制、音量控制、通话等功能。</p>
+<p>可以去<a target="_blank" rel="noopener" href="https://www.alsa-project.org/main/index.php/Download">官网</a>下载源码，这里需要alsa-lib和alsa-utils</p>
+<h3 id="交叉编译alsa-libs"><a href="#交叉编译alsa-libs" class="headerlink" title="交叉编译alsa-libs"></a>交叉编译alsa-libs</h3><p>由于alsa-utils依赖于alsa-libs，因此先编译libs<br>先新建一个alsa目录，然后将源码下载到该目录下并解压。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> WORK_DIR=<span class="variable">$PWD</span></span><br><span class="line"><span class="built_in">mkdir</span> alsa_install</span><br><span class="line"><span class="built_in">cd</span> alsa-lib-1.2.12</span><br><span class="line">./configure\</span><br><span class="line"> --host=arm-linux-gnueabihf\</span><br><span class="line"> --prefix=<span class="variable">$&#123;WORK_DIR&#125;</span>/alsa_install\</span><br><span class="line"> --enable-shared\</span><br><span class="line"> --disable-python\</span><br><span class="line"> --with-configdir=/usr/local/share/alsa\</span><br><span class="line"> --with-plugindir=<span class="variable">$&#123;OUTPUT&#125;</span>/alsa_plugin</span><br><span class="line">make -j10</span><br><span class="line"><span class="built_in">sudo</span> make install</span><br></pre></td></tr></table></figure>
+<p>注意这个configdir的目录必须和下载到开发板时的目录完全相同才行，否则会报错。</p>
+<h3 id="交叉编译alsa-utils"><a href="#交叉编译alsa-utils" class="headerlink" title="交叉编译alsa-utils"></a>交叉编译alsa-utils</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> <span class="variable">$&#123;WORK_DIR&#125;</span></span><br><span class="line"><span class="built_in">cd</span> alsa-utils-1.2.12</span><br><span class="line">./configure --host=arm-linux-gnueabihf\</span><br><span class="line"> --prefix=<span class="variable">$&#123;WORK_DIR&#125;</span>/alsa_install\</span><br><span class="line"> CFLAGS=<span class="string">&quot;-I<span class="variable">$&#123;WORK_DIR&#125;</span>/alsa_install/include&quot;</span>\</span><br><span class="line"> LDFLAGS=<span class="string">&quot;-L<span class="variable">$&#123;WORK_DIR&#125;</span>/alsa_install/lib -lasound&quot;</span>\</span><br><span class="line"> --disable-alsamixer\</span><br><span class="line"> --disable-xmlto\</span><br><span class="line"> --with-alsa-inc-prefix=<span class="variable">$&#123;WORK_DIR&#125;</span>/alsa_install/include\</span><br><span class="line"> --with-alsa-prefix=<span class="variable">$&#123;WORK_DIR&#125;</span>/alsa_install/lib</span><br><span class="line">make -j10</span><br><span class="line"><span class="built_in">sudo</span> make install</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装到开发板"><a href="#安装到开发板" class="headerlink" title="安装到开发板"></a>安装到开发板</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> <span class="variable">$&#123;WORK_DIR&#125;</span>/alsa_install/lib/libasound.* <span class="variable">$&#123;TARGET_ROOT&#125;</span>/lib/</span><br><span class="line"><span class="built_in">cp</span> <span class="variable">$&#123;WORK_DIR&#125;</span>/alsa_install/bin/* <span class="variable">$&#123;TARGET_ROOT&#125;</span>/bin/</span><br><span class="line"><span class="built_in">cp</span> <span class="variable">$&#123;WORK_DIR&#125;</span>/alsa_install/sbin/* <span class="variable">$&#123;TARGET_ROOT&#125;</span>/sbin/</span><br><span class="line"><span class="built_in">cp</span> -r /usr/local/share/alsa <span class="variable">$&#123;TARGET_ROOT&#125;</span>/usr/local/share/alsa</span><br></pre></td></tr></table></figure>
+
+<h2 id="安装ffmpeg"><a href="#安装ffmpeg" class="headerlink" title="安装ffmpeg"></a>安装ffmpeg</h2><h3 id="包管理器安装"><a href="#包管理器安装" class="headerlink" title="包管理器安装"></a>包管理器安装</h3><p>ffmpeg是一个开源的音视频编解码工具，官方文档在<a target="_blank" rel="noopener" href="https://trac.ffmpeg.org/">这里</a>如果有包管理工具可以直接通过包管理工具安装</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt install ffmpeg</span><br></pre></td></tr></table></figure>
+<p>如果没有包管理器，也可以通过源码构建</p>
+<h3 id="从源码构建"><a href="#从源码构建" class="headerlink" title="从源码构建"></a>从源码构建</h3><h4 id="下载源码"><a href="#下载源码" class="headerlink" title="下载源码"></a>下载源码</h4><p>新建一个工作目录ffmpeg，然后下载源码。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://git.ffmpeg.org/ffmpeg.git ffmpeg</span><br></pre></td></tr></table></figure>
+<p>下载好后还有一个ffmpeg目录，进入这个目录</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ffmpeg</span><br></pre></td></tr></table></figure>
+<h4 id="配置编译参数"><a href="#配置编译参数" class="headerlink" title="配置编译参数"></a>配置编译参数</h4><p>ffmpeg的编译参数通过configure脚本设置，先执行一下，发现输入–help命令可以查看帮助，查看一下这些参数的含义，根据需求选择，在此处我们往32位的树莓派上交叉编译。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">./configure --<span class="built_in">arch</span>=arm\</span><br><span class="line"> --cross-prefix=arm-linux-gnueabihf-\</span><br><span class="line"> --target-os=linux\</span><br><span class="line"> --prefix=/home/anakin/Data/code/euler/rootfs/usr\</span><br><span class="line"> --disable-ffprobe\</span><br><span class="line"> --enable-mmal\</span><br><span class="line"> --enable-omx-rpi\</span><br><span class="line"> --enable-gpl\</span><br><span class="line"> --enable-nonfree</span><br></pre></td></tr></table></figure>
+<p>  首先先设置目标架构arm，交叉编译工具armhf，目标系统Linux。</p>
+<p>  –prefix为euler系统的根文件系统的&#x2F;usr目录，这一步非常重要，否则后面会安装到自己的电脑上。</p>
+<p>  然后裁剪掉一些不需要的库，比如媒体分析工具ffprobe</p>
+<p>  最后新加入一些需要的库：</p>
+<ul>
+<li>–enable-mmal：Braodcom的多媒体硬件优化层，可以为树莓派开启硬件加速</li>
+<li>–enable-omx-rpi：开启树莓派的OpenMAX加速</li>
+<li>–enable-gpl:启用gpl许可的编码器</li>
+<li>–enable-nonfree：启用非自由的编码器</li>
+</ul>
+<p>如果提示</p>
+<blockquote>
+<p>WARNING: arm-linux-gnueabihf-pkg-config not found, library detection may fail.<br>则安装pkg-config即可</p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt install pkg-config-arm-linux-gnueabihf</span><br></pre></td></tr></table></figure>
+<p>都完成后开始编译</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make -j10</span><br></pre></td></tr></table></figure>
+<h4 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h4><p>编译完成之后，用make install命令安装即可</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make install</span><br></pre></td></tr></table></figure>
+<h2 id="安装Valgrind"><a href="#安装Valgrind" class="headerlink" title="安装Valgrind"></a>安装Valgrind</h2><p>Valgrind 是一款用于内存调试，内存泄漏检测以及性能分析，检测线程错误的开发工具。</p>
+<h3 id="下载源码-1"><a href="#下载源码-1" class="headerlink" title="下载源码"></a>下载源码</h3><p>在<a target="_blank" rel="noopener" href="https://valgrind.org/downloads/">官网</a>下载对应的包，然后解压，得到一个目录valgrind，进入这个目录</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget https://sourceware.org/pub/valgrind/valgrind-3.23.0.tar.bz2</span><br><span class="line">tar -xvf valgrind-3.23.0.tar.bz2</span><br><span class="line">cd valgrind-3.23.0</span><br></pre></td></tr></table></figure>
+<h3 id="修改配置"><a href="#修改配置" class="headerlink" title="修改配置"></a>修改配置</h3><p>查看目录里面的README和README.aarch64（没有arm32的，看着这俩猜一猜怎么设置交叉编译工具链），然后再打开configure脚本看看。<br>看到大概有这样一段和交叉编译相关的内容</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">Development so far was however done by cross compiling, viz:</span><br><span class="line">  export CC=aarch64-linux-gnu-gcc</span><br><span class="line">  export LD=aarch64-linux-gnu-ld</span><br><span class="line">  export AR=aarch64-linux-gnu-ar</span><br><span class="line"></span><br><span class="line">  ./autogen.sh</span><br><span class="line">  ./configure --prefix=`pwd`/Inst --host=aarch64-unknown-linux \</span><br><span class="line">              --enable-only64bit</span><br><span class="line">  make -j4</span><br><span class="line">  make -j4 install</span><br><span class="line"></span><br><span class="line">Doing this assumes that the install path (`pwd`/Inst) is valid on</span><br><span class="line">both host and target, which isn&#x27;t normally the case.  To avoid</span><br><span class="line">this limitation, do instead:</span><br><span class="line"></span><br><span class="line">  ./configure --prefix=/install/path/on/target \</span><br><span class="line">              --host=aarch64-unknown-linux \</span><br><span class="line">              --enable-only64bit</span><br><span class="line">  make -j4</span><br><span class="line">  make -j4 install DESTDIR=/a/temp/dir/on/host</span><br><span class="line">  # and then copy the contents of DESTDIR to the target.</span><br></pre></td></tr></table></figure>
+<p>大概意思就是，先设置交叉编译工具链，然后运行autogen，然后利用configure配置</p>
+<p>我们首先需要修改交叉编译工具为arm32位的交叉编译工具：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> CC=arm-linux-gnueabihf-gcc</span><br><span class="line"><span class="built_in">export</span> LD=arm-linux-gnueabihf-ld</span><br><span class="line"><span class="built_in">export</span> AR=arm-linux-gnueabihf-ar</span><br></pre></td></tr></table></figure>
+<p>然后修改configure里面的host为arm-linux，并且去掉only64bit，因为我们是32bit。</p>
+<p>注意这个–prefix参数，这里要填写的是在目标机器上的安装路径，在这里我们安装到&#x2F;usr路径下，所以可以得到命令</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">./autogen.sh</span><br><span class="line">./configure --prefix=/usr --host=arm-linux</span><br></pre></td></tr></table></figure>
+<p>至此就完成了编译前配置，设置完后会列出相应的配置：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Version: 3.23.0</span><br><span class="line">        Maximum build arch: arm</span><br><span class="line">        Primary build arch: arm</span><br><span class="line">      Secondary build arch:</span><br><span class="line">                  Build OS: linux</span><br><span class="line">    Link Time Optimisation: no</span><br><span class="line">      Primary build target: ARM_LINUX</span><br><span class="line">    Secondary build target:</span><br><span class="line">          Platform variant: vanilla</span><br><span class="line">     Primary -DVGPV string: -DVGPV_arm_linux_vanilla=1</span><br><span class="line">        Default supp files: ./xfree-3.supp ./xfree-4.supp glibc-2.X-drd.supp glibc-2.X-helgrind.supp glibc-2.X.supp</span><br></pre></td></tr></table></figure>
+<p>确认无误后开始编译</p>
+<h3 id="编译和安装"><a href="#编译和安装" class="headerlink" title="编译和安装"></a>编译和安装</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">make -j4</span><br><span class="line">make -j4 install DESTDIR=&#123;<span class="variable">$ROOTFS_DIR</span>&#125; <span class="comment">#直接放到rootfs里面，因为自带前缀/usr，故不用带/usr路径</span></span><br></pre></td></tr></table></figure>
+<p>如果编译过程中出现问题：</p>
+<blockquote>
+<p>sorry, unimplemented: Thumb-1 hard-float VFP ABI</p>
+</blockquote>
+<p>打开configure文件，把里面的-march&#x3D;armv6修改成-marm即可</p>
+<p>上下文大概如下：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> <span class="string">&quot;<span class="variable">$&#123;host_cpu&#125;</span>&quot;</span> <span class="keyword">in</span></span><br><span class="line">...)</span><br><span class="line">  ......</span><br><span class="line">arm*)</span><br><span class="line">        &#123; <span class="variable">$as_echo</span> <span class="string">&quot;<span class="variable">$as_me</span>:<span class="variable">$&#123;as_lineno-$LINENO&#125;</span>: result: ok (<span class="variable">$&#123;host_cpu&#125;</span>)&quot;</span> &gt;&amp;5</span><br><span class="line"><span class="variable">$as_echo</span> <span class="string">&quot;ok (<span class="variable">$&#123;host_cpu&#125;</span>)&quot;</span> &gt;&amp;6; &#125;</span><br><span class="line">        VGCONF_PLATFORM_ARM_ARCH=<span class="string">&quot;-marm&quot;</span> <span class="comment">#这里原来是-march=armv6</span></span><br><span class="line">        ARCH_MAX=<span class="string">&quot;arm&quot;</span></span><br><span class="line">        ;;</span><br></pre></td></tr></table></figure>
+<p>将rootfs同步到树莓派，进行测试即可</p>
+<h3 id="测试valgrind"><a href="#测试valgrind" class="headerlink" title="测试valgrind"></a>测试valgrind</h3><p>参考这几篇博客</p>
+<p><a target="_blank" rel="noopener" href="http://blog.chinaunix.net/uid-23629988-id-3033741.html">http://blog.chinaunix.net/uid-23629988-id-3033741.html</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_45518728/article/details/119865117">https://blog.csdn.net/weixin_45518728/article/details/119865117</a></p>
+<h2 id="文件系统扩容"><a href="#文件系统扩容" class="headerlink" title="文件系统扩容"></a>文件系统扩容</h2><p>从镜像刷写到SD卡后，rootfs的容量和镜像中的划分大小是一样的，也就是只有500多M的空间可用，因此需要将root分区扩容至SD卡剩余的所有空间。因此需要将磁盘逻辑分区扩大，然后将文件系统也调整至相应容量</p>
+<p>以下操作都需要离线进行，即将树莓派系统的SD卡插到电脑上进行。</p>
+<h3 id="磁盘分区扩容"><a href="#磁盘分区扩容" class="headerlink" title="磁盘分区扩容"></a>磁盘分区扩容</h3><p>用fdisk -l命令查看SD卡的物理空间和分区表。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fdisk -l</span><br></pre></td></tr></table></figure>
+<p>根据容量找到SD卡的盘符，可以看到我的是&#x2F;dev&#x2F;sdc，并且&#x2F;dev&#x2F;sdc3分区是root分区，但是只有502M的可用空间，显然没有占满整个SD卡<br><img src="/../img_folder/Raspberry/fdisk.png"></p>
+<p>下面需要用fdisk工具，将root对应的分区扩容至所有剩余空间，整个操作思路为，删除原有分区，然后再新建一个和原root分区起始块号相同，大小为SD卡中全部可用块的分区。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> fdisk /dev/sdc <span class="comment">#sdc换成你对应的设备号</span></span><br></pre></td></tr></table></figure>
+<p>进入菜单之后：</p>
+<ol>
+<li>按p，查看分区表，会看到一个和上面图片差不多的内容，比如我的是这样<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Device     Boot   Start     End Sectors  Size Id Type</span><br><span class="line">/dev/sdc1  *       8192  593919  585728  286M  c W95 FAT32 (LBA)</span><br><span class="line">/dev/sdc2        593920 1593343  999424  488M 82 Linux swap / Solaris</span><br><span class="line">/dev/sdc3       1593344 2621439 1028096  502M 83 Linux</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>记下Linux类型分区的Start块号，后面有用</p>
+<ol start="2">
+<li><p>按d，删除分区3</p>
+</li>
+<li><p>按n，新建分区，分区类型选择主分区p，分区号为3，起点为上面记录的起始块号，终点为默认（最后一块），最后移除签名选N</p>
+</li>
+<li><p>输入w保存分区</p>
+</li>
+</ol>
+<p>现在就完成了磁盘逻辑分区的调整，可以再次使用fdisk -l命令查看分区表</p>
+<h3 id="文件系统扩容-1"><a href="#文件系统扩容-1" class="headerlink" title="文件系统扩容"></a>文件系统扩容</h3><p>磁盘分区扩容完成后，需要修改文件系统数据结构，使其能识别全部的分区块</p>
+<p>先用e2fsck命令检查分区表</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> e2fsck /dev/sdc3</span><br></pre></td></tr></table></figure>
+<p>e2fsck工具常用选项如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">-a：不询问使用者意见，便自动修复文件系统；</span><br><span class="line">-b&lt;superblock&gt;：指定superblock，而不使用预设的superblock；</span><br><span class="line">-B&lt;区块大小&gt;：指定区块的大小，单位为字节；</span><br><span class="line">-c：一并执行badblocks，以标示损坏的区块；</span><br><span class="line">-C：将检查过程的信息完整记录在file descriptor中，使得整个检查过程都能完整监控；</span><br><span class="line">-d：显示排错信息；</span><br><span class="line">-f：即使文件系统没有错误迹象，仍强制地检查正确性；</span><br><span class="line">-F：执行前先清除设备的缓冲区；</span><br><span class="line">-l&lt;文件&gt;：将文件中指定的区块加到损坏区块列表；</span><br><span class="line">-L&lt;文件&gt;：先清除损坏区块列表，再将文件中指定的区块加到损坏区块列表。因此损坏区块列表的区块跟文件中指定的区块是一样的；</span><br><span class="line">-n：以只读模式开启文件系统，并采取非互动方式执行，所有的问题对话均设置以&quot;no&quot;回答；</span><br><span class="line">-p：不询问使用者意见，便自动修复文件系统；</span><br><span class="line">-r：此参数只为了兼容性而存在，并无实际作用；</span><br><span class="line">-s：如果文件系统的字节顺序不适当，就交换字节顺序，否则不做任何动作；</span><br><span class="line">-S：不管文件系统的字节顺序，一律交换字节顺序；</span><br><span class="line">-t：显示时间信息；</span><br><span class="line">-v：执行时显示详细的信息；</span><br><span class="line">-V：显示版本信息；</span><br><span class="line">-y：采取非互动方式执行，所有的问题均设置以&quot;yes&quot;回答。</span><br></pre></td></tr></table></figure>
+
+<p>用resize2fs工具修改ext4文件系统索引</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> resize2fs /dev/sdc3</span><br></pre></td></tr></table></figure>
+
+<p>至此便完成了扩容，可以将&#x2F;dev&#x2F;sdc3挂载后，使用df -h命令查看分区的大小验证操作是否成功。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/09/19/raspberrypi/rootfs/" data-id="cm18p37r1000bhwzyf1wp8j8y" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2024/09/19/raspberrypi/Raspberry-Euler/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2024/09/19/zipformer/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">September 2024</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/09/19/raspberrypi/Buildimg/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/09/19/raspberrypi/Raspberry-32bit/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/09/19/raspberrypi/Raspberry-Euler/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/09/19/raspberrypi/rootfs/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/09/19/zipformer/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 Anakin<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

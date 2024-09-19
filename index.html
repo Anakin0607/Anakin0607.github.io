@@ -69,46 +69,1223 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-hello-world" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+    <article id="post-raspberrypi/Buildimg" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
-    <a href="/2024/09/19/hello-world/" class="article-date">
-  <time class="dt-published" datetime="2024-09-19T02:39:18.585Z" itemprop="datePublished">2024-09-19</time>
+    <a href="/2024/09/19/raspberrypi/Buildimg/" class="article-date">
+  <time class="dt-published" datetime="2024-09-19T02:49:57.837Z" itemprop="datePublished">2024-09-19</time>
 </a>
     
   </div>
   <div class="article-inner">
     
     
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/09/19/hello-world/">Hello World</a>
-    </h1>
-  
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="从源码构建树莓派系统镜像"><a href="#从源码构建树莓派系统镜像" class="headerlink" title="从源码构建树莓派系统镜像"></a>从源码构建树莓派系统镜像</h1><p>一个完整的Linux系统由内核，文件系统和应用程序组成，本文使用OpenEuler内核和BusyBox工具箱为例，构建了一个Linux-5.10内核的，具有ext4根文件系统和常用命令应用程序的armv7l架构的32位简易操作系统<br>如果需要其他版本的内核，可以参考本文，然后自行替换即可。<br>构建环境为Ubuntu20.04-x86_64</p>
+<p>目标机为树莓派4B</p>
+<ul>
+<li><a href="#%E4%BB%8E%E6%BA%90%E7%A0%81%E6%9E%84%E5%BB%BA%E6%A0%91%E8%8E%93%E6%B4%BE%E7%B3%BB%E7%BB%9F%E9%95%9C%E5%83%8F">从源码构建树莓派系统镜像</a><ul>
+<li><a href="#%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91%E5%86%85%E6%A0%B8">交叉编译内核</a><ul>
+<li><a href="#%E5%AE%89%E8%A3%85%E4%BE%9D%E8%B5%96">安装依赖</a></li>
+<li><a href="#%E4%B8%8B%E8%BD%BD%E5%86%85%E6%A0%B8%E6%BA%90%E7%A0%81">下载内核源码</a></li>
+<li><a href="#%E8%AE%BE%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F">设置环境变量</a></li>
+<li><a href="#%E8%AE%BE%E7%BD%AE%E5%86%85%E6%A0%B8%E5%8F%82%E6%95%B0">设置内核参数</a><ul>
+<li><a href="#%E9%BB%98%E8%AE%A4%E8%AE%BE%E7%BD%AE">默认设置</a></li>
+<li><a href="#%E6%89%8B%E5%8A%A8%E8%AE%BE%E7%BD%AE">手动设置</a></li>
+</ul>
+</li>
+<li><a href="#%E7%BC%96%E8%AF%91%E5%86%85%E6%A0%B8%E6%A8%A1%E5%9D%97%E8%AE%BE%E5%A4%87%E6%A0%91%E6%96%87%E4%BB%B6">编译内核，模块，设备树文件</a></li>
+<li><a href="#%E6%94%B6%E9%9B%86%E7%BC%96%E8%AF%91%E7%BB%93%E6%9E%9C">收集编译结果</a><ul>
+<li><a href="#%E5%86%85%E6%A0%B8%E6%A8%A1%E5%9D%97">内核模块</a></li>
+<li><a href="#%E5%86%85%E6%A0%B8">内核</a></li>
+<li><a href="#%E8%AE%BE%E5%A4%87%E6%A0%91%E6%96%87%E4%BB%B6%E5%92%8Coverlay%E6%96%87%E4%BB%B6">设备树文件和overlay文件</a></li>
+<li><a href="#%E6%8A%8A%E7%BC%96%E8%AF%91%E7%BB%93%E6%9E%9C%E7%A7%BB%E5%8A%A8%E5%88%B0%E4%B8%8A%E4%B8%80%E7%BA%A7%E7%9B%AE%E5%BD%95%E4%B8%8B">把编译结果移动到上一级目录下</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E6%B5%8B%E8%AF%95%E6%96%B0%E7%BC%96%E8%AF%91%E7%9A%84%E5%86%85%E6%A0%B8">测试新编译的内核</a><ul>
+<li><a href="#%E5%B0%86%E5%86%85%E6%A0%B8%E6%A8%A1%E5%9D%97%E6%94%BE%E5%88%B0%E6%A0%B9%E5%88%86%E5%8C%BA%E9%87%8C">将内核模块放到根分区里</a></li>
+<li><a href="#%E5%B0%86%E5%86%85%E6%A0%B8%E6%94%BE%E5%88%B0boot%E5%90%AF%E5%8A%A8%E5%88%86%E5%8C%BA">将内核放到boot启动分区</a></li>
+<li><a href="#%E5%B0%86%E8%AE%BE%E5%A4%87%E6%A0%91%E6%96%87%E4%BB%B6%E6%94%BE%E5%88%B0boot%E5%90%AF%E5%8A%A8%E5%88%86%E5%8C%BA">将设备树文件放到boot启动分区</a></li>
+<li><a href="#%E8%AE%BE%E7%BD%AEconfigtxt">设置config.txt</a></li>
+<li><a href="#%E5%8D%B8%E8%BD%BD%E5%88%86%E5%8C%BA">卸载分区</a></li>
+<li><a href="#%E5%90%AF%E5%8A%A8%E6%A0%91%E8%8E%93%E6%B4%BE">启动树莓派</a></li>
+</ul>
+</li>
+<li><a href="#%E6%9E%84%E5%BB%BArootfs">构建rootfs</a><ul>
+<li><a href="#%E4%B8%8B%E8%BD%BDbusybox%E5%B7%A5%E5%85%B7">下载busybox工具</a></li>
+<li><a href="#%E8%AE%BE%E7%BD%AE%E6%94%AF%E6%8C%81%E4%B8%AD%E6%96%87">设置支持中文</a></li>
+<li><a href="#%E9%85%8D%E7%BD%AE%E7%BC%96%E8%AF%91%E9%80%89%E9%A1%B9">配置编译选项</a></li>
+<li><a href="#%E7%BC%96%E8%AF%91busybox%E4%B8%AD%E7%9A%84%E5%B7%A5%E5%85%B7">编译busybox中的工具</a></li>
+</ul>
+</li>
+<li><a href="#%E5%AE%8C%E5%96%84rootfs">完善rootfs</a><ul>
+<li><a href="#%E6%B7%BB%E5%8A%A0%E5%8A%A8%E6%80%81%E9%93%BE%E6%8E%A5%E5%BA%93">添加动态链接库</a></li>
+<li><a href="#%E5%88%9B%E5%BB%BA%E5%85%B6%E4%BB%96%E7%9A%84%E6%89%80%E9%9C%80%E6%96%87%E4%BB%B6%E5%A4%B9">创建其他的所需文件夹</a></li>
+</ul>
+</li>
+<li><a href="#%E6%9E%84%E5%BB%BA%E5%BC%95%E5%AF%BC">构建引导</a><ul>
+<li><a href="#%E4%B8%8B%E8%BD%BD%E5%BC%95%E5%AF%BC">下载引导</a></li>
+<li><a href="#%E6%9B%BF%E6%8D%A2%E6%96%87%E4%BB%B6">替换文件</a></li>
+<li><a href="#%E5%B0%86boot%E7%A7%BB%E5%8A%A8%E5%87%BA%E6%9D%A5">将boot移动出来</a></li>
+<li><a href="#%E6%B7%BB%E5%8A%A0%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">添加配置文件</a></li>
+</ul>
+</li>
+<li><a href="#%E6%9E%84%E5%BB%BA%E9%95%9C%E5%83%8F">构建镜像</a><ul>
+<li><a href="#%E8%AE%A1%E7%AE%97%E9%95%9C%E5%83%8F%E5%A4%A7%E5%B0%8F">计算镜像大小</a></li>
+<li><a href="#%E5%88%9B%E5%BB%BA%E7%A9%BA%E9%95%9C%E5%83%8F">创建空镜像</a></li>
+<li><a href="#%E9%95%9C%E5%83%8F%E5%88%86%E5%8C%BA">镜像分区</a></li>
+<li><a href="#%E5%B0%86%E7%A3%81%E7%9B%98%E9%95%9C%E5%83%8F%E6%96%87%E4%BB%B6%E8%99%9A%E6%8B%9F%E6%88%90%E5%9D%97%E8%AE%BE%E5%A4%87">将磁盘镜像文件虚拟成块设备</a></li>
+<li><a href="#%E5%88%9B%E5%BB%BA%E5%88%86%E5%8C%BA%E8%A1%A8%E8%AE%BE%E5%A4%87%E6%98%A0%E5%B0%84">创建分区表设备映射</a></li>
+<li><a href="#%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%88%86%E5%8C%BA">格式化分区</a></li>
+<li><a href="#%E6%8C%82%E8%BD%BD%E6%A0%B9%E7%9B%AE%E5%BD%95%E5%88%86%E5%8C%BA%E5%92%8Cboot%E5%88%86%E5%8C%BA">挂载根目录分区和boot分区</a></li>
+<li><a href="#%E4%BF%AE%E6%94%B9fstab%E4%BD%BF%E7%B3%BB%E7%BB%9F%E8%83%BD%E6%AD%A3%E7%A1%AE%E6%8C%82%E8%BD%BD%E5%88%86%E5%8C%BA">修改fstab使系统能正确挂载分区</a><ul>
+<li><a href="#%E8%8E%B7%E5%8F%96blkid">获取blkid</a></li>
+<li><a href="#%E4%BF%AE%E6%94%B9fstab">修改fstab</a></li>
+</ul>
+</li>
+<li><a href="#%E5%B0%86rootfs%E5%92%8Cboot%E5%A4%8D%E5%88%B6%E5%88%B0%E9%95%9C%E5%83%8F">将rootfs和boot复制到镜像</a></li>
+<li><a href="#%E5%8D%B8%E8%BD%BD%E9%95%9C%E5%83%8F">卸载镜像</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="交叉编译内核"><a href="#交叉编译内核" class="headerlink" title="交叉编译内核"></a>交叉编译内核</h2><p>内核是操作系统的核心，负责和硬件直接交互，管理计算机运行所用的资源。</p>
+<h3 id="安装依赖"><a href="#安装依赖" class="headerlink" title="安装依赖"></a>安装依赖</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install bc bison flex libssl-dev make libc6-dev libncurses5-dev</span><br></pre></td></tr></table></figure>
+<p>如果需要构建32位系统：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install crossbuild-essential-armhf</span><br></pre></td></tr></table></figure>
+<p>64位：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install crossbuild-essential-arm64</span><br></pre></td></tr></table></figure>
+<h3 id="下载内核源码"><a href="#下载内核源码" class="headerlink" title="下载内核源码"></a>下载内核源码</h3><p>先新建一个工作目录euler</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir euler</span><br><span class="line">cd euler</span><br></pre></td></tr></table></figure>
+<p>此处选择openEuler 22.03 LTS SP1的树莓派kernel（就是个raspbian换壳）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https://gitee.com/openeuler/raspberrypi-kernel.git -b openEuler-22.03-LTS-SP1 &amp;&amp; cd raspberrypi-kernel</span><br></pre></td></tr></table></figure>
+<p>或选择原版的euler kernel<br>如果选择这个，在设置配置文件的时候记得手动设置一下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https://gitee.com/openeuler/kernel.git -b OLK-6.6 &amp;&amp; cd kernel</span><br></pre></td></tr></table></figure>
+<p>如果需要其他版本，请参考<a target="_blank" rel="noopener" href="https://gitee.com/openeuler/raspberrypi/blob/master/documents/openEuler%E9%95%9C%E5%83%8F%E7%9A%84%E6%9E%84%E5%BB%BA.md#%E4%B8%8B%E8%BD%BD%E6%BA%90%E7%A0%81">官网</a>自行选择</p>
+<h3 id="设置环境变量"><a href="#设置环境变量" class="headerlink" title="设置环境变量"></a>设置环境变量</h3><p>这一步主要是根据需要设置架构和交叉编译工具链到环境变量中</p>
+<p>32位版本：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export ARCH=arm</span><br><span class="line">export CROSS_COMPILE=arm-linux-gnueabihf-</span><br></pre></td></tr></table></figure>
+<p>64位版本：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export ARCH=aarch64</span><br><span class="line">export CROSS_COMPILE=aarch64-linux-gnu-</span><br></pre></td></tr></table></figure>
+<p>其中ARCH代表处理器架构，CROSS_COMPILE代表使用的交叉编译工具</p>
+<h3 id="设置内核参数"><a href="#设置内核参数" class="headerlink" title="设置内核参数"></a>设置内核参数</h3><h4 id="默认设置"><a href="#默认设置" class="headerlink" title="默认设置"></a>默认设置</h4><p>此处硬件为树莓派4B，故选择bcm2711</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make bcm2711_defconfig</span><br></pre></td></tr></table></figure>
+<p>如果需要其他版本的硬件，则参考<a target="_blank" rel="noopener" href="https://www.raspberrypi.com/documentation/computers/linux_kernel.html#cross-compile-the-kernel">官网</a></p>
+<h4 id="手动设置"><a href="#手动设置" class="headerlink" title="手动设置"></a>手动设置</h4><p>如果需要手动设置内核参数，在运行完上面的命令后运行（如果你不知道是否需要手动设置，那跳过即可），如果你选择从原版euler代码构建，则需要进行这一步</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make menuconfig</span><br></pre></td></tr></table></figure>
+<p>打开之后在菜单中选择System Type—&gt;Broadcom SoC Support，然后在这个菜单里面把BCM2835 family设置成exclude，这个是树莓派3系和zero的一些支持，此处不需要，如果不取消掉的话后面会编译错误。</p>
+<p>配置设置保存完之后会在源码根目录下生成一个.config文件<br>如果想使用现成的配置文件，把相应文件复制到源码根目录下然后改名为.config即可</p>
+<h3 id="编译内核，模块，设备树文件"><a href="#编译内核，模块，设备树文件" class="headerlink" title="编译内核，模块，设备树文件"></a>编译内核，模块，设备树文件</h3><p>32位：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make zImage modules dtbs -j10</span><br></pre></td></tr></table></figure>
+<p>64位：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make Image modules dtbs -j10</span><br></pre></td></tr></table></figure>
+<p>Image代表构建内核镜像，modules代表编译内核模块，dtbs代表构建设备树文件。<br>如果这三个都需要编译的话，也可以直接选择默认方式编译</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make -j10</span><br></pre></td></tr></table></figure>
+<p>j后面的参数为线程数，一般设置为cpu核心的1.5倍，cpu的核心数量可以用lscpu命令查看</p>
+<h3 id="收集编译结果"><a href="#收集编译结果" class="headerlink" title="收集编译结果"></a>收集编译结果</h3><p>如果编译成功，在根目录下会出现vmlinux文件，如果编译不成功则没有</p>
+<h4 id="内核模块"><a href="#内核模块" class="headerlink" title="内核模块"></a>内核模块</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir output</span><br><span class="line">make INSTALL_MOD_PATH=output/ modules_install</span><br></pre></td></tr></table></figure>
+<p>在 output&#x2F; 文件夹下会生成 lib 文件夹。</p>
+<h4 id="内核"><a href="#内核" class="headerlink" title="内核"></a>内核</h4><p>32位：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp arch/arm/boot/zImage output/</span><br></pre></td></tr></table></figure>
+<p>64位:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp arch/arm/boot/Image output/</span><br></pre></td></tr></table></figure>
+<h4 id="设备树文件和overlay文件"><a href="#设备树文件和overlay文件" class="headerlink" title="设备树文件和overlay文件"></a>设备树文件和overlay文件</h4><p>32位:</p>
+<ol>
+<li>6.4及以前版本的内核<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cp arch/arm/boot/dts/bcm271*.dtb output/</span><br><span class="line">mkdir output/overlays</span><br><span class="line">cp arch/arm/boot/dts/overlays/*.dtb* output/overlays</span><br></pre></td></tr></table></figure></li>
+<li>6.5及以上版本的内核<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cp arch/arm/boot/dts/broadcom/bcm271*.dtb output/</span><br><span class="line">mkdir output/overlays</span><br><span class="line">cp arch/arm/boot/dts/overlays/*.dtb* output/overlays</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>64位：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cp arch/arm64/boot/dts/broadcom/*.dtb output/</span><br><span class="line">mkdir $&#123;WORKDIR&#125;/output/overlays</span><br><span class="line">cp arch/arm64/boot/dts/overlays/*.dtb* output/overlays/</span><br></pre></td></tr></table></figure>
+<h4 id="把编译结果移动到上一级目录下"><a href="#把编译结果移动到上一级目录下" class="headerlink" title="把编译结果移动到上一级目录下"></a>把编译结果移动到上一级目录下</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd ..</span><br><span class="line">mkdir output</span><br><span class="line">mv raspberrypi-kernel/output/* output/</span><br><span class="line">sudo rm -r raspberrypi-kernel/output</span><br></pre></td></tr></table></figure>
 
-      </header>
+<h2 id="测试新编译的内核"><a href="#测试新编译的内核" class="headerlink" title="测试新编译的内核"></a>测试新编译的内核</h2><p>使用一个之前刷好对应位数raspbian镜像或者其他系统的SD卡（只替换内核，啥系统都行，而且openeuler没有32位官方镜像，如果你编译的32位内核，装个32位的raspbian就行），直接插到Linux主机上，SD会默认挂载其 boot分区和根目录分区。</p>
+<p>运行lsblk命令，查看挂载情况，如果sdc代表你的启动媒体（也可能是sdb），如果不知道的话，把sd卡拔了运行一下lsblk，插上等一会儿再运行一遍lsblk，多出来的那个就是。<br>如果是respbian，应该是这样的结构</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sdc      </span><br><span class="line">├─sdc1  </span><br><span class="line">└─sdc2   </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>也有的可能是这样的结构（Euler或者centos）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sdc      </span><br><span class="line">├─sdc1  </span><br><span class="line">├─sdc2   </span><br><span class="line">└─sdc3   </span><br></pre></td></tr></table></figure>
+<p>无论是啥样的，根据说明，后面带boot的就是格式化的启动分区，一般是sdc1，另外一个带说明的就是ext4根分区，我的是sdc3，没有说明的那个不用管。</p>
+<blockquote>
+<p>一般在debian系的发行版里面，有两个分区，sdc1是boot引导分区，sdc2是根文件系统root</p>
+</blockquote>
+<blockquote>
+<p>在redhat系里面，有三个分区，一般sdc1是boot引导分区，sdc2是swap交换分区，sdc3是根文件系统root</p>
+</blockquote>
+<p>将这些分区挂载位mnt&#x2F;boot和&#x2F;mnt&#x2F;root，并调整字母和数字以匹配启动分区的位置</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mkdir mnt</span><br><span class="line">mkdir mnt/boot</span><br><span class="line">mkdir mnt/root</span><br><span class="line">sudo mount /dev/sdc1 mnt/boot</span><br><span class="line">sudo mount /dev/sdc2 mnt/root</span><br></pre></td></tr></table></figure>
+
+<h3 id="将内核模块放到根分区里"><a href="#将内核模块放到根分区里" class="headerlink" title="将内核模块放到根分区里"></a>将内核模块放到根分区里</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp -r output/lib/modules mnt/root/lib/</span><br></pre></td></tr></table></figure>
+<h3 id="将内核放到boot启动分区"><a href="#将内核放到boot启动分区" class="headerlink" title="将内核放到boot启动分区"></a>将内核放到boot启动分区</h3><p>32位：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp output/zImage mnt/boot/kernel7l.img</span><br></pre></td></tr></table></figure>
+<p>64位：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp output/Image mnt/boot/kernel8.img</span><br></pre></td></tr></table></figure>
+
+<h3 id="将设备树文件放到boot启动分区"><a href="#将设备树文件放到boot启动分区" class="headerlink" title="将设备树文件放到boot启动分区"></a>将设备树文件放到boot启动分区</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cp output/*.dtb mnt/boot/</span><br><span class="line">cp output/overlays/* mnt/boot/overlays</span><br></pre></td></tr></table></figure>
+
+<h3 id="设置config-txt"><a href="#设置config-txt" class="headerlink" title="设置config.txt"></a>设置config.txt</h3><p>如果是32位系统，则需要通过设置config.txt来保证cpu以32位指令集启动，如果是64位则可以跳过这一步。<br>打开树莓派的启动设置文件config.txt</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim mnt/boot/config.txt</span><br></pre></td></tr></table></figure>
+<p>在文件末尾加入</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">arm_64bit=0</span><br><span class="line">kernel=kernel7l.img</span><br></pre></td></tr></table></figure>
+
+<h3 id="卸载分区"><a href="#卸载分区" class="headerlink" title="卸载分区"></a>卸载分区</h3><p>输入以下命令，将分区卸载，然后将SD卡插入树莓派运行系统</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo umount mnt/boot</span><br><span class="line">sudo umount mnt/root</span><br></pre></td></tr></table></figure>
+
+<h3 id="启动树莓派"><a href="#启动树莓派" class="headerlink" title="启动树莓派"></a>启动树莓派</h3><p>将SD卡拔下，插入树莓派然后启动，如果能正常启动，说明内核和引导部分编译成功。<br>如果No working init found，也说明内核成功启动，但未成功启动任何进程，所以停止。init进程是内核启动后第一个启动的进程，其他所有的进程都是init进程的子进程。init进程一般位于rootfs目录中，下面的章节将开始构建rootfs</p>
+<h2 id="构建rootfs"><a href="#构建rootfs" class="headerlink" title="构建rootfs"></a>构建rootfs</h2><p>rootfs为操作系统的根文件系统，根文件系统是一个抽象的概念，其更像一个目录，也可以称作根目录，根目录和其子目录中里面存放着Linux系统运行所必需的配置文件和程序，根文件系统和Linux内核是分开的，单独的Linux内核是无法工作的，必须要搭配根文件系统。这一部分主要利用busybox工具，完成了根目录的创建和其中文件的配置。</p>
+<h3 id="下载busybox工具"><a href="#下载busybox工具" class="headerlink" title="下载busybox工具"></a>下载busybox工具</h3><p>首先下载busybox源码包并解压<br>去<a target="_blank" rel="noopener" href="https://www.busybox.net/">官网</a>选择最新的版本下载<br>尽量选择1.30以后的版本，1.30修复了交叉编译的bug，并且更新了config设置界面<br>此处工作目录依然为euler</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget https://busybox.net/downloads/busybox-1.36.1.tar.bz2</span><br><span class="line">tar xvf busybox-1.36.1.tar.bz2</span><br></pre></td></tr></table></figure>
+<h3 id="设置支持中文"><a href="#设置支持中文" class="headerlink" title="设置支持中文"></a>设置支持中文</h3><p>如果使用busybox默认配置直接编译的话，使用ssh远程登录时，中文字符显示是不正常的，因为busybox中的shell命令对中文显示做了一些限制，所以在此处需要对busybox源码做出修改，取消busybox对中文现实的限制。（如果你不需要中文的话可以跳过这一步）<br>打开文件busybox-1.36.1&#x2F;libbb&#x2F;printable_string.c，找到函数 printable_string2<br>函数长下面这样，观察第20行和第21行，和34，35行处，所有大于0x7f的内容全都被替换成了?，因此需要改掉。（下面注释掉的是源码，添加或修改的是支持unicode的样子）</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">char</span>* FAST_FUNC <span class="title function_">printable_string2</span><span class="params">(<span class="type">uni_stat_t</span> *stats, <span class="type">const</span> <span class="type">char</span> *str)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">char</span> *dst;</span><br><span class="line">	<span class="type">const</span> <span class="type">char</span> *s;</span><br><span class="line"></span><br><span class="line">	s = str;</span><br><span class="line">	<span class="keyword">while</span> (<span class="number">1</span>) &#123;</span><br><span class="line">		<span class="type">unsigned</span> <span class="type">char</span> c = *s;</span><br><span class="line">		<span class="keyword">if</span> (c == <span class="string">&#x27;\0&#x27;</span>) &#123;</span><br><span class="line">			<span class="comment">/* 99+% of inputs do not need conversion */</span></span><br><span class="line">			<span class="keyword">if</span> (stats) &#123;</span><br><span class="line">				stats-&gt;byte_count = (s - str);</span><br><span class="line">				stats-&gt;unicode_count = (s - str);</span><br><span class="line">				stats-&gt;unicode_width = (s - str);</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">return</span> str;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> (c &lt; <span class="string">&#x27; &#x27;</span>)</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		<span class="comment">/*-----修改这里-----*/</span></span><br><span class="line">		<span class="comment">//if (c &gt;= 0x7f)</span></span><br><span class="line">		<span class="comment">//	break;</span></span><br><span class="line">		s++;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="meta">#<span class="keyword">if</span> ENABLE_UNICODE_SUPPORT</span></span><br><span class="line">	dst = unicode_conv_to_printable(stats, str);</span><br><span class="line"><span class="meta">#<span class="keyword">else</span></span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="type">char</span> *d = dst = xstrdup(str);</span><br><span class="line">		<span class="keyword">while</span> (<span class="number">1</span>) &#123;</span><br><span class="line">			<span class="type">unsigned</span> <span class="type">char</span> c = *d;</span><br><span class="line">			<span class="keyword">if</span> (c == <span class="string">&#x27;\0&#x27;</span>)</span><br><span class="line">				<span class="keyword">break</span>;</span><br><span class="line">			<span class="comment">/*-----修改这里-----*/</span></span><br><span class="line">			<span class="comment">//if (c &lt; &#x27; &#x27; || c &gt;= 0x7f)</span></span><br><span class="line">			<span class="comment">//	*d = &#x27;?&#x27;;</span></span><br><span class="line">			<span class="keyword">if</span>(c &lt; <span class="string">&#x27; &#x27;</span>)</span><br><span class="line">				*d = <span class="string">&#x27;?&#x27;</span>;</span><br><span class="line">			d++;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> (stats) &#123;</span><br><span class="line">			stats-&gt;byte_count = (d - dst);</span><br><span class="line">			stats-&gt;unicode_count = (d - dst);</span><br><span class="line">			stats-&gt;unicode_width = (d - dst);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">	<span class="keyword">return</span> auto_string(dst);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以及&#x2F;libbb&#x2F;unicode.c文件中，找到static char* FAST_FUNC</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (unicode_status != UNICODE_ON) &#123;</span><br><span class="line">		<span class="type">char</span> *d;</span><br><span class="line">		<span class="keyword">if</span> (flags &amp; UNI_FLAG_PAD) &#123;</span><br><span class="line">			d = dst = xmalloc(width + <span class="number">1</span>);</span><br><span class="line">			<span class="keyword">while</span> ((<span class="type">int</span>)--width &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">				<span class="type">unsigned</span> <span class="type">char</span> c = *src;</span><br><span class="line">				<span class="keyword">if</span> (c == <span class="string">&#x27;\0&#x27;</span>) &#123;</span><br><span class="line">					<span class="keyword">do</span></span><br><span class="line">						*d++ = <span class="string">&#x27; &#x27;</span>;</span><br><span class="line">					<span class="keyword">while</span> ((<span class="type">int</span>)--width &gt;= <span class="number">0</span>);</span><br><span class="line">					<span class="keyword">break</span>;</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="comment">/*-----修改这里-----*/</span></span><br><span class="line">				*d++ = (c &gt;= <span class="string">&#x27; &#x27;</span>) ? c : <span class="string">&#x27;?&#x27;</span>;</span><br><span class="line">				src++;</span><br><span class="line">			&#125;</span><br><span class="line">			*d = <span class="string">&#x27;\0&#x27;</span>;</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			d = dst = xstrndup(src, width);</span><br><span class="line">			<span class="keyword">while</span> (*d) &#123;</span><br><span class="line">				<span class="type">unsigned</span> <span class="type">char</span> c = *d;</span><br><span class="line">				<span class="comment">/*-----修改这里-----*/</span></span><br><span class="line">				<span class="keyword">if</span> (c &lt; <span class="string">&#x27; &#x27;</span>)</span><br><span class="line">					*d = <span class="string">&#x27;?&#x27;</span>;</span><br><span class="line">				d++;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> (stats) &#123;</span><br><span class="line">			stats-&gt;byte_count = (d - dst);</span><br><span class="line">			stats-&gt;unicode_count = (d - dst);</span><br><span class="line">			stats-&gt;unicode_width = (d - dst);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> dst;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<p>将其中的&gt;&#x3D;0x7f都删掉即可</p>
+<h3 id="配置编译选项"><a href="#配置编译选项" class="headerlink" title="配置编译选项"></a>配置编译选项</h3><p>先进入busybox目录</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd busybox-1.36.1</span><br><span class="line">make defconfig</span><br><span class="line">make menuconfig</span><br></pre></td></tr></table></figure>
+<p>出现一个图形界面，可以进行设置</p>
+<ol>
+<li><p>注意很多教程中将</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Location:</span><br><span class="line">    -&gt; Settings</span><br><span class="line">        -&gt; Build static binary (no shared libs)</span><br></pre></td></tr></table></figure>
+<p>这一处设置为yes，即编译为静态库，在那些配置中大多为嵌入式设备构建rootfs，即系统本身不包含动态库，这样的编译方式会使系统功能受限，此处我们打算构建一个较完整功能的镜像，因此选择为no，即</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[ ] Build static binary (no shared libs)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置模块</p>
+</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Location:</span><br><span class="line">    -&gt; Linux Module Utilities</span><br><span class="line">        -&gt; Simplified modutils</span><br></pre></td></tr></table></figure>
+<p>将Simplified modutils取消勾选<br><img src="/../img_folder/Raspberry/busybox_config1.png"></p>
+<ol start="3">
+<li><p>设备支持<br>这一步设置确保系统能正确创建dev目录下的设备节点，mdev是busybox自带的一个简化版的udev，适合于嵌入式的应用场合。其具有使用简单的特点。它的作用，就是在系统启动和热插拔或动态加载驱动程序时，自动产生驱动程序所需的节点文件。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Location:</span><br><span class="line">    -&gt; Linux System Utilities</span><br><span class="line">        -&gt; mdev (17 kb) //确保下面的全部选中，默认都是选中的</span><br></pre></td></tr></table></figure>
+<p><img src="/../img_folder/Raspberry/busybox_config2.png"></p>
+</li>
+<li><p>支持Unicode</p>
+</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Location:</span><br><span class="line">    -&gt; Settings</span><br><span class="line">        -&gt; Support Unicode //选中</span><br><span class="line">            -&gt; Check $LC_ALL, $LC_CTYPE and $LANG environment variables //选中</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><img src="/../img_folder/Raspberry/busybox_unicode.png"></p>
+<p>以及挨着他的两个</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(65536)Character code to substitete unprintable characters with //将不可打印的字符替换成占位符</span><br><span class="line">(300000)Range of supported Unicode characters //支持到的Unicode字符范围</span><br></pre></td></tr></table></figure>
+<p>查阅资料知，汉字主要出现在Unicode字符的19968-40869中，而这里最大支持到767，肯定是不行的，因此需要修改成一个比较大的数，我修改成了195102，Unicode字符对应的字符可以参考<a target="_blank" rel="noopener" href="https://jrgraphix.net/research/unicode_blocks.php">这里</a></p>
+<p>最后还有编辑器选项，</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Location:</span><br><span class="line">    -&gt; Editors</span><br><span class="line">        -&gt; Allow to display 8-bit chars (otherwise shows dots)  //选中</span><br></pre></td></tr></table></figure>
+<p><img src="/../img_folder/Raspberry/busybox_unicode2.png"></p>
+<p>至此busybox的配置都完成了，下面开始编译busybox</p>
+<h3 id="编译busybox中的工具"><a href="#编译busybox中的工具" class="headerlink" title="编译busybox中的工具"></a>编译busybox中的工具</h3><p>先设置交叉编译工具和架构，此处的设置要与内核相同<br>32位：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export ARCH=arm</span><br><span class="line">export CROSS_COMPILE=arm-linux-gnueabihf-</span><br></pre></td></tr></table></figure>
+<p>64位：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export ARCH=aarch64</span><br><span class="line">export CROSS_COMPILE=aarch64-linux-gnu-</span><br></pre></td></tr></table></figure>
+<p>设置好之后开始编译并安装</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">make -j10</span><br><span class="line">mkdir rootfs</span><br><span class="line">make install CONFIG_PREFIX=rootfs</span><br></pre></td></tr></table></figure>
+
+<p>将内容复制到工作目录下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd ..</span><br><span class="line">mv busybox-1.36.1/rootfs/* rootfs/</span><br></pre></td></tr></table></figure>
+<p>完成后可以看到rootfs&#x2F;目录下有bin sbin  usr三个目录和一个文件linuxrc，Linux 内核 init 进程最后会查找用户空间的 init 程序，找到以后就会运行这个用户空间的 init 程序，从而切换到用户态。如果 bootargs 设置 init&#x3D;&#x2F;linuxrc，那么 linuxrc 就是可以作为用户空间的 init 程序，所以用户态空间的 init 程序是 busybox 来生成的。<br>至此busybox的工作已经完成，但根文件系统还需要完善后才能使用，还需要添加一些其他文件</p>
+<h2 id="完善rootfs"><a href="#完善rootfs" class="headerlink" title="完善rootfs"></a>完善rootfs</h2><h3 id="添加动态链接库"><a href="#添加动态链接库" class="headerlink" title="添加动态链接库"></a>添加动态链接库</h3><p>linux的可执行文件大都需要动态链接库，这些库通常都可以从交叉编译器中获取，找到交叉编译器的目录，我的是在&#x2F;usr目录下，交叉编译器为arm-linux-gnueabihf，库文件的存放位置为&#x2F;usr&#x2F;arm-linux-gnueabihf&#x2F;lib，将所有文件复制到rootfs中<br>当前工作目录为最开始提到的工作目录euler&#x2F;，下面应该有</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">busybox-1.36.1  mnt  output  raspberrypi-kernel  rootfs</span><br></pre></td></tr></table></figure>
+<p>这样几个目录<br>下面开始复制库文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mkdir rootfs/lib</span><br><span class="line">cp /usr/arm-linux-gnueabihf/lib/*so* rootfs/lib</span><br><span class="line">cp /usr/arm-linux-gnueabihf/lib/*.a rootfs/lib</span><br><span class="line">mkdir rootfs/usr/lib</span><br><span class="line">cp /usr/arm-linux-gnueabihf/lib/*so* rootfs/usr/lib</span><br><span class="line">cp /usr/arm-linux-gnueabihf/lib/*.a rootfs/usr/lib</span><br></pre></td></tr></table></figure>
+
+<h3 id="创建其他的所需文件夹"><a href="#创建其他的所需文件夹" class="headerlink" title="创建其他的所需文件夹"></a>创建其他的所需文件夹</h3><p>创建根文件系统中所需的其他文件夹，如</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir boot dev etc mnt home proc root sys tmp   </span><br></pre></td></tr></table></figure>
+<p>最终完成后rootfs目录下应该有这么几个目录</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin  dev  etc  lib linuxrc mnt home proc  root  sbin  sys  tmp  usr</span><br></pre></td></tr></table></figure>
+
+<p>至此根文件系统已经构建的差不多了，但还需要引导，才能完成内核和根文件系统的启动<br>这里只做一个初步的教程，只构建一个只具备基本应用程序和配置文件的rootfs，如果想继续添加如联网，远程连接，用户登录等功能和配置可以参考<a href="rootfs.md">这里</a></p>
+<h2 id="构建引导"><a href="#构建引导" class="headerlink" title="构建引导"></a>构建引导</h2><p>树莓派的启动流程为：引导程序-&gt;内核-&gt;rootfs中init进程，init进程为系统中所有进程的父进程，负责再运行其他程序。其中引导程序和硬件绑定，内核会自动选择rootfs中的程序，因此我们只需要让引导程序装入我们自己构建的内核，并正确执行，即可使树莓派正确运行。因此这一步选择用树莓派官方提供的引导程序，来构建整个引导目录boot&#x2F;</p>
+<h3 id="下载引导"><a href="#下载引导" class="headerlink" title="下载引导"></a>下载引导</h3><p>返回工作目录euler</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone --depth=1 https://github.com/raspberrypi/firmware</span><br></pre></td></tr></table></figure>
+<p>这里下载的内容包含树莓派官方提供的GPU固件和引导加载程序，和基于raspbian系统构建的内核以及设备树文件，因此我们只需将kernel替换成自己构建的内核，将dtbs,overlays替换成上面基于euler内核构建的文件即可</p>
+<h3 id="替换文件"><a href="#替换文件" class="headerlink" title="替换文件"></a>替换文件</h3><p>先删除需要替换的文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd firmware/boot</span><br><span class="line">rm *.dtb kernel*.img</span><br></pre></td></tr></table></figure>
+<p>将内核放进引导<br>32位</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd ../..</span><br><span class="line">cp output/zImage firmware/boot/kernel7l.img</span><br></pre></td></tr></table></figure>
+<p>64位</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd ../..</span><br><span class="line">cp output/Image firmware/boot/kernel8.img</span><br></pre></td></tr></table></figure>
+
+<p>将设备树文件和overlays放进引导</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cp output/*.dtb firmware/boot/</span><br><span class="line">cp output/overlays/* firmware/boot/overlays</span><br></pre></td></tr></table></figure>
+
+<h3 id="将boot移动出来"><a href="#将boot移动出来" class="headerlink" title="将boot移动出来"></a>将boot移动出来</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir boot</span><br><span class="line">mv firmware/boot/* boot/</span><br></pre></td></tr></table></figure>
+
+<h3 id="添加配置文件"><a href="#添加配置文件" class="headerlink" title="添加配置文件"></a>添加配置文件</h3><p>添加cmdline.txt</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">touch cmdline.txt</span><br></pre></td></tr></table></figure>
+<p>复制进去下面的内容</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">console=serial0,115200 console=tty1 root=/dev/mmcblk0p3 rootfstype=ext4 rw elevator=deadline rootwait</span><br></pre></td></tr></table></figure>
+<p>其含义分别为控制台串口和波特率；根文件系统位置；根文件系统类型；可读写（如果不加rw，整个系统为readonly）；I&#x2F;O调度算法为deadline，即对每个I&#x2F;O操作施加一个截止日期，以防止请求耗尽；等待根文件系统准备好后再启动终端</p>
+<p>如果是32位镜像，则需要再添加config.txt</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">touch config.txt</span><br></pre></td></tr></table></figure>
+<p>加入下面的内容，以保证启动32位镜像</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[all]</span><br><span class="line">arm_64bit=0</span><br><span class="line">kernel=kernel7l.img</span><br></pre></td></tr></table></figure>
+
+<h2 id="构建镜像"><a href="#构建镜像" class="headerlink" title="构建镜像"></a>构建镜像</h2><h3 id="计算镜像大小"><a href="#计算镜像大小" class="headerlink" title="计算镜像大小"></a>计算镜像大小</h3><p>回到工作目录euler</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">du -sh --block-size=1MiB rootfs/</span><br><span class="line">du -sh --block-size=1MiB boot/</span><br></pre></td></tr></table></figure>
+<p>得到总大小后略加1100MiB即可，将其记为SIZE</p>
+<h3 id="创建空镜像"><a href="#创建空镜像" class="headerlink" title="创建空镜像"></a>创建空镜像</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dd if=/dev/zero of=openEuler_raspi.img bs=1M count=1280 #将1280替换为SIZE</span><br></pre></td></tr></table></figure>
+<p>我这里SIZE是1280，这里替换成你自己计算的SIZE即可，之后得到空的镜像文件openEuler_raspi.img</p>
+<h3 id="镜像分区"><a href="#镜像分区" class="headerlink" title="镜像分区"></a>镜像分区</h3><p>执行 fdisk openEuler_raspi.img 后，根据提示依次输入：</p>
+<ol>
+<li>输入 p，查看分区信息，可以看到当前无分区。</li>
+<li>输入 n，创建分区。</li>
+<li>输入 p 或直接按 Enter，创建 Primary 类型的分区。</li>
+<li>输入 1 或直接按 Enter，创建序号为 1 的分区。</li>
+<li>输入 8192，输入第一个分区的起始扇区号。</li>
+<li>输入 593919，输入第一个分区的末尾扇区号。</li>
+<li>输入 t，设置分区类型。因为当前只有一个分区，会默认设置第一个分区的分区类型。</li>
+<li>输入 c，设置第一个分区类型为 W95 FAT32 (LBA)。</li>
+<li>输入 a，设置引导分区。因为当前只有一个分区，会默认设置第一个分区为引导分区。至此第一个分区分区完成。</li>
+<li>输入 p，查看当前分区情况，可以看到当前有一个分区。</li>
+<li>输入 n，创建分区。</li>
+<li>输入 p 或直接按 Enter，创建 Primary 类型的分区。</li>
+<li>输入 2 或直接按 Enter，创建序号为 2 的分区。</li>
+<li>输入 593920，输入第二个分区的起始扇区号。</li>
+<li>输入 1593343，输入第二个分区的末尾扇区号。</li>
+<li>输入 t，设置分区类型。</li>
+<li>输入 2 或直接按 Enter，选择要设置的分区序号。</li>
+<li>输入 82，设置第二个分区类型为 Linux swap &#x2F; Solaris，至此第二个分区分区完成。</li>
+<li>输入 p，查看当前分区情况，可以看到当前有两个分区。</li>
+<li>输入 n，创建分区。</li>
+<li>输入 p 或直接按 Enter，创建 Primary 类型的分区。</li>
+<li>输入 3 或直接按 Enter，创建序号为 3 的分区。</li>
+<li>输入 1593344，输入第三个分区的起始扇区号。</li>
+<li>按 Enter，输入第三个分区的末尾扇区号，使用最后一个扇区号作为第三个分区的末尾扇区号。</li>
+<li>输入 t，设置分区类型。</li>
+<li>输入 3 或直接按 Enter，选择要设置的分区序号。</li>
+<li>输入 83，设置第三个分区类型为 Linux。至此第三个分区分区完成。</li>
+<li>输入 p，查看当前分区情况，可以看到当前有三个分区。</li>
+<li>输入 w，写入并退出。</li>
+</ol>
+<h3 id="将磁盘镜像文件虚拟成块设备"><a href="#将磁盘镜像文件虚拟成块设备" class="headerlink" title="将磁盘镜像文件虚拟成块设备"></a>将磁盘镜像文件虚拟成块设备</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo losetup -f --show openEuler_raspi.img</span><br></pre></td></tr></table></figure>
+<p>我这里显示的结果为&#x2F;dev&#x2F;loop12</p>
+<h3 id="创建分区表设备映射"><a href="#创建分区表设备映射" class="headerlink" title="创建分区表设备映射"></a>创建分区表设备映射</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo kpartx -va /dev/loop12</span><br></pre></td></tr></table></figure>
+<p>这里loop12换成上一步显示的你自己对应的设备</p>
+<p>得到结果将三个分区挂载</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">add map loop12p1 (253:0): 0 585728 linear 7:12 8192</span><br><span class="line">add map loop12p2 (253:1): 0 999424 linear 7:12 593920</span><br><span class="line">add map loop12p3 (253:2): 0 1028096 linear 7:12 1593344</span><br></pre></td></tr></table></figure>
+<p>运行 ls &#x2F;dev&#x2F;mapper&#x2F;loop12p* 可以看到分区分别对应刚才为 openEuler_raspi.img 做的三个分区：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/dev/mapper/loop12p1  /dev/mapper/loop12p2  /dev/mapper/loop12p3</span><br></pre></td></tr></table></figure>
+
+<h3 id="格式化分区"><a href="#格式化分区" class="headerlink" title="格式化分区"></a>格式化分区</h3><ol>
+<li>格式化boot分区<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkfs.vfat -n boot /dev/mapper/loop12p1</span><br></pre></td></tr></table></figure></li>
+<li>格式化swap分区<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkswap /dev/mapper/loop12p2 --pagesize 4096</span><br></pre></td></tr></table></figure></li>
+<li>格式化根目录分区<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkfs.ext4 /dev/mapper/loop12p3</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="挂载根目录分区和boot分区"><a href="#挂载根目录分区和boot分区" class="headerlink" title="挂载根目录分区和boot分区"></a>挂载根目录分区和boot分区</h3><p>利用先前验证使用的mnt&#x2F;目录来进行挂载，如果你的电脑上没有，则在euler工作目录下创建一个mnt&#x2F;目录用来挂载。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo mount -t vfat -o uid=root,gid=root,umask=0000 /dev/mapper/loop12p1 mnt/boot/</span><br><span class="line">sudo mount -t ext4 /dev/mapper/loop12p3 mnt/root/</span><br></pre></td></tr></table></figure>
+
+<h3 id="修改fstab使系统能正确挂载分区"><a href="#修改fstab使系统能正确挂载分区" class="headerlink" title="修改fstab使系统能正确挂载分区"></a>修改fstab使系统能正确挂载分区</h3><h4 id="获取blkid"><a href="#获取blkid" class="headerlink" title="获取blkid"></a>获取blkid</h4><p>运行命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo blkid</span><br></pre></td></tr></table></figure>
+<p>然后查看三个分区的UUID，我的是这样</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/dev/mapper/loop12p1: SEC_TYPE=&quot;msdos&quot; LABEL_FATBOOT=&quot;boot&quot; LABEL=&quot;boot&quot; UUID=&quot;6B1C-CEEF&quot; TYPE=&quot;vfat&quot; PARTUUID=&quot;52dc83dc-01&quot;</span><br><span class="line">/dev/mapper/loop12p2: UUID=&quot;2b20721a-1321-41f6-bf6d-a2c65fa7584d&quot; TYPE=&quot;swap&quot; PARTUUID=&quot;52dc83dc-02&quot;</span><br><span class="line">/dev/mapper/loop12p3: UUID=&quot;dc983371-7543-481d-acd2-a936e59c177c&quot; TYPE=&quot;ext4&quot; PARTUUID=&quot;52dc83dc-03&quot;</span><br></pre></td></tr></table></figure>
+
+<h4 id="修改fstab"><a href="#修改fstab" class="headerlink" title="修改fstab"></a>修改fstab</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim rootfs/etc/fstab</span><br></pre></td></tr></table></figure>
+<p>在里面添加内容</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">UUID=dc983371-7543-481d-acd2-a936e59c177c  / ext4    defaults,noatime 0 0</span><br><span class="line">UUID=6B1C-CEEF	/boot vfat    defaults,noatime 0 0</span><br><span class="line">UUID=2b20721a-1321-41f6-bf6d-a2c65fa7584d  swap swap    defaults,noatime 0 0</span><br></pre></td></tr></table></figure>
+<p>剩下三个分区为上面创建的boot，交换分区和根文件系统。<br>其中ext4的UUID对应p3，swap对应p2，boot对应p1</p>
+<h3 id="将rootfs和boot复制到镜像"><a href="#将rootfs和boot复制到镜像" class="headerlink" title="将rootfs和boot复制到镜像"></a>将rootfs和boot复制到镜像</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">rsync -avHAXq rootfs/* mnt/root</span><br><span class="line">cd $&#123;WORKDIR&#125;/boot</span><br><span class="line">tar cf $&#123;WORKDIR&#125;/boot.tar ./</span><br><span class="line">cd $&#123;WORKDIR&#125;/mnt/boot</span><br><span class="line">tar xf $&#123;WORKDIR&#125;/boot.tar -C .</span><br></pre></td></tr></table></figure>
+
+<h3 id="卸载镜像"><a href="#卸载镜像" class="headerlink" title="卸载镜像"></a>卸载镜像</h3><p>卸载目录</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo umount mnt/boot</span><br><span class="line">sudo umount mnt/root</span><br></pre></td></tr></table></figure>
+<p>卸载块设备</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo kpartx -d /dev/loop12</span><br><span class="line">sudo losetup -d /dev/loop12</span><br></pre></td></tr></table></figure>
+<p>这样最终就生成了img镜像文件，可以刷写至树莓派尝试</p>
+<p>如果后续想继续更新rootfs到镜像，这里写了一个脚本可以一键更新</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="keyword">if</span> [ ! <span class="variable">$1</span> ]; <span class="keyword">then</span></span><br><span class="line">	<span class="built_in">echo</span> <span class="string">&quot;Please Input the dist img&quot;</span></span><br><span class="line">	<span class="built_in">exit</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line">PART_NAME=$(<span class="built_in">sudo</span> losetup -f --show <span class="variable">$1</span>) <span class="comment"># 获取块设备名</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 切分结果，得到虚拟块的loop号</span></span><br><span class="line">ARRAY=(<span class="variable">$&#123;PART_NAME//// &#125;</span>) </span><br><span class="line">DEV_NAME=<span class="variable">$&#123;ARRAY[1]&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;The Virtual Device is at <span class="variable">$DEV_NAME</span>&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Parting the img&quot;</span></span><br><span class="line"><span class="built_in">sudo</span> kpartx -va /dev/<span class="variable">$&#123;DEV_NAME&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Start to mount the device&quot;</span></span><br><span class="line"><span class="built_in">sudo</span> mount -t ext4 /dev/mapper/<span class="variable">$&#123;DEV_NAME&#125;</span>p3 mnt/root/</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Start sync file system&quot;</span></span><br><span class="line"><span class="built_in">sudo</span> rsync -avHAXq rootfs/* mnt/root</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Sync Successful!&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Umount the device&quot;</span></span><br><span class="line"><span class="built_in">sudo</span> umount mnt/root</span><br><span class="line"><span class="built_in">sudo</span> kpartx -d /dev/<span class="variable">$&#123;DEV_NAME&#125;</span></span><br><span class="line"><span class="built_in">sudo</span> losetup -d /dev/<span class="variable">$&#123;DEV_NAME&#125;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;End!&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/09/19/raspberrypi/Buildimg/" data-id="cm18p37qy0008hwzy76c11rl4" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-raspberrypi/Raspberry-32bit" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/09/19/raspberrypi/Raspberry-32bit/" class="article-date">
+  <time class="dt-published" datetime="2024-09-19T02:49:57.837Z" itemprop="datePublished">2024-09-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+        <h1 id="树莓派4B启动32位系统"><a href="#树莓派4B启动32位系统" class="headerlink" title="树莓派4B启动32位系统"></a>树莓派4B启动32位系统</h1><h2 id="安装系统"><a href="#安装系统" class="headerlink" title="安装系统"></a>安装系统</h2><p>树莓派官网可以直接下载<a target="_blank" rel="noopener" href="https://www.raspberrypi.com/software/operating-systems/#raspberry-pi-os-32-bit">系统</a>，也可以用官网给的<a target="_blank" rel="noopener" href="https://downloads.raspberrypi.org/imager/imager_latest.exe">一键安装软件</a>安装，这两种方式都需要选择镜像版本，其中withdesktop是带桌面的版本，lite是纯命令行的版本，写32bit的是32位版本，其他的是64位版本。用win32diskmanager直接写入内存卡后，如果有显示器和键盘，可以直接插入树莓派即可启动，如果不想用显示器和键盘，想通过ssh连接方式使用，则不要着急将内存卡插入树莓派。</p>
+<h2 id="无头模式启动"><a href="#无头模式启动" class="headerlink" title="无头模式启动"></a>无头模式启动</h2><p>不连接任何外设，只通过网线连接电脑控制树莓派的方式，叫做无头模式，使用这种模式需要对树莓派进行一些配置</p>
+<h3 id="开启ssh服务"><a href="#开启ssh服务" class="headerlink" title="开启ssh服务"></a>开启ssh服务</h3><p>树莓派中ssh服务是默认关闭的，因此我们需要手动开启，手动开启的方式为，在bootfs目录下新建一个文件，文件名为ssh（不带任何后缀）</p>
+<p><img src="/../../img_folder/Raspberry/ssh.png"></p>
+<h3 id="设置默认用户名和密码"><a href="#设置默认用户名和密码" class="headerlink" title="设置默认用户名和密码"></a>设置默认用户名和密码</h3><p>注意现在的树莓派系统出于安全考虑，已不再预设用户名和密码（2022年之前的版本有默认用户名pi和默认密码raspberry），所以安装好系统后，第一次启动有两种方法：</p>
+<ol>
+<li>连接显示器和键盘，根据系统引导自己设定用户名和密码</li>
+<li>新建一个文件userconf，然后设置密码</li>
+</ol>
+<p>显然在此处我们选择第二种方式，具体操作步骤为：</p>
+<ol>
+<li>在bootfs目录下，新建一个文件，文件名为userconf，不带任何后缀名</li>
+<li>打开文件，填入文件内容，文件内容就一行，格式为：<strong>用户名:加密后的密码</strong>，假设要使用祖传账号密码：<strong>pi:raspberry</strong>，则内容为：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pi:$6$zzRu/pqLm1DA1RkF$jivj4Eij82S1cFimYFlBEbPXxKZbRHI6sGhwd3MlwzOhxthk1uaifNIkpIR75MP/5Wf4yBhjt6DGZU9AzbSM31</span><br></pre></td></tr></table></figure>
+如果需要自己设置密码，加密后的密码获取方式为使用如下命令：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &#x27;password&#x27; | openssl passwd -6 -stdin</span><br></pre></td></tr></table></figure>
+其中password替换为你想要使用的密码</li>
+</ol>
+<h3 id="连接树莓派"><a href="#连接树莓派" class="headerlink" title="连接树莓派"></a>连接树莓派</h3><h4 id="网络设置"><a href="#网络设置" class="headerlink" title="网络设置"></a>网络设置</h4><p>如果此时你想使用有线网络连接电脑和树莓派，可以略过本节。</p>
+<p>如果想使用无线网络连接的话，还需要再添加一个配置文件wpa_supplicant.conf，内容是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev</span><br><span class="line">update_config=1</span><br><span class="line">country=CN</span><br><span class="line">network=&#123;</span><br><span class="line">ssid=&quot;你的SSID&quot;</span><br><span class="line">psk=&quot;你的密码&quot;</span><br><span class="line">key_mgmt=WPA-PSK</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>注意：</strong>一定要保证等号两边没有空格，否则可能连接不上。</p>
+<p>完成设置后，就可以将SD卡插入树莓派然后启动了。（如果需要在启动32位系统，不要着急，<a href="#%E4%BF%AE%E6%94%B9%E5%90%AF%E5%8A%A8%E5%8F%82%E6%95%B0">还得再配置一步</a>）</p>
+<h4 id="探测IP并连接树莓派"><a href="#探测IP并连接树莓派" class="headerlink" title="探测IP并连接树莓派"></a>探测IP并连接树莓派</h4><p>这个步骤是比较常规的操作，网上资料比较多，且步骤比较繁琐，就直接贴几个好用的参考吧：</p>
+<p><a target="_blank" rel="noopener" href="https://www.waveshare.net/study/article-741-1.html">有线连接</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.waveshare.net/study/portal.php?mod=view&aid=743">无线连接</a></p>
+<p>如果用ssh连接过相同的ip地址，会出现ssh认证失败的提示，此时使用命令移除之前的密钥，重新接受新的密钥即可。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -R &lt;hostname&gt;</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+<h2 id="修改启动参数"><a href="#修改启动参数" class="headerlink" title="修改启动参数"></a>修改启动参数</h2><p>这一步是为了启动一个真正的32位系统，更真实的模拟软件运行的环境。<br>树莓派4B使用的是Arm Cortex-72内核，其基于armv8架构，如果直接用默认的配置启动系统，其会默认启动一个64位的内核，然后运行一个32位的地址空间（指令集还是64位的），不能很好的模拟一个真正的32位环境，因此需要做一些修改，来让其启动一个真正的32位内核。<br>方法为打开bootfs目录下的config.txt，在文件末尾加入下面两句</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">arm_64bit=0</span><br><span class="line">kernel=kernel7l.img</span><br></pre></td></tr></table></figure>
+<p>即可以启动真正的32位内核。</p>
+<p>这两句设置的具体含义可以参考<a target="_blank" rel="noopener" href="https://pidoc.cn/docs/computers/config-txt">树莓派官方文档</a></p>
+<p><strong>一些分析</strong>：</p>
+<p>如果不添加上面两句设置，直接启动官方的32位树莓派系统，查看cpu架构和系统内核，可以得到以下结果</p>
+<p><img src="/../img_folder/Raspberry/v8-uname.png"><br><img src="/../img_folder/Raspberry/v8-cpu.png"></p>
+<ol>
+<li>使用uname命令查看内核版本，发现架构为aarch64，即armv8的64位执行模式</li>
+<li>使用getconf LONG_BIT查看操作系统位数，为32位</li>
+<li>查看包管理器的运行架构，得到armhf，带有硬件浮点的armv7（32位）指令集</li>
+<li>查看cpu版本，发现架构为v8（64位）</li>
+</ol>
+<p>如果添加了命令，则得到以下结果：</p>
+<p><img src="/../img_folder/Raspberry/v7-uname.png"><br><img src="/../img_folder/Raspberry/v7-cpu.png"></p>
+<ol>
+<li>使用uname命令查看内核版本，发现架构为armv7l，即armv7（32位）的小端序指令集</li>
+<li>使用getconf LONG_BIT查看操作系统位数，为32位</li>
+<li>查看系统配置文件，发现其运行的为32位ELF文件</li>
+<li>查看cpu版本，发现架构为armv7l（32位）</li>
+</ol>
+<p>总结：如果不加启动选项，树莓派会启动一个在armv8（64位）指令集下运行的内核，但运行32位地址空间，所有的软件都在32位模式下运行，即64位硬件运行32位软件，如果添加启动选项，树莓派会启动一个在armv7l指令集下运行的内核，其软件硬件的运行模式都为32位。因此，添加启动选项后，树莓派的运行模式才是真正的32位模式，也可以更真实的模拟开发所用的运行环境。</p>
+<h2 id="一些参考资料"><a href="#一些参考资料" class="headerlink" title="一些参考资料"></a>一些参考资料</h2><p><a target="_blank" rel="noopener" href="http://icing.fun/2023/12/09/raspberrypi_boot/">树莓派的启动流程</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#raspberry-pi-4-boot-flow">树莓派文档</a></p>
+<p><a target="_blank" rel="noopener" href="https://pidoc.cn/docs/computers/getting-started">树莓派中文文档</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.163.com/dy/article/F8BVU5JM0531AFNT.html">arm几个指令集的区别</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/kin-zhang/p/15031633.html">arm指令集的区别（另外一篇）</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/1021683053/awesome-raspberry-pi-zh">树莓派资源大全</a></p>
+<h1 id="编译树莓派系统内核"><a href="#编译树莓派系统内核" class="headerlink" title="编译树莓派系统内核"></a>编译树莓派系统内核</h1><p>参考<a target="_blank" rel="noopener" href="https://www.raspberrypi.com/documentation/computers/linux_kernel.html#cross-compile-the-kernel">官方文档</a>拉通一遍流程即可</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/09/19/hello-world/" data-id="cm18oxda20000ipzyasps2k9c" data-title="Hello World" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/09/19/raspberrypi/Raspberry-32bit/" data-id="cm18p37qz0009hwzyhpx93idn" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-raspberrypi/Raspberry-Euler" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/09/19/raspberrypi/Raspberry-Euler/" class="article-date">
+  <time class="dt-published" datetime="2024-09-19T02:49:57.837Z" itemprop="datePublished">2024-09-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="在树莓派上安装Openeuler"><a href="#在树莓派上安装Openeuler" class="headerlink" title="在树莓派上安装Openeuler"></a>在树莓派上安装Openeuler</h1><h1 id="安装64位OpenEuler"><a href="#安装64位OpenEuler" class="headerlink" title="安装64位OpenEuler"></a>安装64位OpenEuler</h1><p><a target="_blank" rel="noopener" href="https://docs.openeuler.org/zh/docs/22.03_LTS_SP3/docs/Installation/%E5%AE%89%E8%A3%85%E5%9C%A8%E6%A0%91%E8%8E%93%E6%B4%BE.html">安装方法可以直接参考官方文档</a></p>
+<p><a target="_blank" rel="noopener" href="https://gitee.com/openeuler/raspberrypi/tree/master">镜像源在gitee</a></p>
+<h1 id="安装32位OpenEuler"><a href="#安装32位OpenEuler" class="headerlink" title="安装32位OpenEuler"></a>安装32位OpenEuler</h1><p>Euler官网不提供32位版本的树莓派镜像，因此需要自己参考<a href="Buildimg.md">文档</a>构建</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/09/19/raspberrypi/Raspberry-Euler/" data-id="cm18p37r0000ahwzy1bg3dg73" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-raspberrypi/rootfs" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/09/19/raspberrypi/rootfs/" class="article-date">
+  <time class="dt-published" datetime="2024-09-19T02:49:57.837Z" itemprop="datePublished">2024-09-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="完善rootfs"><a href="#完善rootfs" class="headerlink" title="完善rootfs"></a>完善rootfs</h1><p>Linux系统就是一个内核加各种程序组成，这些常用的如ls, mkdir, ifconfi g命令都是一个个小程序，<a href="Raspberry-Euler.md">构建树莓派镜像</a>一文中使用的busybox工具是一个工具集合，里面包含了一些最常用的小程序。<br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/zhuangquan/p/11557781.html">源码分析</a><br>如果想选择默认功能更为丰富的rootfs构建工具，可以选择debian系的工具debootstrap，或者使用buildroot</p>
+<ul>
+<li><a href="#%E5%AE%8C%E5%96%84rootfs">完善rootfs</a><ul>
+<li><a href="#rootfs%E4%B8%AD%E7%9A%84%E5%B8%B8%E7%94%A8%E7%9B%AE%E5%BD%95">rootfs中的常用目录</a></li>
+<li><a href="#etc%E4%B8%AD%E7%9A%84%E5%B8%B8%E7%94%A8%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">&#x2F;etc中的常用配置文件</a><ul>
+<li><a href="#inittab%E6%96%87%E4%BB%B6">inittab文件</a></li>
+<li><a href="#rcs%E6%96%87%E4%BB%B6">rcS文件</a></li>
+<li><a href="#fstab%E6%96%87%E4%BB%B6">fstab文件</a></li>
+<li><a href="#rclocal%E6%96%87%E4%BB%B6">rc.local文件</a></li>
+<li><a href="#profile%E6%96%87%E4%BB%B6">profile文件</a></li>
+</ul>
+</li>
+<li><a href="#%E6%B7%BB%E5%8A%A0%E8%AE%BE%E5%A4%87%E6%96%87%E4%BB%B6">添加设备文件</a></li>
+<li><a href="#%E9%85%8D%E7%BD%AEdhcp%E8%87%AA%E5%8A%A8%E8%8E%B7%E5%8F%96ip%E5%9C%B0%E5%9D%80">配置dhcp自动获取ip地址</a><ul>
+<li><a href="#%E5%8A%A0%E5%85%A5defaultscript%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">加入default.script配置文件</a></li>
+<li><a href="#%E5%BC%80%E6%9C%BA%E8%87%AA%E5%8A%A8%E5%90%AF%E5%8A%A8dhcp%E6%9C%8D%E5%8A%A1">开机自动启动dhcp服务</a></li>
+<li><a href="#%E5%AE%9E%E7%8E%B0%E7%BD%91%E7%BA%BF%E7%83%AD%E6%8F%92%E6%8B%94">实现网线热插拔</a></li>
+</ul>
+</li>
+<li><a href="#%E6%B7%BB%E5%8A%A0%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86">添加用户管理</a><ul>
+<li><a href="#%E6%B7%BB%E5%8A%A0%E7%94%A8%E6%88%B7%E7%9B%B8%E5%85%B3%E6%96%87%E4%BB%B6">添加用户相关文件</a><ul>
+<li><a href="#%E8%B4%A6%E5%8F%B7%E6%96%87%E4%BB%B6">账号文件</a></li>
+<li><a href="#%E8%AE%BE%E7%BD%AE%E5%AF%86%E7%A0%81">设置密码</a></li>
+<li><a href="#%E7%94%A8%E6%88%B7%E7%BB%84%E6%96%87%E4%BB%B6">用户组文件</a></li>
+</ul>
+</li>
+<li><a href="#%E8%AE%BE%E7%BD%AE%E5%BC%80%E6%9C%BA%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95">设置开机自动登录</a></li>
+<li><a href="#%E5%8A%A0%E5%BC%BA%E5%AF%86%E7%A0%81%E5%AE%89%E5%85%A8%E6%80%A7">加强密码安全性</a></li>
+</ul>
+</li>
+<li><a href="#%E9%85%8D%E7%BD%AE%E8%BF%9C%E7%A8%8B">配置远程</a><ul>
+<li><a href="#telnet">telnet</a></li>
+<li><a href="#ftp">ftp</a></li>
+<li><a href="#ssh">ssh</a><ul>
+<li><a href="#%E7%BC%96%E8%AF%91%E4%BE%9D%E8%B5%96">编译依赖</a></li>
+<li><a href="#%E7%BC%96%E8%AF%91openssh">编译OpenSSH</a></li>
+<li><a href="#%E9%85%8D%E7%BD%AEopenssh">配置OpenSSH</a></li>
+<li><a href="#ssh%E6%98%BE%E7%A4%BA%E6%AC%A2%E8%BF%8E%E7%95%8C%E9%9D%A2">ssh显示欢迎界面</a></li>
+</ul>
+</li>
+<li><a href="#%E5%BC%80%E6%9C%BA%E8%87%AA%E5%8A%A8%E5%90%AF%E5%8A%A8%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1">开机自动启动远程服务</a></li>
+</ul>
+</li>
+<li><a href="#%E5%AE%89%E8%A3%85alsa">安装Alsa</a><ul>
+<li><a href="#%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91alsa-libs">交叉编译alsa-libs</a></li>
+<li><a href="#%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91alsa-utils">交叉编译alsa-utils</a></li>
+<li><a href="#%E5%AE%89%E8%A3%85%E5%88%B0%E5%BC%80%E5%8F%91%E6%9D%BF">安装到开发板</a></li>
+</ul>
+</li>
+<li><a href="#%E5%AE%89%E8%A3%85ffmpeg">安装ffmpeg</a><ul>
+<li><a href="#%E5%8C%85%E7%AE%A1%E7%90%86%E5%99%A8%E5%AE%89%E8%A3%85">包管理器安装</a></li>
+<li><a href="#%E4%BB%8E%E6%BA%90%E7%A0%81%E6%9E%84%E5%BB%BA">从源码构建</a><ul>
+<li><a href="#%E4%B8%8B%E8%BD%BD%E6%BA%90%E7%A0%81">下载源码</a></li>
+<li><a href="#%E9%85%8D%E7%BD%AE%E7%BC%96%E8%AF%91%E5%8F%82%E6%95%B0">配置编译参数</a></li>
+<li><a href="#%E5%AE%89%E8%A3%85">安装</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E5%AE%89%E8%A3%85valgrind">安装Valgrind</a><ul>
+<li><a href="#%E4%B8%8B%E8%BD%BD%E6%BA%90%E7%A0%81-1">下载源码</a></li>
+<li><a href="#%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE">修改配置</a></li>
+<li><a href="#%E7%BC%96%E8%AF%91%E5%92%8C%E5%AE%89%E8%A3%85">编译和安装</a></li>
+<li><a href="#%E6%B5%8B%E8%AF%95valgrind">测试valgrind</a></li>
+</ul>
+</li>
+<li><a href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E6%89%A9%E5%AE%B9">文件系统扩容</a><ul>
+<li><a href="#%E7%A3%81%E7%9B%98%E5%88%86%E5%8C%BA%E6%89%A9%E5%AE%B9">磁盘分区扩容</a></li>
+<li><a href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E6%89%A9%E5%AE%B9-1">文件系统扩容</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="rootfs中的常用目录"><a href="#rootfs中的常用目录" class="headerlink" title="rootfs中的常用目录"></a>rootfs中的常用目录</h2><table>
+<thead>
+<tr>
+<th>目录</th>
+<th>含义</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&#x2F;bin</td>
+<td>重要的二进制 (binary) 应用程序</td>
+<td>包含二进制文件，系统的所有用户使用的命令都在这个目录下。</td>
+</tr>
+<tr>
+<td>&#x2F;boot</td>
+<td>启动 (boot) 配置文件</td>
+<td>包含引导加载程序相关的文件</td>
+</tr>
+<tr>
+<td>&#x2F;dev</td>
+<td>设备 (device) 文件</td>
+<td>包含设备文件，包括终端设备，USB或连接到系统的任何设备</td>
+</tr>
+<tr>
+<td>&#x2F;etc</td>
+<td>配置文件、启动脚本等(etc)</td>
+<td>包含所有程序所需的配置文件，也包含了用于启动&#x2F;停止单个程序的启动和关闭shell脚本</td>
+</tr>
+<tr>
+<td>&#x2F;home</td>
+<td>本地用户主 (home) 目录</td>
+<td>所有用户用home目录来存储他们的个人档案</td>
+</tr>
+<tr>
+<td>&#x2F;lib</td>
+<td>系统库 (libraries) 文件</td>
+<td>包含支持位于&#x2F;bin和&#x2F;sbin下的二进制文件的库文件</td>
+</tr>
+<tr>
+<td>&#x2F;lost+found</td>
+<td>在根 (&#x2F;) 目录下提供一个遗失+查找(lost+found) 系统</td>
+<td>必须在root用户下才可以查看当前目录下的内容</td>
+</tr>
+<tr>
+<td>&#x2F;media</td>
+<td>挂载可移动介质 (media)</td>
+<td>，诸如 CD、数码相机等	用于挂载可移动设备的临时目录</td>
+</tr>
+<tr>
+<td>&#x2F;mnt</td>
+<td>挂载 (mounted) 文件系统</td>
+<td>临时安装目录，系统管理员可以挂载文件系统</td>
+</tr>
+<tr>
+<td>&#x2F;opt</td>
+<td>提供一个供可选的 (optional) 应用程序安装目录</td>
+<td>包含从各个厂商的附加应用程序，附加的应用程序应该安装在&#x2F;opt或者&#x2F;opt的子目录下</td>
+</tr>
+<tr>
+<td>&#x2F;proc</td>
+<td>特殊的动态目录，用以维护系统信息和状态，包括当前运行中进程 (processes) 信息</td>
+<td>包含系统进程的相关信息，是一个虚拟的文件系统，包含有关正在运行的进程的信息，系统资源以文本信息形式存在</td>
+</tr>
+<tr>
+<td>&#x2F;root</td>
+<td>root (root) 用户主文件夹</td>
+<td>读作“slash-root”</td>
+</tr>
+<tr>
+<td>&#x2F;sbin</td>
+<td>重要的系统二进制 (system binaries) 文件</td>
+<td>也是包含的二进制可执行文件。在这个目录下的linux命令通常都是由系统管理员使用的，对系统进行维护</td>
+</tr>
+<tr>
+<td>&#x2F;sys</td>
+<td>系统 (system) 文件</td>
+<td></td>
+</tr>
+<tr>
+<td>&#x2F;tmp</td>
+<td>临时(temporary)文件</td>
+<td>包含系统和用户创建的临时文件。当系统重启时，这个目录下的文件将都被删除</td>
+</tr>
+<tr>
+<td>&#x2F;usr</td>
+<td>包含绝大部分所有用户(users)都能访问的应用程序和文件</td>
+<td>包含二进制文件，库文件。文档和二级程序的源代码</td>
+</tr>
+<tr>
+<td>&#x2F;var</td>
+<td>经常变化的(variable)文件，诸如日志或数据库等</td>
+<td>代表变量文件。在这个目录下可以找到内容可能增长的文件</td>
+</tr>
+</tbody></table>
+<h2 id="etc中的常用配置文件"><a href="#etc中的常用配置文件" class="headerlink" title="&#x2F;etc中的常用配置文件"></a>&#x2F;etc中的常用配置文件</h2><p>Linux系统的配置文件都放置在&#x2F;etc目录下，下面介绍几个常用的配置文件</p>
+<h3 id="inittab文件"><a href="#inittab文件" class="headerlink" title="inittab文件"></a>inittab文件</h3><p>inittab文件是初始进程init的配置文件，内核引导完成后，内核会启动初始化进程init（用户级进程）来进行 系统的各项配置。init是系统第一个进程，它是系统上运行的所有其他进程的父进程，他会观察其子进程，并在需要时启动、停止、重启它们。init主要是 用来完成系统的各项配置。init从&#x2F;etc&#x2F;inittab获取所有信息。想了解BusyBox init及其inittab基本原理的，可以看<a target="_blank" rel="noopener" href="https://www.cnblogs.com/arnoldlu/p/10868354.html">这篇文章</a><br>其中有几个action，定义方法如下表：</p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>执行条件</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>sysinit</td>
+<td>系统启动后执行</td>
+<td>只执行一次，init进程等它结束之后执行其他动作</td>
+</tr>
+<tr>
+<td>wait</td>
+<td>系统执行完sysinit进程后</td>
+<td>只执行一次，init进程等待它结束后执行其他动作</td>
+</tr>
+<tr>
+<td>once</td>
+<td>系统执行完wait进程后</td>
+<td>只执行一次，init不等他结束</td>
+</tr>
+<tr>
+<td>respawn</td>
+<td>启动完once进程后</td>
+<td>init进程发现其退出后，重新启动它</td>
+</tr>
+<tr>
+<td>askfirst</td>
+<td>启动完respawn后</td>
+<td>与respawn类似，但init进程先输出Please Enter to activate this console，等用户按下回车后才启动子进程</td>
+</tr>
+<tr>
+<td>shutdown</td>
+<td>当系统关机时</td>
+<td>重启，关闭系统命令时</td>
+</tr>
+<tr>
+<td>restart</td>
+<td>Busybox中配置CONFIG_FEATURE_USE_INITTAB，并且init进程收到SIGHUP信号时</td>
+<td>先重新读取，解析inittab文件，再执行restart程序</td>
+</tr>
+<tr>
+<td>ctrlaltdel</td>
+<td>按下ctrl+alt+del时</td>
+<td>-</td>
+</tr>
+</tbody></table>
+<p>格式如下：</p>
+<ul>
+<li>#开始的行是注释</li>
+<li>冒号在里面是分隔符，分隔开各个部分。</li>
+<li>inittab内容是以行为单位的，行与行之间没有关联，每行都是一个独立的配置项，每一个 配置项表示一个具体的含义。</li>
+<li>每一行的配置项都是由3个冒号分隔开的4个配置值共同确定的。这四个配置值就是id:runlevels:action:process 值得注意得是有些配置值可以空缺，空缺后冒号不能空缺，所以有时候会看到连续2个冒号。</li>
+<li>每一行的配置项中4个配置值中最重要的是action和process，action是一个条件&#x2F;状态，process是一个可被执行的程序的pathname。合起来的意思就是：当满足action的条件时就会执行process这个程序。</li>
+</ul>
+<p>busybox官方给出的说明以及样例在&#x2F;examples&#x2F;inittab文件中<br>如果没有inittab，busybox会按照以下默认配置运行init</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">::sysinit:/etc/init.d/rcS <span class="comment"># 执行rcS</span></span><br><span class="line">::askfirst:/bin/sh <span class="comment">#执行命令行</span></span><br><span class="line">::ctrlaltdel:/sbin/reboot</span><br><span class="line">::shutdown:/sbin/swapoff -a</span><br><span class="line">::shutdown:/bin/umount -a -r</span><br><span class="line">::restart:/sbin/init</span><br><span class="line">tty2::askfirst:/bin/sh</span><br><span class="line">tty3::askfirst:/bin/sh</span><br><span class="line">tty4::askfirst:/bin/sh</span><br></pre></td></tr></table></figure>
+<p>inittab的关键就是：“当满足action的条件时就会执行process这个程序”。</p>
+<h3 id="rcS文件"><a href="#rcS文件" class="headerlink" title="rcS文件"></a>rcS文件</h3><p>可以看到inittab的第一步即解析rcS文件，其在系统初始化阶段会被init进程调用，并且执行里面的命令，因此该文件用于执行一些系统初始化指令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir rootfs/etc/init.d</span><br><span class="line">sudo vim rootfs/etc/init.d/rcS</span><br></pre></td></tr></table></figure>
+
+<p>内容为：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line">PATH=/sbin:/bin:/usr/sbin:/usr/bin</span><br><span class="line"><span class="built_in">export</span> PATH</span><br><span class="line"><span class="built_in">umask</span> 022</span><br><span class="line"></span><br><span class="line">mount -a</span><br><span class="line"><span class="built_in">mkdir</span> /dev/pts</span><br><span class="line">mount -t devpts devpts /dev/pts</span><br><span class="line"></span><br><span class="line">hostname euler</span><br><span class="line"></span><br><span class="line">ifconfig lo 127.0.0.1</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="fstab文件"><a href="#fstab文件" class="headerlink" title="fstab文件"></a>fstab文件</h3><p>这个文件是供mount读取设备所用，在rcS中有mount -a命令，负责挂载系统所用到的设备，mount -a从fstab中读取参数<br>先加入三个内核自带的三个虚拟文件系统</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#&lt;file system&gt;  &lt;mount point&gt;   &lt;type&gt;  &lt;options&gt;       &lt;dump&gt;  &lt;pass&gt;</span><br><span class="line">proc            /proc           proc    defaults        0       0</span><br><span class="line">tmpfs           /tmp            tmpfs   defaults        0       0</span><br><span class="line">sysfs           /sys            sysfs   defaults        0       0</span><br></pre></td></tr></table></figure>
+<p>这三个目录为linux内核文件系统，存在于内存中</p>
+<ul>
+<li><p>proc用于在系统运行时访问内核内部数据结构，改变内核设置，proc只存在于内存当中，以文件系统的方式为访问内核数据提供接口，其被挂在于根目录的&#x2F;proc目录下。</p>
+</li>
+<li><p>sysfs将系统中的设备组织成层次结构，并向用户模式程序提供详细的内核数据结构信息</p>
+</li>
+<li><p>tmpfs用于存储临时文件，这些文件通常是由操作系统或应用程序创建的。这些文件可以是日志文件、临时缓存文件、程序临时文件、打印队列文件等</p>
+</li>
+</ul>
+<p>除这三个目录外，通常还需要再根据物理设备以及分区情况，加入其他文件系统。</p>
+<h3 id="rc-local文件"><a href="#rc-local文件" class="headerlink" title="rc.local文件"></a>rc.local文件</h3><p>&#x2F;etc&#x2F;rc.local是被init.d&#x2F;rcS 文件调用执行的特殊文件，与Linux 系统硬件平台相关，如安装核心模块、进行网络配置、运行应用程序、启动图形界面等。<br>因此可以将rcS文件中非核心操作的内容移动到rc.local中，使得配置文件更加清晰</p>
+<p>rcS文件修改如下：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">umask</span> 022</span><br><span class="line"></span><br><span class="line">PATH=/sbin:/bin:/usr/sbin:/usr/bin</span><br><span class="line"><span class="built_in">export</span> PATH</span><br><span class="line"></span><br><span class="line">mount -a</span><br><span class="line"><span class="built_in">mkdir</span> /dev/pts</span><br><span class="line">mount -t devpts devpts /dev/pts</span><br><span class="line"></span><br><span class="line"><span class="built_in">exec</span> /etc/rc.local</span><br></pre></td></tr></table></figure>
+<p>rc.local中的内容如下：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line"></span><br><span class="line">hostname Euler</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> /sbin/mdev &gt; /proc/sys/kernel/hotplug</span><br><span class="line">mdev -s</span><br><span class="line"></span><br><span class="line">ifconfig lo 127.0.0.1</span><br><span class="line">telnetd <span class="comment"># 启动telnet服务供远程登录</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;**************************************************&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;*                                                *&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;*                 Openeuler-22.04                *&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;*                                                *&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;*          Linux Kernel version 5.10.0           *&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;*                                                *&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;*                 2024-07-03                     *&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;*                                                *&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;**************************************************&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="profile文件"><a href="#profile文件" class="headerlink" title="profile文件"></a>profile文件</h3><p>profile文件在每个用户登录时被执行一次，用于设置每个用户的环境信息，root用户的环境信息由init进程设置，而其他用户则通过login进程读取profile文件设置</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">PATH=/bin:/sbin:/usr/bin:/usr/sbin</span><br><span class="line">LD_LIBRARY_PATH=/lib:/usr/lib</span><br><span class="line"></span><br><span class="line">HOSTNAME=`/bin/hostname`</span><br><span class="line">PS1=<span class="string">&#x27;\u@\h:\w\$ &#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> PATH LD_LIBRARY_PATH HOSTNAME PS1</span><br></pre></td></tr></table></figure>
+<h2 id="添加设备文件"><a href="#添加设备文件" class="headerlink" title="添加设备文件"></a>添加设备文件</h2><p>busybox中自动利用mdev管理设备，在编译时已经设置好，其工作过程参考这个<a target="_blank" rel="noopener" href="http://www.360doc.com/content/10/0428/11/496343_25245348.shtml">博客</a></p>
+<h2 id="配置dhcp自动获取ip地址"><a href="#配置dhcp自动获取ip地址" class="headerlink" title="配置dhcp自动获取ip地址"></a>配置dhcp自动获取ip地址</h2><p>udhcpc的<a target="_blank" rel="noopener" href="https://www.cnblogs.com/arnoldlu/p/13567937.html">工作过程</a></p>
+<h3 id="加入default-script配置文件"><a href="#加入default-script配置文件" class="headerlink" title="加入default.script配置文件"></a>加入default.script配置文件</h3><p>将busybox的默认配置复制到根文件系统中，以正确使用udhcpc获取ip地址<br>具体解析可以看这个<a target="_blank" rel="noopener" href="https://www.cnblogs.com/arnoldlu/p/13567937.html">博客</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir rootfs/usr/share/udhcpc</span><br><span class="line">cp busybox-1.36.1/examples/udhcp/simple.script rootfs/usr/share/udhcpc/default.script</span><br></pre></td></tr></table></figure>
+<h3 id="开机自动启动dhcp服务"><a href="#开机自动启动dhcp服务" class="headerlink" title="开机自动启动dhcp服务"></a>开机自动启动dhcp服务</h3><p>在rcS文件的末尾添加</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">udhcpc</span><br></pre></td></tr></table></figure>
+<h3 id="实现网线热插拔"><a href="#实现网线热插拔" class="headerlink" title="实现网线热插拔"></a>实现网线热插拔</h3><p><a target="_blank" rel="noopener" href="http://blog.chinaunix.net/uid-16759545-id-4891833.html">http://blog.chinaunix.net/uid-16759545-id-4891833.html</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/xuesong10210/article/details/113858728">https://blog.csdn.net/xuesong10210/article/details/113858728</a></p>
+<h2 id="添加用户管理"><a href="#添加用户管理" class="headerlink" title="添加用户管理"></a>添加用户管理</h2><h3 id="添加用户相关文件"><a href="#添加用户相关文件" class="headerlink" title="添加用户相关文件"></a>添加用户相关文件</h3><p>linux中，用户管理涉及到两个文件：账号文件 &#x2F;etc&#x2F;passwd和用户组文件 &#x2F;etc&#x2F;group。</p>
+<h4 id="账号文件"><a href="#账号文件" class="headerlink" title="账号文件"></a>账号文件</h4><p>首先先创建账号文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/passwd</span><br></pre></td></tr></table></figure>
+<p>添加内容</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root:x:0:0:root:/root:/bin/sh</span><br></pre></td></tr></table></figure>
+<h4 id="设置密码"><a href="#设置密码" class="headerlink" title="设置密码"></a>设置密码</h4><p>如果需要设置用户初始密码，可以通过修改x字段的值来实现</p>
+<p>密码生成方式为：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl passwd -1 -salt [username] <span class="comment">#passwd代表设置密码，-1代表使用MD5加密 -salt代表加盐 username替换成要设置密码的用户名</span></span><br></pre></td></tr></table></figure>
+<p>然后输入密码，将生成的内容复制，替换x字段即可为用户设置密码</p>
+<p>账号文件的每一行是一个用户和其对应的设置，用”:”隔开，每字段的含义为</p>
+<blockquote>
+<p>用户名称：用户密码：USER ID：GROUP ID：相关注释：主目录：使用的shell</p>
+</blockquote>
+<ol>
+<li>用户名称：在Linux系统中用唯一的字符串区分不同的用户，用户名可以由字母、数字、下划线组成。注意Linux系统中对字母大小写是敏感的。 比如USERNAME1 和username1是两个不同的用户。</li>
+<li>用户密码：在用户校验时验证用户的合法性。超级用户root可以更改系统中所有用户的密码，普通用户登陆后可以使用 pawwd 命令来更改自己的密码。在 &#x2F;etc&#x2F;passwd 文件中该字段一般为 x ，或加密存储的密码，处于安全考虑，一些高级发行版中该字段加密后的密码数据已经移至 &#x2F;etc&#x2F;shadow 中。 &#x2F;etc&#x2F;shadow 文件不能被普通用户读取，只有超级用户才有权读取。而此处使用的busybox依然在此字段存放加密的密码。</li>
+<li>用户标识号(USER ID)：USER ID，简称UID，是一个数值，用于唯一标识Linux系统中的用户。在Linux系统中最多可使用65535个用户名，用户名和UID都可以用于标识用户。相同UID的用户可以认为是同一用户，同时他们也具有相同的权限，当然对于使用者来说用户名更容易记忆和使用。</li>
+<li>组标识号(GROUP ID)：GROUP ID，检查GID，这是当前用户所属的默认用户组标识。当添加用户时，系统会默认建立一个和用户名一样的用户组，多个用户可以属于相同的用户组。用户可以同时属于多个组，每个组也可以有多个用户。除了在 &#x2F;etc&#x2F;passwd 文件中指定其归属的基本组外，&#x2F;etc&#x2F;group 文件中也指明一个组所包含的用户。</li>
+<li>相关注释：用于存放一些用户的其它信息，比如用户含义说明、用户地址信息等。</li>
+<li>主目录：该字段定义了用户的主目录，登录后shell将把该目录作为用户的工作目录。登录系统后可以使用 pwd 命令查看。超级用户 root的工作目录为 &#x2F;root。每个用户都有自己的主目录，默认一般在 &#x2F;home 下建立与用户名一致的目录，同时建立目录时可以指定其它目录作为用户的主目录。</li>
+<li>使用的shell：shell是当前用户登录系统是运行的程序的名称，通常是 &#x2F;bin&#x2F;bash。同时系统中可能存在其它的shell，比如 tsh。用户可以自己指定shell，也可以随时更改，比较流行的就行 &#x2F;bin&#x2F;bash，在busybox中一般是&#x2F;bin&#x2F;sh</li>
+</ol>
+<h4 id="用户组文件"><a href="#用户组文件" class="headerlink" title="用户组文件"></a>用户组文件</h4><p>创建文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/group</span><br></pre></td></tr></table></figure>
+<p>添加内容</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root:x:0:root</span><br></pre></td></tr></table></figure>
+<p>该文件用于保存用户组的所有信息，通过它可以更好地对系统中的用户进行管理。对用户分组是一种有效的手段，用户组和用户之间属于多对多的关系，一个用户可以属于多个组，一个组也可以包含多个用户。用户登录时默认的组存放在 &#x2F;etc&#x2F;passwd 中。</p>
+<p>用户组文件也是每行代表一个用户组的信息，含义为</p>
+<blockquote>
+<p>用户组名：用户组密码：用户组标识号：组内用户列表</p>
+</blockquote>
+<ol>
+<li>用户组名：可以由字母、数字、下划线组成，用户组名是唯一的，和用户名一样不可重复。</li>
+<li>用户组密码：该字段存放的是用户组加密后的密码，这一字段基本不使用，Linux系统的用户组都没有密码。</li>
+<li>用户组标识号：GROUP ID 简称GID，和用户标识号UID类似，也是一个整数，用于唯一标识一个用户组。</li>
+<li>组内用户列表：是属于这个组的所有用户的列表，不同用户之间用逗号分隔，不能有空格。这个用户组可能是用户的主组，也可能是附加组。</li>
+</ol>
+<p>至此系统中已经默认自带root用户，并且可以在系统运行之后新建，切换用户。但在开机时依然不会登录，直接选择进入命令行</p>
+<h3 id="设置开机自动登录"><a href="#设置开机自动登录" class="headerlink" title="设置开机自动登录"></a>设置开机自动登录</h3><p>开机自动登录功能需要修改inittab文件来实现，即在运行shell之前先运行一个login程序，将inittab中的askfirst:&#x2F;bin&#x2F;sh替换为，即先启动getty，然后再运行login进程来进行登录</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">console::respawn:/sbin/getty -L -n -l /etc/autologin console 0 vt100</span><br></pre></td></tr></table></figure>
+<p>然后添加autologin脚本</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line">/bin/login -f root</span><br></pre></td></tr></table></figure>
+<p>其中选项-f表示不对root用户进行验证</p>
+<h3 id="加强密码安全性"><a href="#加强密码安全性" class="headerlink" title="加强密码安全性"></a>加强密码安全性</h3><h2 id="配置远程"><a href="#配置远程" class="headerlink" title="配置远程"></a>配置远程</h2><h3 id="telnet"><a href="#telnet" class="headerlink" title="telnet"></a>telnet</h3><p>telnet服务器由busybox中的telnetd程序来实现，默认端口为23端口</p>
+<h3 id="ftp"><a href="#ftp" class="headerlink" title="ftp"></a>ftp</h3><p>ftp服务为ftpd</p>
+<h3 id="ssh"><a href="#ssh" class="headerlink" title="ssh"></a>ssh</h3><p>OpenSSH（OpenBSD Secure Shell）是使用SSH透过计算机网络加密通信的实现。它是取代由SSH Communications Security所提供的商用版本的开放源代码方案。目前OpenSSH是OpenBSD的子项目。<br>OpenSSH常常被误认以为与OpenSSL有关系，但实际上这两个项目有不同的目的，不同的发展团队，名称相近只是因为两者有同样的软件发展目标──提供开放源代码的加密通信软件。<br>而目前最经常的应用：SSH远程连接。相比telnet远程连接，SSH更安全</p>
+<p>下面将从源码构建OpenSSH</p>
+<h4 id="编译依赖"><a href="#编译依赖" class="headerlink" title="编译依赖"></a>编译依赖</h4><p><a target="_blank" rel="noopener" href="https://openssl-library.org/source/">OpenSSL</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.zlib.net/">zlib</a><br>首先新建一个文件夹，将源码下载到这个文件夹中，并将其作为工作目录<br><strong>编译Zlib</strong></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> WORK_DIR=<span class="variable">$&#123;PWD&#125;</span></span><br><span class="line"><span class="built_in">cd</span> zlib-1.3.1</span><br><span class="line"><span class="built_in">export</span> CHOST arm-linux-gnueabihf <span class="comment">#配置交叉编译选项</span></span><br><span class="line">./configure --prefix=<span class="variable">$&#123;WORK_DIR&#125;</span>/zlib_install</span><br><span class="line">make -j10</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
+<p>这一步很多教程让自己修改Makefile，但是修改Makefile很麻烦还容易出错，故不推荐使用这种方法。阅读zlib的configure文件发现其通过CHOST环境变量来控制交叉编译选项，因此只需将CHOST设置为交叉编译前缀即可。</p>
+<p>下面是configure文件中控制交叉编译的部分：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># set command prefix for cross-compilation</span></span><br><span class="line"><span class="keyword">if</span> [ -n <span class="string">&quot;<span class="variable">$&#123;CHOST&#125;</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">uname</span>=<span class="variable">$&#123;CHOST&#125;</span></span><br><span class="line">    mname=<span class="variable">$&#123;CHOST&#125;</span></span><br><span class="line">    CROSS_PREFIX=<span class="string">&quot;<span class="variable">$&#123;CHOST&#125;</span>-&quot;</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    mname=`(<span class="built_in">uname</span> -a || <span class="built_in">echo</span> unknown) 2&gt;/dev/null`</span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>编译OpenSSL</strong></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">./Configure --prefix=<span class="variable">$&#123;WORK_DIR&#125;</span>/openssl_install --cross-compile-prefix=arm-linux-gnueabihf- no-asm linux-armv4 -fPIC</span><br><span class="line">make -j10</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
+<p>这里一定要加-fPIC，以生成位置无关代码，否则后面编译OpenSSH时会找不到相应的库</p>
+<h4 id="编译OpenSSH"><a href="#编译OpenSSH" class="headerlink" title="编译OpenSSH"></a>编译OpenSSH</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">./configure --host=arm-linux-gnueabihf --with-libs --with-zlib=<span class="variable">$&#123;WORK_DIR&#125;</span>/zlib_install/ --with-ssl-dir=<span class="variable">$&#123;WORK_DIR&#125;</span>/openssl_install/ --disable-etc-default-login CC=arm-linux-gnueabihf-gcc AR=arm-linux-gnueabihf-ar</span><br><span class="line">make -j10</span><br></pre></td></tr></table></figure>
+<p>编译好后不着急install，先生成四个key文件</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa -f ssh_host_rsa_key -N <span class="string">&quot;&quot;</span></span><br><span class="line">ssh-keygen -t dsa -f ssh_host_dsa_key -N <span class="string">&quot;&quot;</span></span><br><span class="line">ssh-keygen -t ecdsa -f ssh_host_ecdsa_key -N <span class="string">&quot;&quot;</span></span><br><span class="line">ssh-keygen -t dsa -f ssh_host_ed25519_key -N <span class="string">&quot;&quot;</span></span><br></pre></td></tr></table></figure>
+<p>然后准备复制到rootfs中，切换工作目录到${rootfs}，创建下面三个文件夹</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> /usr/libexec  </span><br><span class="line"><span class="built_in">mkdir</span> /usr/local/etc  </span><br><span class="line"><span class="built_in">mkdir</span> /usr/local/bin</span><br><span class="line"><span class="built_in">mkdir</span> /usr/local/libexec</span><br></pre></td></tr></table></figure>
+<p>复制文件到相应目录</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> scp sftp ssh sshd ssh-add ssh-agent ssh-keygen ssh-keyscan <span class="variable">$&#123;ROOTFS_WORKDIR&#125;</span>/usr/local/bin</span><br><span class="line"></span><br><span class="line"><span class="comment">#这四个key文件需要确保权限为600</span></span><br><span class="line"><span class="comment">#ssh_host_rsa_key、ssh_host_dsa_key、ssh_host_ecdsa_key和ssh_host_ed25519_key</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">cp</span> moduli ssh_config sshd_config ssh_host_rsa_key ssh_host_dsa_key ssh_host_ecdsa_key ssh_host_ed25519_key <span class="variable">$&#123;ROOTFS_WORKDIR&#125;</span>/usr/local/etc</span><br><span class="line"></span><br><span class="line"><span class="built_in">cp</span> sftp-server ssh-keysign <span class="variable">$&#123;ROOTFS_WORKDIR&#125;</span>/usr/libexec</span><br><span class="line"><span class="built_in">cp</span> sshd-session <span class="variable">$&#123;ROOTFS_WORKDIR&#125;</span>/usr/local/libexec</span><br></pre></td></tr></table></figure>
+
+<p>然后再&#x2F;etc&#x2F;passwd文件中增加两行</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sshd:x:74:74:Privilege-separated</span><br><span class="line">SSH:/var/empty/sshd:/sbin/nologin</span><br></pre></td></tr></table></figure>
+<p>在&#x2F;etc&#x2F;group文件中添加</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sshd:x:74:</span><br></pre></td></tr></table></figure>
+<p>最后将相应的库复制到rootfs中</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cp libssl.so.3 libcrypto.so.3 $&#123;ROOTFS_WORKDIR&#125;/lib</span><br><span class="line">cp libz.so.1.3.1 $&#123;ROOTFS_WORKDIR&#125;/lib</span><br></pre></td></tr></table></figure>
+
+<h4 id="配置OpenSSH"><a href="#配置OpenSSH" class="headerlink" title="配置OpenSSH"></a>配置OpenSSH</h4><p>ssh_config，sshd_config配置文件在&#x2F;usr&#x2F;local&#x2F;etc&#x2F;中，不同于常规ubuntu位于&#x2F;etc&#x2F;ssh中，其他具体配置可参考网上的教程</p>
+<h4 id="ssh显示欢迎界面"><a href="#ssh显示欢迎界面" class="headerlink" title="ssh显示欢迎界面"></a>ssh显示欢迎界面</h4><ol>
+<li>在sshd_config中设置banner字段<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># sshd_config</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#Banner</span></span><br><span class="line">banner /etc/banner <span class="comment"># 这个文件中的内容会在SSH登录请求时显示</span></span><br></pre></td></tr></table></figure></li>
+<li>在&#x2F;etc&#x2F;motd文件中添加内容，这个文件中的内容会在登录成功时显示<br>motd是message of to day（今日信息）的缩写，在Ubuntu系统中，会开机自动生成，而其他系统中，一般为固定内容</li>
+</ol>
+<h3 id="开机自动启动远程服务"><a href="#开机自动启动远程服务" class="headerlink" title="开机自动启动远程服务"></a>开机自动启动远程服务</h3><p>既然都使用远程了，我们肯定不希望先连接显示器键盘，输入命令开启远程服务后，再进行远程连接，因此远程服务需要在开机时自动启动。<br>在inittab中设置一个once，来启动telnet和ftp，其中网络的基本设置在sysinit中完成，而telnet和ftp服务器进程需要等网络基本设置完成后启动，并且持续运行，因此使用once活动来实现</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">::once:/etc/initremote</span><br></pre></td></tr></table></figure>
+<p>&#x2F;etc&#x2F;initremote内容如下：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!bin/sh</span></span><br><span class="line">telnetd</span><br><span class="line">tcpsvd -vE 0.0.0.0 21 ftpd -w /home/euler &amp;</span><br><span class="line">/usr/local/bin/sshd</span><br></pre></td></tr></table></figure>
+
+<h2 id="安装Alsa"><a href="#安装Alsa" class="headerlink" title="安装Alsa"></a>安装Alsa</h2><p>ALSA，全称是Advanced Linux Sound Architecture，是Linux中提供声音设备驱动的内核组件，应用可以通过ALSA接口实现音频播放、录音、设备通路控制、音量控制、通话等功能。</p>
+<p>可以去<a target="_blank" rel="noopener" href="https://www.alsa-project.org/main/index.php/Download">官网</a>下载源码，这里需要alsa-lib和alsa-utils</p>
+<h3 id="交叉编译alsa-libs"><a href="#交叉编译alsa-libs" class="headerlink" title="交叉编译alsa-libs"></a>交叉编译alsa-libs</h3><p>由于alsa-utils依赖于alsa-libs，因此先编译libs<br>先新建一个alsa目录，然后将源码下载到该目录下并解压。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> WORK_DIR=<span class="variable">$PWD</span></span><br><span class="line"><span class="built_in">mkdir</span> alsa_install</span><br><span class="line"><span class="built_in">cd</span> alsa-lib-1.2.12</span><br><span class="line">./configure\</span><br><span class="line"> --host=arm-linux-gnueabihf\</span><br><span class="line"> --prefix=<span class="variable">$&#123;WORK_DIR&#125;</span>/alsa_install\</span><br><span class="line"> --enable-shared\</span><br><span class="line"> --disable-python\</span><br><span class="line"> --with-configdir=/usr/local/share/alsa\</span><br><span class="line"> --with-plugindir=<span class="variable">$&#123;OUTPUT&#125;</span>/alsa_plugin</span><br><span class="line">make -j10</span><br><span class="line"><span class="built_in">sudo</span> make install</span><br></pre></td></tr></table></figure>
+<p>注意这个configdir的目录必须和下载到开发板时的目录完全相同才行，否则会报错。</p>
+<h3 id="交叉编译alsa-utils"><a href="#交叉编译alsa-utils" class="headerlink" title="交叉编译alsa-utils"></a>交叉编译alsa-utils</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> <span class="variable">$&#123;WORK_DIR&#125;</span></span><br><span class="line"><span class="built_in">cd</span> alsa-utils-1.2.12</span><br><span class="line">./configure --host=arm-linux-gnueabihf\</span><br><span class="line"> --prefix=<span class="variable">$&#123;WORK_DIR&#125;</span>/alsa_install\</span><br><span class="line"> CFLAGS=<span class="string">&quot;-I<span class="variable">$&#123;WORK_DIR&#125;</span>/alsa_install/include&quot;</span>\</span><br><span class="line"> LDFLAGS=<span class="string">&quot;-L<span class="variable">$&#123;WORK_DIR&#125;</span>/alsa_install/lib -lasound&quot;</span>\</span><br><span class="line"> --disable-alsamixer\</span><br><span class="line"> --disable-xmlto\</span><br><span class="line"> --with-alsa-inc-prefix=<span class="variable">$&#123;WORK_DIR&#125;</span>/alsa_install/include\</span><br><span class="line"> --with-alsa-prefix=<span class="variable">$&#123;WORK_DIR&#125;</span>/alsa_install/lib</span><br><span class="line">make -j10</span><br><span class="line"><span class="built_in">sudo</span> make install</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装到开发板"><a href="#安装到开发板" class="headerlink" title="安装到开发板"></a>安装到开发板</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> <span class="variable">$&#123;WORK_DIR&#125;</span>/alsa_install/lib/libasound.* <span class="variable">$&#123;TARGET_ROOT&#125;</span>/lib/</span><br><span class="line"><span class="built_in">cp</span> <span class="variable">$&#123;WORK_DIR&#125;</span>/alsa_install/bin/* <span class="variable">$&#123;TARGET_ROOT&#125;</span>/bin/</span><br><span class="line"><span class="built_in">cp</span> <span class="variable">$&#123;WORK_DIR&#125;</span>/alsa_install/sbin/* <span class="variable">$&#123;TARGET_ROOT&#125;</span>/sbin/</span><br><span class="line"><span class="built_in">cp</span> -r /usr/local/share/alsa <span class="variable">$&#123;TARGET_ROOT&#125;</span>/usr/local/share/alsa</span><br></pre></td></tr></table></figure>
+
+<h2 id="安装ffmpeg"><a href="#安装ffmpeg" class="headerlink" title="安装ffmpeg"></a>安装ffmpeg</h2><h3 id="包管理器安装"><a href="#包管理器安装" class="headerlink" title="包管理器安装"></a>包管理器安装</h3><p>ffmpeg是一个开源的音视频编解码工具，官方文档在<a target="_blank" rel="noopener" href="https://trac.ffmpeg.org/">这里</a>如果有包管理工具可以直接通过包管理工具安装</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt install ffmpeg</span><br></pre></td></tr></table></figure>
+<p>如果没有包管理器，也可以通过源码构建</p>
+<h3 id="从源码构建"><a href="#从源码构建" class="headerlink" title="从源码构建"></a>从源码构建</h3><h4 id="下载源码"><a href="#下载源码" class="headerlink" title="下载源码"></a>下载源码</h4><p>新建一个工作目录ffmpeg，然后下载源码。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://git.ffmpeg.org/ffmpeg.git ffmpeg</span><br></pre></td></tr></table></figure>
+<p>下载好后还有一个ffmpeg目录，进入这个目录</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ffmpeg</span><br></pre></td></tr></table></figure>
+<h4 id="配置编译参数"><a href="#配置编译参数" class="headerlink" title="配置编译参数"></a>配置编译参数</h4><p>ffmpeg的编译参数通过configure脚本设置，先执行一下，发现输入–help命令可以查看帮助，查看一下这些参数的含义，根据需求选择，在此处我们往32位的树莓派上交叉编译。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">./configure --<span class="built_in">arch</span>=arm\</span><br><span class="line"> --cross-prefix=arm-linux-gnueabihf-\</span><br><span class="line"> --target-os=linux\</span><br><span class="line"> --prefix=/home/anakin/Data/code/euler/rootfs/usr\</span><br><span class="line"> --disable-ffprobe\</span><br><span class="line"> --enable-mmal\</span><br><span class="line"> --enable-omx-rpi\</span><br><span class="line"> --enable-gpl\</span><br><span class="line"> --enable-nonfree</span><br></pre></td></tr></table></figure>
+<p>  首先先设置目标架构arm，交叉编译工具armhf，目标系统Linux。</p>
+<p>  –prefix为euler系统的根文件系统的&#x2F;usr目录，这一步非常重要，否则后面会安装到自己的电脑上。</p>
+<p>  然后裁剪掉一些不需要的库，比如媒体分析工具ffprobe</p>
+<p>  最后新加入一些需要的库：</p>
+<ul>
+<li>–enable-mmal：Braodcom的多媒体硬件优化层，可以为树莓派开启硬件加速</li>
+<li>–enable-omx-rpi：开启树莓派的OpenMAX加速</li>
+<li>–enable-gpl:启用gpl许可的编码器</li>
+<li>–enable-nonfree：启用非自由的编码器</li>
+</ul>
+<p>如果提示</p>
+<blockquote>
+<p>WARNING: arm-linux-gnueabihf-pkg-config not found, library detection may fail.<br>则安装pkg-config即可</p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt install pkg-config-arm-linux-gnueabihf</span><br></pre></td></tr></table></figure>
+<p>都完成后开始编译</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make -j10</span><br></pre></td></tr></table></figure>
+<h4 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h4><p>编译完成之后，用make install命令安装即可</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make install</span><br></pre></td></tr></table></figure>
+<h2 id="安装Valgrind"><a href="#安装Valgrind" class="headerlink" title="安装Valgrind"></a>安装Valgrind</h2><p>Valgrind 是一款用于内存调试，内存泄漏检测以及性能分析，检测线程错误的开发工具。</p>
+<h3 id="下载源码-1"><a href="#下载源码-1" class="headerlink" title="下载源码"></a>下载源码</h3><p>在<a target="_blank" rel="noopener" href="https://valgrind.org/downloads/">官网</a>下载对应的包，然后解压，得到一个目录valgrind，进入这个目录</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget https://sourceware.org/pub/valgrind/valgrind-3.23.0.tar.bz2</span><br><span class="line">tar -xvf valgrind-3.23.0.tar.bz2</span><br><span class="line">cd valgrind-3.23.0</span><br></pre></td></tr></table></figure>
+<h3 id="修改配置"><a href="#修改配置" class="headerlink" title="修改配置"></a>修改配置</h3><p>查看目录里面的README和README.aarch64（没有arm32的，看着这俩猜一猜怎么设置交叉编译工具链），然后再打开configure脚本看看。<br>看到大概有这样一段和交叉编译相关的内容</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">Development so far was however done by cross compiling, viz:</span><br><span class="line">  export CC=aarch64-linux-gnu-gcc</span><br><span class="line">  export LD=aarch64-linux-gnu-ld</span><br><span class="line">  export AR=aarch64-linux-gnu-ar</span><br><span class="line"></span><br><span class="line">  ./autogen.sh</span><br><span class="line">  ./configure --prefix=`pwd`/Inst --host=aarch64-unknown-linux \</span><br><span class="line">              --enable-only64bit</span><br><span class="line">  make -j4</span><br><span class="line">  make -j4 install</span><br><span class="line"></span><br><span class="line">Doing this assumes that the install path (`pwd`/Inst) is valid on</span><br><span class="line">both host and target, which isn&#x27;t normally the case.  To avoid</span><br><span class="line">this limitation, do instead:</span><br><span class="line"></span><br><span class="line">  ./configure --prefix=/install/path/on/target \</span><br><span class="line">              --host=aarch64-unknown-linux \</span><br><span class="line">              --enable-only64bit</span><br><span class="line">  make -j4</span><br><span class="line">  make -j4 install DESTDIR=/a/temp/dir/on/host</span><br><span class="line">  # and then copy the contents of DESTDIR to the target.</span><br></pre></td></tr></table></figure>
+<p>大概意思就是，先设置交叉编译工具链，然后运行autogen，然后利用configure配置</p>
+<p>我们首先需要修改交叉编译工具为arm32位的交叉编译工具：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> CC=arm-linux-gnueabihf-gcc</span><br><span class="line"><span class="built_in">export</span> LD=arm-linux-gnueabihf-ld</span><br><span class="line"><span class="built_in">export</span> AR=arm-linux-gnueabihf-ar</span><br></pre></td></tr></table></figure>
+<p>然后修改configure里面的host为arm-linux，并且去掉only64bit，因为我们是32bit。</p>
+<p>注意这个–prefix参数，这里要填写的是在目标机器上的安装路径，在这里我们安装到&#x2F;usr路径下，所以可以得到命令</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">./autogen.sh</span><br><span class="line">./configure --prefix=/usr --host=arm-linux</span><br></pre></td></tr></table></figure>
+<p>至此就完成了编译前配置，设置完后会列出相应的配置：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Version: 3.23.0</span><br><span class="line">        Maximum build arch: arm</span><br><span class="line">        Primary build arch: arm</span><br><span class="line">      Secondary build arch:</span><br><span class="line">                  Build OS: linux</span><br><span class="line">    Link Time Optimisation: no</span><br><span class="line">      Primary build target: ARM_LINUX</span><br><span class="line">    Secondary build target:</span><br><span class="line">          Platform variant: vanilla</span><br><span class="line">     Primary -DVGPV string: -DVGPV_arm_linux_vanilla=1</span><br><span class="line">        Default supp files: ./xfree-3.supp ./xfree-4.supp glibc-2.X-drd.supp glibc-2.X-helgrind.supp glibc-2.X.supp</span><br></pre></td></tr></table></figure>
+<p>确认无误后开始编译</p>
+<h3 id="编译和安装"><a href="#编译和安装" class="headerlink" title="编译和安装"></a>编译和安装</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">make -j4</span><br><span class="line">make -j4 install DESTDIR=&#123;<span class="variable">$ROOTFS_DIR</span>&#125; <span class="comment">#直接放到rootfs里面，因为自带前缀/usr，故不用带/usr路径</span></span><br></pre></td></tr></table></figure>
+<p>如果编译过程中出现问题：</p>
+<blockquote>
+<p>sorry, unimplemented: Thumb-1 hard-float VFP ABI</p>
+</blockquote>
+<p>打开configure文件，把里面的-march&#x3D;armv6修改成-marm即可</p>
+<p>上下文大概如下：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> <span class="string">&quot;<span class="variable">$&#123;host_cpu&#125;</span>&quot;</span> <span class="keyword">in</span></span><br><span class="line">...)</span><br><span class="line">  ......</span><br><span class="line">arm*)</span><br><span class="line">        &#123; <span class="variable">$as_echo</span> <span class="string">&quot;<span class="variable">$as_me</span>:<span class="variable">$&#123;as_lineno-$LINENO&#125;</span>: result: ok (<span class="variable">$&#123;host_cpu&#125;</span>)&quot;</span> &gt;&amp;5</span><br><span class="line"><span class="variable">$as_echo</span> <span class="string">&quot;ok (<span class="variable">$&#123;host_cpu&#125;</span>)&quot;</span> &gt;&amp;6; &#125;</span><br><span class="line">        VGCONF_PLATFORM_ARM_ARCH=<span class="string">&quot;-marm&quot;</span> <span class="comment">#这里原来是-march=armv6</span></span><br><span class="line">        ARCH_MAX=<span class="string">&quot;arm&quot;</span></span><br><span class="line">        ;;</span><br></pre></td></tr></table></figure>
+<p>将rootfs同步到树莓派，进行测试即可</p>
+<h3 id="测试valgrind"><a href="#测试valgrind" class="headerlink" title="测试valgrind"></a>测试valgrind</h3><p>参考这几篇博客</p>
+<p><a target="_blank" rel="noopener" href="http://blog.chinaunix.net/uid-23629988-id-3033741.html">http://blog.chinaunix.net/uid-23629988-id-3033741.html</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_45518728/article/details/119865117">https://blog.csdn.net/weixin_45518728/article/details/119865117</a></p>
+<h2 id="文件系统扩容"><a href="#文件系统扩容" class="headerlink" title="文件系统扩容"></a>文件系统扩容</h2><p>从镜像刷写到SD卡后，rootfs的容量和镜像中的划分大小是一样的，也就是只有500多M的空间可用，因此需要将root分区扩容至SD卡剩余的所有空间。因此需要将磁盘逻辑分区扩大，然后将文件系统也调整至相应容量</p>
+<p>以下操作都需要离线进行，即将树莓派系统的SD卡插到电脑上进行。</p>
+<h3 id="磁盘分区扩容"><a href="#磁盘分区扩容" class="headerlink" title="磁盘分区扩容"></a>磁盘分区扩容</h3><p>用fdisk -l命令查看SD卡的物理空间和分区表。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fdisk -l</span><br></pre></td></tr></table></figure>
+<p>根据容量找到SD卡的盘符，可以看到我的是&#x2F;dev&#x2F;sdc，并且&#x2F;dev&#x2F;sdc3分区是root分区，但是只有502M的可用空间，显然没有占满整个SD卡<br><img src="/../img_folder/Raspberry/fdisk.png"></p>
+<p>下面需要用fdisk工具，将root对应的分区扩容至所有剩余空间，整个操作思路为，删除原有分区，然后再新建一个和原root分区起始块号相同，大小为SD卡中全部可用块的分区。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> fdisk /dev/sdc <span class="comment">#sdc换成你对应的设备号</span></span><br></pre></td></tr></table></figure>
+<p>进入菜单之后：</p>
+<ol>
+<li>按p，查看分区表，会看到一个和上面图片差不多的内容，比如我的是这样<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Device     Boot   Start     End Sectors  Size Id Type</span><br><span class="line">/dev/sdc1  *       8192  593919  585728  286M  c W95 FAT32 (LBA)</span><br><span class="line">/dev/sdc2        593920 1593343  999424  488M 82 Linux swap / Solaris</span><br><span class="line">/dev/sdc3       1593344 2621439 1028096  502M 83 Linux</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>记下Linux类型分区的Start块号，后面有用</p>
+<ol start="2">
+<li><p>按d，删除分区3</p>
+</li>
+<li><p>按n，新建分区，分区类型选择主分区p，分区号为3，起点为上面记录的起始块号，终点为默认（最后一块），最后移除签名选N</p>
+</li>
+<li><p>输入w保存分区</p>
+</li>
+</ol>
+<p>现在就完成了磁盘逻辑分区的调整，可以再次使用fdisk -l命令查看分区表</p>
+<h3 id="文件系统扩容-1"><a href="#文件系统扩容-1" class="headerlink" title="文件系统扩容"></a>文件系统扩容</h3><p>磁盘分区扩容完成后，需要修改文件系统数据结构，使其能识别全部的分区块</p>
+<p>先用e2fsck命令检查分区表</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> e2fsck /dev/sdc3</span><br></pre></td></tr></table></figure>
+<p>e2fsck工具常用选项如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">-a：不询问使用者意见，便自动修复文件系统；</span><br><span class="line">-b&lt;superblock&gt;：指定superblock，而不使用预设的superblock；</span><br><span class="line">-B&lt;区块大小&gt;：指定区块的大小，单位为字节；</span><br><span class="line">-c：一并执行badblocks，以标示损坏的区块；</span><br><span class="line">-C：将检查过程的信息完整记录在file descriptor中，使得整个检查过程都能完整监控；</span><br><span class="line">-d：显示排错信息；</span><br><span class="line">-f：即使文件系统没有错误迹象，仍强制地检查正确性；</span><br><span class="line">-F：执行前先清除设备的缓冲区；</span><br><span class="line">-l&lt;文件&gt;：将文件中指定的区块加到损坏区块列表；</span><br><span class="line">-L&lt;文件&gt;：先清除损坏区块列表，再将文件中指定的区块加到损坏区块列表。因此损坏区块列表的区块跟文件中指定的区块是一样的；</span><br><span class="line">-n：以只读模式开启文件系统，并采取非互动方式执行，所有的问题对话均设置以&quot;no&quot;回答；</span><br><span class="line">-p：不询问使用者意见，便自动修复文件系统；</span><br><span class="line">-r：此参数只为了兼容性而存在，并无实际作用；</span><br><span class="line">-s：如果文件系统的字节顺序不适当，就交换字节顺序，否则不做任何动作；</span><br><span class="line">-S：不管文件系统的字节顺序，一律交换字节顺序；</span><br><span class="line">-t：显示时间信息；</span><br><span class="line">-v：执行时显示详细的信息；</span><br><span class="line">-V：显示版本信息；</span><br><span class="line">-y：采取非互动方式执行，所有的问题均设置以&quot;yes&quot;回答。</span><br></pre></td></tr></table></figure>
+
+<p>用resize2fs工具修改ext4文件系统索引</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> resize2fs /dev/sdc3</span><br></pre></td></tr></table></figure>
+
+<p>至此便完成了扩容，可以将&#x2F;dev&#x2F;sdc3挂载后，使用df -h命令查看分区的大小验证操作是否成功。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/09/19/raspberrypi/rootfs/" data-id="cm18p37r1000bhwzyf1wp8j8y" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-zipformer" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/09/19/zipformer/" class="article-date">
+  <time class="dt-published" datetime="2024-09-19T02:49:51.436Z" itemprop="datePublished">2024-09-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="数据路径"><a href="#数据路径" class="headerlink" title="数据路径"></a>数据路径</h1><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/mnt/share/Downloads/ASR-datasets <span class="comment"># 原始数据</span></span><br><span class="line">/mnt/share/Downloads/ASR-k2-features <span class="comment">#处理后的特征</span></span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/boling_cavalry/article/details/106590784">不用sudo使用docker命令</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/09/19/zipformer/" data-id="cm18p37qx0007hwzycyzpgw2s" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-Ubuntu" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/09/19/Ubuntu/" class="article-date">
+  <time class="dt-published" datetime="2024-09-19T02:49:51.432Z" itemprop="datePublished">2024-09-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="安装Ubuntu"><a href="#安装Ubuntu" class="headerlink" title="安装Ubuntu"></a>安装Ubuntu</h1><h2 id="使用rufus制作启动盘"><a href="#使用rufus制作启动盘" class="headerlink" title="使用rufus制作启动盘"></a>使用rufus制作启动盘</h2><h2 id="安装系统"><a href="#安装系统" class="headerlink" title="安装系统"></a>安装系统</h2><h1 id="更换KDE桌面环境"><a href="#更换KDE桌面环境" class="headerlink" title="更换KDE桌面环境"></a>更换KDE桌面环境</h1><h1 id="安装中文输入法"><a href="#安装中文输入法" class="headerlink" title="安装中文输入法"></a>安装中文输入法</h1><p>Ubuntu下通常有几个常用的输入法框架，ibus，fcix等，Ubuntu自带ibus，因此只需安装其支持的拼音输入法即可</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get install ibus-pinyin ibus-libpinyin</span><br></pre></td></tr></table></figure>
+
+<h1 id="科学上网"><a href="#科学上网" class="headerlink" title="科学上网"></a>科学上网</h1><p>Clash现在没有了，使用<a target="_blank" rel="noopener" href="https://www.clashverge.dev/install.html">Clash-Verge</a></p>
+<h1 id="网络设置"><a href="#网络设置" class="headerlink" title="网络设置"></a>网络设置</h1><p>netplan</p>
+<h1 id="环境变量配置"><a href="#环境变量配置" class="headerlink" title="环境变量配置"></a>环境变量配置</h1><p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1174426">https://cloud.tencent.com/developer/article/1174426</a></p>
+<h1 id="远程传输文件"><a href="#远程传输文件" class="headerlink" title="远程传输文件"></a>远程传输文件</h1><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rsync -avz [<span class="built_in">source</span>] [user@ip]:[dist]</span><br></pre></td></tr></table></figure>
+<p>确定本地主机可以通过ssh登录远程主机后，可以将文件从本地传输到远程<br>例：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rsync -avz /home user@192.168.1.2:/home</span><br></pre></td></tr></table></figure>
+<p>参数中a代表递归模式，v代表显示过程，z代表传输时压缩文件</p>
+<h1 id="shell脚本常用方法"><a href="#shell脚本常用方法" class="headerlink" title="shell脚本常用方法"></a>shell脚本常用方法</h1><h2 id="将命令运行结果赋值给变量"><a href="#将命令运行结果赋值给变量" class="headerlink" title="将命令运行结果赋值给变量"></a>将命令运行结果赋值给变量</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var=$(<span class="built_in">command</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="用指定字符分割字符串"><a href="#用指定字符分割字符串" class="headerlink" title="用指定字符分割字符串"></a>用指定字符分割字符串</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">string=<span class="string">&quot;hello,shell,split,test&quot;</span>  </span><br><span class="line">array=(<span class="variable">$&#123;string//,/ &#125;</span>)</span><br><span class="line"><span class="comment"># 第二句的意思是：$&#123;parameter//pattern/string&#125; </span></span><br><span class="line"><span class="comment"># 即用string来替换parameter变量中所有匹配的pattern，并把结果存在数组中</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> var <span class="keyword">in</span> <span class="variable">$&#123;array[@]&#125;</span> <span class="comment">#将分割出来的字符打印出来</span></span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">   <span class="built_in">echo</span> <span class="variable">$var</span></span><br><span class="line"><span class="keyword">done</span> </span><br></pre></td></tr></table></figure>
+<h1 id="查看资源占用的工具"><a href="#查看资源占用的工具" class="headerlink" title="查看资源占用的工具"></a>查看资源占用的工具</h1><h2 id="CPU"><a href="#CPU" class="headerlink" title="CPU"></a>CPU</h2><p>top，htop</p>
+<h2 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h2><p>free，valgrind</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/09/19/Ubuntu/" data-id="cm18p37qs0001hwzyhy7b9ggs" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-deeplearning" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/09/19/deeplearning/" class="article-date">
+  <time class="dt-published" datetime="2024-09-19T02:49:51.432Z" itemprop="datePublished">2024-09-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="构建模型"><a href="#构建模型" class="headerlink" title="构建模型"></a>构建模型</h1><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_27825451/article/details/90550890">定义模型</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_27825451/article/details/90705328">定义层</a></p>
+<h2 id="用torch重写keras"><a href="#用torch重写keras" class="headerlink" title="用torch重写keras"></a>用torch重写keras</h2><p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6863822972709732366">https://juejin.cn/post/6863822972709732366</a></p>
+<h1 id="训练模型"><a href="#训练模型" class="headerlink" title="训练模型"></a>训练模型</h1><h2 id="训练流程"><a href="#训练流程" class="headerlink" title="训练流程"></a>训练流程</h2><p>训练流程一般为，将数据$X$按batch（一次输入一批数据）输入模型$M$，然后得到预测结果$Y&#x3D;M(X)$，利用损失函数计算$Y$和$Label$的距离$Loss(Y, Label)$，然后用优化器计算梯度，优化参数，并且计算在验证集上的准确率，评估模型泛化能力，然后根据评估结果，可以相应修改超参数，不断迭代上述过程直至模型收敛。</p>
+<h2 id="单机单卡训练"><a href="#单机单卡训练" class="headerlink" title="单机单卡训练"></a>单机单卡训练</h2><h3 id="加载数据"><a href="#加载数据" class="headerlink" title="加载数据"></a>加载数据</h3><p>Dataset负责逐条读取数据<br>Dataloader负责将Dataset中的数据组合</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/zyw2002/article/details/128175177">https://blog.csdn.net/zyw2002/article/details/128175177</a><br>一般用下面的模板就行</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><span class="line">criterion = nn.CrossEntropyLoss() <span class="comment">#选择损失函数</span></span><br><span class="line">optimizer = torch.optim.Adam(model.parameters(), lr=<span class="number">0.001</span>, weight_decay=<span class="number">0.01</span>) <span class="comment"># 选择优化器</span></span><br><span class="line">scheduler = torch.optim.lr_scheduler.StepLR(optimizer = optimizer, step_size=<span class="number">10</span>, gamma=<span class="number">0.1</span>) <span class="comment"># 逐轮下降学习率</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">train</span>(<span class="params">model, device, dataLoader, criterion, optimizer, epoch</span>):</span><br><span class="line">    <span class="string">r&quot;&quot;&quot;模型训练函数</span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">        model: 要训练的模型</span></span><br><span class="line"><span class="string">        device: 训练的设备</span></span><br><span class="line"><span class="string">        dataLoader: 训练集</span></span><br><span class="line"><span class="string">        criterion: 损失函数</span></span><br><span class="line"><span class="string">        optimizer: 优化器</span></span><br><span class="line"><span class="string">        epoch: 当前训练的轮数，给进度条用</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    model.train() <span class="comment">#将模型设置为训练模式</span></span><br><span class="line"></span><br><span class="line">    tensor = torch.rand(<span class="number">4</span>, <span class="number">1</span>)</span><br><span class="line">    train_loss = criterion(tensor, tensor) <span class="comment"># 随便给loss赋一个初值</span></span><br><span class="line">    bar = tqdm(dataLoader) <span class="comment"># 定义一个进度条</span></span><br><span class="line">    bar.desc = <span class="string">&quot;Epoch &#123;&#125; train&quot;</span>.<span class="built_in">format</span>(epoch + <span class="number">1</span>) <span class="comment"># 进度条前面显示的内容</span></span><br><span class="line">    <span class="keyword">for</span> wav, label <span class="keyword">in</span> bar:</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 将数据和标签装载到设备</span></span><br><span class="line">        wav = wav.to(device)</span><br><span class="line">        label = label.to(device)</span><br><span class="line">        out = model(wav) <span class="comment">#用模型计算当前结果</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 计算损失函数</span></span><br><span class="line">        loss = criterion(out, label)</span><br><span class="line">        train_loss = loss.data <span class="comment">#记录训练loss</span></span><br><span class="line">        bar.set_postfix(loss = <span class="string">&quot;&#123;:.5f&#125;&quot;</span>.<span class="built_in">format</span>(train_loss)) <span class="comment"># 更新进度条后面显示的内容</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 计算当前模型的梯度</span></span><br><span class="line">        optimizer.zero_grad()</span><br><span class="line">        loss.backward()</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 更新参数</span></span><br><span class="line">        optimizer.step()</span><br><span class="line">    <span class="keyword">return</span> train_loss</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">val</span>(<span class="params">model, device, dataLoader, criterion, epoch</span>):</span><br><span class="line">    <span class="string">r&quot;&quot;&quot;验证模型泛化情况</span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">        model: 要验证的模型</span></span><br><span class="line"><span class="string">        device: 验证使用的设备</span></span><br><span class="line"><span class="string">        dataLoader: 验证数据集</span></span><br><span class="line"><span class="string">        criterion: 损失函数</span></span><br><span class="line"><span class="string">        epoch: 当前轮数，给进度条显示使用</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    loss_val = []</span><br><span class="line">    model.<span class="built_in">eval</span>() <span class="comment"># 将模型设置为验证模式，其中dropout等层会被关闭，可以加快推理速度</span></span><br><span class="line">    bar = tqdm(dataLoader)</span><br><span class="line">    bar.set_description(<span class="string">&quot;Epoch &#123;&#125; validate&quot;</span>.<span class="built_in">format</span>(epoch + <span class="number">1</span>))</span><br><span class="line">    <span class="keyword">for</span> wav, label <span class="keyword">in</span> bar:</span><br><span class="line">        <span class="comment"># 将数据和标签装载到设备</span></span><br><span class="line">        wav = wav.to(device)</span><br><span class="line">        label = label.to(device)</span><br><span class="line">        out = model(wav) <span class="comment">#用模型计算当前结果</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 计算损失函数</span></span><br><span class="line">        loss = criterion(out, label)</span><br><span class="line">        loss_val.append(loss.item())</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> np.mean(loss_val)</span><br><span class="line">    </span><br><span class="line"><span class="keyword">def</span> <span class="title function_">fit</span>(<span class="params">model, train_data, val_data, device, criterion, optimizer, scheduler=<span class="literal">None</span>, epochs = <span class="number">60</span></span>):</span><br><span class="line">    <span class="string">r&quot;&quot;&quot;拟合数据集</span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">        model: 要拟合的模型</span></span><br><span class="line"><span class="string">        train_data: 训练集的dataLoader</span></span><br><span class="line"><span class="string">        val_data: 验证集的dataLoader</span></span><br><span class="line"><span class="string">        criterion: 损失函数</span></span><br><span class="line"><span class="string">        optimizer: 优化器</span></span><br><span class="line"><span class="string">        scheduler: 超参数修改管理器</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">for</span> e <span class="keyword">in</span> <span class="built_in">range</span>(epochs):</span><br><span class="line">        loss_train = train(model, device, train_data, criterion, optimizer, e)</span><br><span class="line">        loss_val = val(model, device, val_data, criterion, e)</span><br><span class="line"></span><br><span class="line">        <span class="string">&quot;&quot;&quot;这里可以根据两个loss评估本轮训练情况，进行一些操作</span></span><br><span class="line"><span class="string">        如：保存模型，修改超参数，停止训练等</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;train_loss: &#123;:.5f&#125; val_loss: &#123;:.5f&#125;&quot;</span>.<span class="built_in">format</span>(loss_train, loss_val)) <span class="comment"># 输出当前结果</span></span><br><span class="line">        torch.save(model, <span class="string">&#x27;model.pkl&#x27;</span>) <span class="comment"># 保存模型</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;model saved!&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_41554005/article/details/117297861">进度条设置</a></p>
+<h2 id="单机多卡训练"><a href="#单机多卡训练" class="headerlink" title="单机多卡训练"></a>单机多卡训练</h2><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/liyier/p/18135209">https://www.cnblogs.com/liyier/p/18135209</a></p>
+<h1 id="torch利用模型进行推理"><a href="#torch利用模型进行推理" class="headerlink" title="torch利用模型进行推理"></a>torch利用模型进行推理</h1><h1 id="转onnx"><a href="#转onnx" class="headerlink" title="转onnx"></a>转onnx</h1><p><a target="_blank" rel="noopener" href="https://mmdeploy.readthedocs.io/zh-cn/latest/tutorial/03_pytorch2onnx.html">https://mmdeploy.readthedocs.io/zh-cn/latest/tutorial/03_pytorch2onnx.html</a></p>
+<p>gpu训练的模型用cpu推理</p>
+<h1 id="keras中的mel层"><a href="#keras中的mel层" class="headerlink" title="keras中的mel层"></a>keras中的mel层</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">get_melspectrogram_layer</span>(<span class="params"></span></span><br><span class="line"><span class="params">    input_shape=<span class="literal">None</span>,</span></span><br><span class="line"><span class="params">    n_fft=<span class="number">2048</span>,</span></span><br><span class="line"><span class="params">    win_length=<span class="literal">None</span>,</span></span><br><span class="line"><span class="params">    hop_length=<span class="literal">None</span>,</span></span><br><span class="line"><span class="params">    window_name=<span class="literal">None</span>,</span></span><br><span class="line"><span class="params">    pad_begin=<span class="literal">False</span>,</span></span><br><span class="line"><span class="params">    pad_end=<span class="literal">False</span>,</span></span><br><span class="line"><span class="params">    sample_rate=<span class="number">22050</span>,</span></span><br><span class="line"><span class="params">    n_mels=<span class="number">128</span>,</span></span><br><span class="line"><span class="params">    mel_f_min=<span class="number">0.0</span>,</span></span><br><span class="line"><span class="params">    mel_f_max=<span class="literal">None</span>,</span></span><br><span class="line"><span class="params">    mel_htk=<span class="literal">False</span>,</span></span><br><span class="line"><span class="params">    mel_norm=<span class="string">&#x27;slaney&#x27;</span>,</span></span><br><span class="line"><span class="params">    return_decibel=<span class="literal">False</span>,</span></span><br><span class="line"><span class="params">    db_amin=<span class="number">1e-5</span>,</span></span><br><span class="line"><span class="params">    db_ref_value=<span class="number">1.0</span>,</span></span><br><span class="line"><span class="params">    db_dynamic_range=<span class="number">80.0</span>,</span></span><br><span class="line"><span class="params">    input_data_format=<span class="string">&#x27;default&#x27;</span>,</span></span><br><span class="line"><span class="params">    output_data_format=<span class="string">&#x27;default&#x27;</span>,</span></span><br><span class="line"><span class="params">    name=<span class="string">&#x27;melspectrogram&#x27;</span>,</span></span><br><span class="line"><span class="params"></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;A function that returns a melspectrogram layer, which is a `keras.Sequential` model consists of</span></span><br><span class="line"><span class="string">    `STFT`, `Magnitude`, `ApplyFilterbank(_mel_filterbank)`, and optionally `MagnitudeToDecibel`.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">        input_shape (None or tuple of integers): input shape of the model. Necessary only if this melspectrogram layer is</span></span><br><span class="line"><span class="string">            is the first layer of your model (see `keras.model.Sequential()` for more details)</span></span><br><span class="line"><span class="string">        n_fft (int): number of FFT points in `STFT`</span></span><br><span class="line"><span class="string">        win_length (int): window length of `STFT`</span></span><br><span class="line"><span class="string">        hop_length (int): hop length of `STFT`</span></span><br><span class="line"><span class="string">        window_name (str or None): *Name* of `tf.signal` function that returns a 1D tensor window that is used in analysis.</span></span><br><span class="line"><span class="string">            Defaults to `hann_window` which uses `tf.signal.hann_window`.</span></span><br><span class="line"><span class="string">            Window availability depends on Tensorflow version. More details are at `kapre.backend.get_window()`.</span></span><br><span class="line"><span class="string">        pad_begin (bool): Whether to pad with zeros along time axis (length: win_length - hop_length). Defaults to `False`.</span></span><br><span class="line"><span class="string">        pad_end (bool): whether to pad the input signal at the end in `STFT`.</span></span><br><span class="line"><span class="string">        sample_rate (int): sample rate of the input audio</span></span><br><span class="line"><span class="string">        n_mels (int): number of mel bins in the mel filterbank</span></span><br><span class="line"><span class="string">        mel_f_min (float): lowest frequency of the mel filterbank</span></span><br><span class="line"><span class="string">        mel_f_max (float): highest frequency of the mel filterbank</span></span><br><span class="line"><span class="string">        mel_htk (bool): whether to follow the htk mel filterbank fomula or not</span></span><br><span class="line"><span class="string">        mel_norm (&#x27;slaney&#x27; or int): normalization policy of the mel filterbank triangles</span></span><br><span class="line"><span class="string">        return_decibel (bool): whether to apply decibel scaling at the end</span></span><br><span class="line"><span class="string">        db_amin (float): noise floor of decibel scaling input. See `MagnitudeToDecibel` for more details.</span></span><br><span class="line"><span class="string">        db_ref_value (float): reference value of decibel scaling. See `MagnitudeToDecibel` for more details.</span></span><br><span class="line"><span class="string">        db_dynamic_range (float): dynamic range of the decibel scaling result.</span></span><br><span class="line"><span class="string">        input_data_format (str): the audio data format of input waveform batch.</span></span><br><span class="line"><span class="string">            `&#x27;channels_last&#x27;` if it&#x27;s `(batch, time, channels)`</span></span><br><span class="line"><span class="string">            `&#x27;channels_first&#x27;` if it&#x27;s `(batch, channels, time)`</span></span><br><span class="line"><span class="string">            Defaults to the setting of your Keras configuration. (tf.keras.backend.image_data_format())</span></span><br><span class="line"><span class="string">        output_data_format (str): the data format of output melspectrogram.</span></span><br><span class="line"><span class="string">            `&#x27;channels_last&#x27;` if you want `(batch, time, frequency, channels)`</span></span><br><span class="line"><span class="string">            `&#x27;channels_first&#x27;` if you want `(batch, channels, time, frequency)`</span></span><br><span class="line"><span class="string">            Defaults to the setting of your Keras configuration. (tf.keras.backend.image_data_format())</span></span><br><span class="line"><span class="string">        name (str): name of the returned layer</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Note:</span></span><br><span class="line"><span class="string">        Melspectrogram is originally developed for speech applications and has been *very* widely used for audio signal</span></span><br><span class="line"><span class="string">        analysis including music information retrieval. As its mel-axis is a non-linear compression of (linear)</span></span><br><span class="line"><span class="string">        frequency axis, a melspectrogram can be an efficient choice as an input of a machine learning model.</span></span><br><span class="line"><span class="string">        We recommend to set `return_decibel=True`.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        **References**:</span></span><br><span class="line"><span class="string">        `Automatic tagging using deep convolutional neural networks &lt;https://arxiv.org/abs/1606.00298&gt;`_,</span></span><br><span class="line"><span class="string">        `Deep content-based music recommendation &lt;http://papers.nips.cc/paper/5004-deep-content-based-music-recommen&gt;`_,</span></span><br><span class="line"><span class="string">        `CNN Architectures for Large-Scale Audio Classification &lt;https://arxiv.org/abs/1609.09430&gt;`_,</span></span><br><span class="line"><span class="string">        `Multi-label vs. combined single-label sound event detection with deep neural networks &lt;http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.711.74&amp;rep=rep1&amp;type=pdf&gt;`_,</span></span><br><span class="line"><span class="string">        `Deep Convolutional Neural Networks and Data Augmentation for Environmental Sound Classification &lt;https://arxiv.org/pdf/1608.04363.pdf&gt;`_,</span></span><br><span class="line"><span class="string">        and way too many speech applications.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Example:</span></span><br><span class="line"><span class="string">        ::</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">            input_shape = (2, 2048)  # stereo signal, audio is channels_first</span></span><br><span class="line"><span class="string">            melgram = get_melspectrogram_layer(input_shape=input_shape, n_fft=1024, return_decibel=True,</span></span><br><span class="line"><span class="string">                n_mels=96, input_data_format=&#x27;channels_first&#x27;, output_data_format=&#x27;channels_last&#x27;)</span></span><br><span class="line"><span class="string">            model = Sequential()</span></span><br><span class="line"><span class="string">            model.add(melgram)</span></span><br><span class="line"><span class="string">            # now the shape is (batch, n_frame=3, n_mels=96, n_ch=2) because output_data_format is &#x27;channels_last&#x27;</span></span><br><span class="line"><span class="string">            # and the dtype is float</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    backend.validate_data_format_str(input_data_format)</span><br><span class="line">    backend.validate_data_format_str(output_data_format)</span><br><span class="line"></span><br><span class="line">    stft_kwargs = &#123;&#125;</span><br><span class="line">    <span class="keyword">if</span> input_shape <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">        stft_kwargs[<span class="string">&#x27;input_shape&#x27;</span>] = input_shape</span><br><span class="line"></span><br><span class="line">    waveform_to_stft = STFT(</span><br><span class="line">        **stft_kwargs,</span><br><span class="line">        n_fft=n_fft,</span><br><span class="line">        win_length=win_length,</span><br><span class="line">        hop_length=hop_length,</span><br><span class="line">        window_name=window_name,</span><br><span class="line">        pad_begin=pad_begin,</span><br><span class="line">        pad_end=pad_end,</span><br><span class="line">        input_data_format=input_data_format,</span><br><span class="line">        output_data_format=output_data_format,</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    stft_to_stftm = Magnitude()</span><br><span class="line"></span><br><span class="line">    kwargs = &#123;</span><br><span class="line">        <span class="string">&#x27;sample_rate&#x27;</span>: sample_rate,</span><br><span class="line">        <span class="string">&#x27;n_freq&#x27;</span>: n_fft // <span class="number">2</span> + <span class="number">1</span>,</span><br><span class="line">        <span class="string">&#x27;n_mels&#x27;</span>: n_mels,</span><br><span class="line">        <span class="string">&#x27;f_min&#x27;</span>: mel_f_min,</span><br><span class="line">        <span class="string">&#x27;f_max&#x27;</span>: mel_f_max,</span><br><span class="line">        <span class="string">&#x27;htk&#x27;</span>: mel_htk,</span><br><span class="line">        <span class="string">&#x27;norm&#x27;</span>: mel_norm,</span><br><span class="line">    &#125;</span><br><span class="line">    stftm_to_melgram = ApplyFilterbank(</span><br><span class="line">        <span class="built_in">type</span>=<span class="string">&#x27;mel&#x27;</span>, filterbank_kwargs=kwargs, data_format=output_data_format</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    layers = [waveform_to_stft, stft_to_stftm, stftm_to_melgram]</span><br><span class="line">    <span class="keyword">if</span> return_decibel:</span><br><span class="line">        mag_to_decibel = MagnitudeToDecibel(</span><br><span class="line">            ref_value=db_ref_value, amin=db_amin, dynamic_range=db_dynamic_range</span><br><span class="line">        )</span><br><span class="line">        layers.append(mag_to_decibel)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> Sequential(layers, name=name)</span><br></pre></td></tr></table></figure>
+
+<h1 id="推理"><a href="#推理" class="headerlink" title="推理"></a>推理</h1><h2 id="onnx推理"><a href="#onnx推理" class="headerlink" title="onnx推理"></a>onnx推理</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/u013250861/article/details/127829944">https://blog.csdn.net/u013250861/article/details/127829944</a></p>
+<p>安装onnx库<br>直接在官方github下载release包，添加到工程目录即可</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/09/19/deeplearning/" data-id="cm18p37qu0003hwzy7qtgc5lr" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-index" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/09/19/index/" class="article-date">
+  <time class="dt-published" datetime="2024-09-19T02:49:51.432Z" itemprop="datePublished">2024-09-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="Anakin0607的博客"><a href="#Anakin0607的博客" class="headerlink" title="Anakin0607的博客"></a>Anakin0607的博客</h1><h1 id="树莓派相关"><a href="#树莓派相关" class="headerlink" title="树莓派相关"></a>树莓派相关</h1><p><a href="raspberrypi/Raspberry-32bit.md">运行32位官方系统</a></p>
+<p>这篇文章提供了在树莓派4B上以32位模式启动官方系统以及分析系统架构的方法。如果直接安装树莓派官方32位镜像到树莓派4B，其会启动64位内核，但以兼容模式运行32位文件系统，故在此平台上测试程序可能会出现bug，故本文提供方法运行32位内核和文件系统，以便在树莓派4B上测试arm32程序。</p>
+<p><a href="raspberrypi/Raspberry-Euler.md">安装OpenEuler</a></p>
+<p>这篇文章讲述了如何在树莓派上安装OpenEuler操作系统</p>
+<p><a href="raspberrypi/Buildimg.md">从源码构建镜像</a></p>
+<p>这篇文章以32位OpenEuler为例，讲述了从头构建树莓派镜像的流程：编译内核、构建文件系统、交叉编译相关应用。</p>
+<p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1758280">树莓派网卡</a></p>
+<p>这篇文章讲述了树莓派有线网卡的工作原理和驱动设计模式，在编写相关驱动或配置操作系统网络设置时可以参考</p>
+<p><a target="_blank" rel="noopener" href="https://www.packetmania.net/2021/12/19/RPi-NAS-Plex/">树莓派当NAS用</a></p>
+<p>用树莓派搭建一个NAS的全部流程</p>
+<h1 id="深度学习"><a href="#深度学习" class="headerlink" title="深度学习"></a>深度学习</h1><p><a href="deeplearning.md">torch</a></p>
+<h1 id="C和C"><a href="#C和C" class="headerlink" title="C和C++"></a>C和C++</h1><p><a href="cpp.md">编译</a></p>
+<p>C语言和C++代码的编译方法以及编译工具（CMake，makefile）的使用方法</p>
+<p><a href="runtimes-link.md">运行时链接问题及解决方法</a></p>
+<p>一次调试记录，后面补充了查看可执行文件依赖库以及解决找不到依赖文件的一些方法</p>
+<h1 id="小工具"><a href="#小工具" class="headerlink" title="小工具"></a><a href="tools.md">小工具</a></h1><p>一些比较好用的电脑小工具</p>
+<h1 id="力扣笔记"><a href="#力扣笔记" class="headerlink" title="力扣笔记"></a>力扣笔记</h1><p><a href="Leetcode/%E6%9A%B4%E5%8A%9B.md">暴力解题</a></p>
+<p><a href="Leetcode/c%E8%AF%AD%E8%A8%80.md">C语言基础知识</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/09/19/index/" data-id="cm18p37qv0004hwzy4w7phruw" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-runtime-link" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/09/19/runtime-link/" class="article-date">
+  <time class="dt-published" datetime="2024-09-19T02:49:51.432Z" itemprop="datePublished">2024-09-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="arm64-linux中运行32位程序的方法"><a href="#arm64-linux中运行32位程序的方法" class="headerlink" title="arm64-linux中运行32位程序的方法"></a>arm64-linux中运行32位程序的方法</h1><p>在部署32位程序到64位系统时，运行主程序出现如下症状：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-bash: ./voix: No such file or directory</span><br></pre></td></tr></table></figure>
+<p>但是在目录下存在这个文件，查阅属性：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FILE voix</span><br></pre></td></tr></table></figure>
+<p>发现动态链接了ld-linux-armhf.so.3这个32位的库，而系统中没有，<br>再查看一下其他的依赖：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">objdump -x voix | grep NEEDED</span><br></pre></td></tr></table></figure>
+<p>暂时没发现其他的问题</p>
+<h2 id="下载依赖动态库"><a href="#下载依赖动态库" class="headerlink" title="下载依赖动态库"></a>下载依赖动态库</h2><p>据之前的交叉编译经验，这种不同架构的运行时库，一般都集成在相应的交叉编译工具包中，故直接安装32位的交叉编译工具</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt install crossbuild-essential-armhf</span><br></pre></td></tr></table></figure>
+<p>一般相应的库都安装在&#x2F;usr目录下，找到对应的目录，并进入，所需的库一般在&#x2F;usr&#x2F;arm-linux-gnueabihf&#x2F;lib目录下。</p>
+<h2 id="建立软链接"><a href="#建立软链接" class="headerlink" title="建立软链接"></a>建立软链接</h2><p>在根目录下建立lib32目录，将&#x2F;usr&#x2F;arm-linux-gnueabihf&#x2F;lib都复制进去（只复制ld-linux-armhf.so.3）也行，但是为了后面使用起来方便，这里就全复制进去了。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> /usr/arm-linux-gnueabihf/* /lib32</span><br></pre></td></tr></table></figure>
+
+<p>进入&#x2F;lib目录，建立软链接：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> <span class="built_in">ln</span> -s /lib32/ld-linux-armhf.so.3 ld-linux-armhf.so.3</span><br></pre></td></tr></table></figure>
+<p>ln -s命令的用法是</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ln</span> -s [<span class="built_in">source</span>] [dis]</span><br></pre></td></tr></table></figure>
+<p>含义是，dis文件软链接到source文件，即在dis目录创建一个文件，链接到source</p>
+<h2 id="添加其他库"><a href="#添加其他库" class="headerlink" title="添加其他库"></a>添加其他库</h2><p>再次运行，发现还是找不到一个库libdl.so，先在根目录下搜索一下刚才安装上了没有</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> find / -name libdl.so</span><br></pre></td></tr></table></figure>
+<p>搜索完后发现找到了，位于&#x2F;usr&#x2F;arm-linux-gnueabihf&#x2F;lib&#x2F;libdl.so，那直接添加即可，这次使用临时添加的方式</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> LD_LIBRARY_PATH=/usr/arm-linux-gnueabihf/lib</span><br></pre></td></tr></table></figure>
+
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>在遇到一个程序在当前系统下无法运行时，先判断当前硬件和系统是否支持此格式的程序运行，如果支持，再去查找相应的库，并完成安装和链接</p>
+<h2 id="arm各架构支持的程序位数"><a href="#arm各架构支持的程序位数" class="headerlink" title="arm各架构支持的程序位数"></a>arm各架构支持的程序位数</h2><table>
+<thead>
+<tr>
+<th>架构</th>
+<th>支持的位数</th>
+<th>uname -a中的显示</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>armv8</td>
+<td>64位，32位</td>
+<td>aarch64</td>
+</tr>
+<tr>
+<td>armv7及以前</td>
+<td>32位</td>
+<td>armv7,armv7l，或armvX(X为架构数)</td>
+</tr>
+</tbody></table>
+<h2 id="查看程序依赖库的方法"><a href="#查看程序依赖库的方法" class="headerlink" title="查看程序依赖库的方法"></a>查看程序依赖库的方法</h2><h3 id="使用file命令查看"><a href="#使用file命令查看" class="headerlink" title="使用file命令查看"></a>使用file命令查看</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">file <span class="built_in">exec</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="使用ldd命令"><a href="#使用ldd命令" class="headerlink" title="使用ldd命令"></a>使用ldd命令</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ldd [<span class="built_in">exec</span>]</span><br></pre></td></tr></table></figure>
+<h3 id="使用objdump"><a href="#使用objdump" class="headerlink" title="使用objdump"></a>使用objdump</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">objdump -x [<span class="built_in">exec</span>] | grep NEEDED</span><br></pre></td></tr></table></figure>
+<h3 id="使用readelf"><a href="#使用readelf" class="headerlink" title="使用readelf"></a>使用readelf</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">readelf -d [<span class="built_in">exec</span>]</span><br></pre></td></tr></table></figure>
+<h2 id="查找文件的方法"><a href="#查找文件的方法" class="headerlink" title="查找文件的方法"></a>查找文件的方法</h2><h3 id="使用find命令"><a href="#使用find命令" class="headerlink" title="使用find命令"></a>使用find命令</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find [<span class="built_in">dir</span>] -name [filename]</span><br></pre></td></tr></table></figure>
+<p>含义为在dir目录下递归查找名字为filename的文件</p>
+<h2 id="添加动态链接目录的方法"><a href="#添加动态链接目录的方法" class="headerlink" title="添加动态链接目录的方法"></a>添加动态链接目录的方法</h2><h3 id="临时添加"><a href="#临时添加" class="headerlink" title="临时添加"></a>临时添加</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> LD_LIBRARY_PATH=/path/to/library1:/path/to/library2</span><br></pre></td></tr></table></figure>
+<p>将目录添加到环境变量LD_LIBRARY_PATH中，多个路径用冒号分开，这个方式只对当前shell有效，并且有时候不好用</p>
+<h3 id="永久添加"><a href="#永久添加" class="headerlink" title="永久添加"></a>永久添加</h3><h4 id="复制文件到相应路径"><a href="#复制文件到相应路径" class="headerlink" title="复制文件到相应路径"></a>复制文件到相应路径</h4><p>一般将库文件放到系统默认路径&#x2F;lib或&#x2F;usr&#x2F;lib下，但是有时候会造成冲突</p>
+<h4 id="创建软链接"><a href="#创建软链接" class="headerlink" title="创建软链接"></a>创建软链接</h4><p>将库文件放到其他路径下，然后在&#x2F;lib路径下使用ln -s创建软链接</p>
+<h4 id="修改系统文件"><a href="#修改系统文件" class="headerlink" title="修改系统文件"></a>修改系统文件</h4><p>修改系统文件&#x2F;etc&#x2F;ld.so.conf</p>
+<p>在&#x2F;etc&#x2F;ld.so.conf文件中指定了默认的动态链接库查找路径，我的&#x2F;etc&#x2F;ld.so.conf文件内容是这样的include &#x2F;etc&#x2F;ld.so.conf.d&#x2F;*.conf。也就是说它间接的指定了定义路径的文件，我们只需要把需要的路径加到&#x2F;etc&#x2F;ld.so.conf.d目录下的任何一个文件中，再运行ldconfig就可以了，但为了容易理解，最好是找一个相关的文件，或者重新建立一个文件，把需要添加的路径写入然后运行ldconfig</p>
+<p>ldconfig几个需要注意的地方</p>
+<ol>
+<li>往&#x2F;lib和&#x2F;usr&#x2F;lib里面加东西，是不用修改&#x2F;etc&#x2F;ld.so.conf的，但是完了之后要调一下ldconfig，不然这个library会找不到</li>
+<li>想往上面两个目录以外加东西的时候，一定要修改&#x2F;etc&#x2F;ld.so.conf，然后再调用ldconfig，不然也会找不到</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/09/19/runtime-link/" data-id="cm18p37qw0005hwzyh58eg0qb" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-tools" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/09/19/tools/" class="article-date">
+  <time class="dt-published" datetime="2024-09-19T02:49:51.432Z" itemprop="datePublished">2024-09-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h1><ul>
+<li><a href="#%E7%9B%AE%E5%BD%95">目录</a></li>
+<li><a href="#%E5%9C%A8word%E4%B8%AD%E4%BD%BF%E7%94%A8bib%E6%8F%92%E5%85%A5%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE">在word中使用bib插入参考文献</a></li>
+<li><a href="#%E5%9C%A8powershell%E4%B8%AD%E4%BD%BF%E7%94%A8linux%E5%91%BD%E4%BB%A4%E8%A1%8C">在powershell中使用linux命令行</a><ul>
+<li><a href="#chocolaty">chocolaty</a></li>
+<li><a href="#%E8%BF%90%E8%A1%8Clinux%E5%91%BD%E4%BB%A4">运行linux命令</a></li>
+</ul>
+</li>
+<li><a href="#%E6%88%AA%E5%9B%BE%E5%B7%A5%E5%85%B7">截图工具</a></li>
+<li><a href="#%E5%85%A8%E7%9B%98%E6%90%9C%E7%B4%A2%E5%B7%A5%E5%85%B7">全盘搜索工具</a></li>
+<li><a href="#vscode%E6%8F%92%E4%BB%B6">vscode插件</a><ul>
+<li><a href="#tabnine">tabnine</a></li>
+<li><a href="#drawio-intergration">Draw.io Intergration</a></li>
+</ul>
+</li>
+<li><a href="#barriers">barriers</a></li>
+</ul>
+<h1 id="在word中使用bib插入参考文献"><a href="#在word中使用bib插入参考文献" class="headerlink" title="在word中使用bib插入参考文献"></a>在word中使用bib插入参考文献</h1><p><a target="_blank" rel="noopener" href="http://www.ee.ic.ac.uk/hp/staff/dmb/perl/index.html">bib4word</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_37412775/article/details/120854017">教程</a></p>
+<h1 id="在powershell中使用linux命令行"><a href="#在powershell中使用linux命令行" class="headerlink" title="在powershell中使用linux命令行"></a>在powershell中使用linux命令行</h1><h2 id="chocolaty"><a href="#chocolaty" class="headerlink" title="chocolaty"></a>chocolaty</h2><p>chocolaty是windows下的一款包管理软件<br><a target="_blank" rel="noopener" href="https://chocolatey.org/install">官网</a></p>
+<h2 id="运行linux命令"><a href="#运行linux命令" class="headerlink" title="运行linux命令"></a>运行linux命令</h2><p><a target="_blank" rel="noopener" href="https://github.com/farhanmustar/windows-config">一些常用的工具包</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">choco install `- [在word中使用bib插入参考文献](#在word中使用bib插入参考文献)</span><br><span class="line"></span><br><span class="line">postman `</span><br><span class="line">free-download-manager `</span><br><span class="line">psutils `</span><br><span class="line">wezterm `</span><br><span class="line">rclone `</span><br><span class="line">vcxsrv `</span><br><span class="line">filezilla dbeaver 7zip `</span><br><span class="line">advanced-ip-scanner wireshark `</span><br><span class="line">libreoffice notepadplusplus `</span><br><span class="line">paint.net inkscape `</span><br><span class="line">vlc `</span><br><span class="line">git `</span><br><span class="line">flameshot `</span><br><span class="line">powertoys `</span><br><span class="line">cpu-z hwmonitor wiztree `</span><br><span class="line">-y</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://community.chocolatey.org/packages?page=1&prerelease=False&moderatorQueue=False&tags=psutils">psutils</a><br>这个工具可以在powershell中使用一些linux命令，比如最常见的sudo，ls等</p>
+<h1 id="截图工具"><a href="#截图工具" class="headerlink" title="截图工具"></a>截图工具</h1><p>ShareX</p>
+<h1 id="全盘搜索工具"><a href="#全盘搜索工具" class="headerlink" title="全盘搜索工具"></a>全盘搜索工具</h1><p><a target="_blank" rel="noopener" href="https://www.listary.com/download">listary</a>（Windows）</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/albertlauncher/albert">Albert</a>（Linux下的Listary）</p>
+<h1 id="vscode插件"><a href="#vscode插件" class="headerlink" title="vscode插件"></a>vscode插件</h1><h2 id="tabnine"><a href="#tabnine" class="headerlink" title="tabnine"></a>tabnine</h2><p>一款AI自动补全代码插件</p>
+<h2 id="Draw-io-Intergration"><a href="#Draw-io-Intergration" class="headerlink" title="Draw.io Intergration"></a>Draw.io Intergration</h2><p>在vscode里面画draw.io</p>
+<h1 id="barriers"><a href="#barriers" class="headerlink" title="barriers"></a>barriers</h1><p><a target="_blank" rel="noopener" href="https://github.com/debauchee/barrier">不同电脑共用一套键盘鼠标</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/09/19/tools/" data-id="cm18p37qw0006hwzyg5f6bq16" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -121,6 +1298,11 @@
 
   
 
+
+  <nav id="page-nav">
+    
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+  </nav>
 
 </section>
         
@@ -151,7 +1333,23 @@
       <ul>
         
           <li>
-            <a href="/2024/09/19/hello-world/">Hello World</a>
+            <a href="/2024/09/19/raspberrypi/Buildimg/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/09/19/raspberrypi/Raspberry-32bit/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/09/19/raspberrypi/Raspberry-Euler/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/09/19/raspberrypi/rootfs/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/09/19/zipformer/">(no title)</a>
           </li>
         
       </ul>
