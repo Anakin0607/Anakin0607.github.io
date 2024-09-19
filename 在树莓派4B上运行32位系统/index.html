@@ -25,7 +25,7 @@
     <meta name="description" content="这篇文章提供了在树莓派4B上以32位模式启动官方系统以及分析系统架构的方法。如果直接安装树莓派官方32位镜像到树莓派4B，其会启动64位内核，但以兼容模式运行32位文件系统，故在此平台上测试程序可能会出现bug，故本文提供方法运行32位内核和文件系统，以便在树莓派4B上测试arm32程序。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="在树莓派4B上运行32位系统">
-<meta property="og:url" content="https://anakin0607.github.io/:%E5%9C%A8%E6%A0%91%E8%8E%93%E6%B4%BE4B%E4%B8%8A%E8%BF%90%E8%A1%8C32%E4%BD%8D%E7%B3%BB%E7%BB%9F/index.html">
+<meta property="og:url" content="https://anakin0607.github.io/%E5%9C%A8%E6%A0%91%E8%8E%93%E6%B4%BE4B%E4%B8%8A%E8%BF%90%E8%A1%8C32%E4%BD%8D%E7%B3%BB%E7%BB%9F/index.html">
 <meta property="og:site_name" content="Anakin0607">
 <meta property="og:description" content="这篇文章提供了在树莓派4B上以32位模式启动官方系统以及分析系统架构的方法。如果直接安装树莓派官方32位镜像到树莓派4B，其会启动64位内核，但以兼容模式运行32位文件系统，故在此平台上测试程序可能会出现bug，故本文提供方法运行32位内核和文件系统，以便在树莓派4B上测试arm32程序。">
 <meta property="og:locale" content="zh_CN">
@@ -44,11 +44,11 @@
 <meta name="twitter:image" content="https://anakin0607.github.io/img_folder/Raspberry/ssh.png">
 
 
-<link rel="canonical" href="https://anakin0607.github.io/:%E5%9C%A8%E6%A0%91%E8%8E%93%E6%B4%BE4B%E4%B8%8A%E8%BF%90%E8%A1%8C32%E4%BD%8D%E7%B3%BB%E7%BB%9F/">
+<link rel="canonical" href="https://anakin0607.github.io/%E5%9C%A8%E6%A0%91%E8%8E%93%E6%B4%BE4B%E4%B8%8A%E8%BF%90%E8%A1%8C32%E4%BD%8D%E7%B3%BB%E7%BB%9F/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://anakin0607.github.io/:%E5%9C%A8%E6%A0%91%E8%8E%93%E6%B4%BE4B%E4%B8%8A%E8%BF%90%E8%A1%8C32%E4%BD%8D%E7%B3%BB%E7%BB%9F/","path":":在树莓派4B上运行32位系统/","title":"在树莓派4B上运行32位系统"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://anakin0607.github.io/%E5%9C%A8%E6%A0%91%E8%8E%93%E6%B4%BE4B%E4%B8%8A%E8%BF%90%E8%A1%8C32%E4%BD%8D%E7%B3%BB%E7%BB%9F/","path":"在树莓派4B上运行32位系统/","title":"在树莓派4B上运行32位系统"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
 <title>在树莓派4B上运行32位系统 | Anakin0607</title>
@@ -174,7 +174,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://anakin0607.github.io/:%E5%9C%A8%E6%A0%91%E8%8E%93%E6%B4%BE4B%E4%B8%8A%E8%BF%90%E8%A1%8C32%E4%BD%8D%E7%B3%BB%E7%BB%9F/">
+    <link itemprop="mainEntityOfPage" href="https://anakin0607.github.io/%E5%9C%A8%E6%A0%91%E8%8E%93%E6%B4%BE4B%E4%B8%8A%E8%BF%90%E8%A1%8C32%E4%BD%8D%E7%B3%BB%E7%BB%9F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -300,12 +300,12 @@
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/:%E5%9C%A832%E4%BD%8D%E7%B3%BB%E7%BB%9F%E4%B8%AD%E8%BF%90%E8%A1%8C64%E4%BD%8D%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%96%B9%E6%B3%95/" rel="prev" title="在32位系统中运行64位程序的方法">
+                <a href="/%E5%9C%A832%E4%BD%8D%E7%B3%BB%E7%BB%9F%E4%B8%AD%E8%BF%90%E8%A1%8C64%E4%BD%8D%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%96%B9%E6%B3%95/" rel="prev" title="在32位系统中运行64位程序的方法">
                   <i class="fa fa-angle-left"></i> 在32位系统中运行64位程序的方法
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/:%E5%AE%9E%E7%94%A8%E5%B0%8F%E5%B7%A5%E5%85%B7/" rel="next" title="实用小工具">
+                <a href="/%E5%AE%9E%E7%94%A8%E5%B0%8F%E5%B7%A5%E5%85%B7/" rel="next" title="实用小工具">
                   实用小工具 <i class="fa fa-angle-right"></i>
                 </a>
             </div>
