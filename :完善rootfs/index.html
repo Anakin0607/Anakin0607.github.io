@@ -1,74 +1,226 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content=""><title>完善rootfs | Anakin0607</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=1.0.0"><link rel="stylesheet" type="text/css" href="https://unpkg.com/normalize.css"><link rel="stylesheet" type="text/css" href="https://unpkg.com/purecss/build/pure-min.css"><link rel="stylesheet" type="text/css" href="https://unpkg.com/purecss/build/grids-responsive-min.css"><link rel="stylesheet" href="https://unpkg.com/font-awesome@4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="https://unpkg.com/jquery/dist/jquery.min.js"></script><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><script type="text/javascript" src="https://unpkg.com/clipboard/dist/clipboard.min.js"></script><script type="text/javascript" src="https://unpkg.com/toastr/build/toastr.min.js"></script><link rel="stylesheet" href="https://unpkg.com/toastr/build/toastr.min.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">完善rootfs</h1><a id="logo" href="/.">Anakin0607</a><p class="description"></p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">完善rootfs</h1><div class="post-meta">2024-09-19<span> | </span><span class="category"><a href="/categories/RaspberryPi/">RaspberryPi</a></span></div><div class="post-content"><p>Linux系统就是一个内核加各种程序组成，这些常用的如ls, mkdir, ifconfi g命令都是一个个小程序，<a href="Raspberry-Euler.md">构建树莓派镜像</a>一文中使用的busybox工具是一个工具集合，里面包含了一些最常用的小程序。<br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/zhuangquan/p/11557781.html">源码分析</a><br>如果想选择默认功能更为丰富的rootfs构建工具，可以选择debian系的工具debootstrap，或者使用buildroot</p>
-<ul>
-<li><a href="#rootfs%E4%B8%AD%E7%9A%84%E5%B8%B8%E7%94%A8%E7%9B%AE%E5%BD%95">rootfs中的常用目录</a></li>
-<li><a href="#etc%E4%B8%AD%E7%9A%84%E5%B8%B8%E7%94%A8%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">&#x2F;etc中的常用配置文件</a><ul>
-<li><a href="#inittab%E6%96%87%E4%BB%B6">inittab文件</a></li>
-<li><a href="#rcs%E6%96%87%E4%BB%B6">rcS文件</a></li>
-<li><a href="#fstab%E6%96%87%E4%BB%B6">fstab文件</a></li>
-<li><a href="#rclocal%E6%96%87%E4%BB%B6">rc.local文件</a></li>
-<li><a href="#profile%E6%96%87%E4%BB%B6">profile文件</a></li>
-</ul>
-</li>
-<li><a href="#%E6%B7%BB%E5%8A%A0%E8%AE%BE%E5%A4%87%E6%96%87%E4%BB%B6">添加设备文件</a></li>
-<li><a href="#%E9%85%8D%E7%BD%AEdhcp%E8%87%AA%E5%8A%A8%E8%8E%B7%E5%8F%96ip%E5%9C%B0%E5%9D%80">配置dhcp自动获取ip地址</a><ul>
-<li><a href="#%E5%8A%A0%E5%85%A5defaultscript%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">加入default.script配置文件</a></li>
-<li><a href="#%E5%BC%80%E6%9C%BA%E8%87%AA%E5%8A%A8%E5%90%AF%E5%8A%A8dhcp%E6%9C%8D%E5%8A%A1">开机自动启动dhcp服务</a></li>
-<li><a href="#%E5%AE%9E%E7%8E%B0%E7%BD%91%E7%BA%BF%E7%83%AD%E6%8F%92%E6%8B%94">实现网线热插拔</a></li>
-</ul>
-</li>
-<li><a href="#%E6%B7%BB%E5%8A%A0%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86">添加用户管理</a><ul>
-<li><a href="#%E6%B7%BB%E5%8A%A0%E7%94%A8%E6%88%B7%E7%9B%B8%E5%85%B3%E6%96%87%E4%BB%B6">添加用户相关文件</a><ul>
-<li><a href="#%E8%B4%A6%E5%8F%B7%E6%96%87%E4%BB%B6">账号文件</a></li>
-<li><a href="#%E8%AE%BE%E7%BD%AE%E5%AF%86%E7%A0%81">设置密码</a></li>
-<li><a href="#%E7%94%A8%E6%88%B7%E7%BB%84%E6%96%87%E4%BB%B6">用户组文件</a></li>
-</ul>
-</li>
-<li><a href="#%E8%AE%BE%E7%BD%AE%E5%BC%80%E6%9C%BA%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95">设置开机自动登录</a></li>
-<li><a href="#%E5%8A%A0%E5%BC%BA%E5%AF%86%E7%A0%81%E5%AE%89%E5%85%A8%E6%80%A7">加强密码安全性</a></li>
-</ul>
-</li>
-<li><a href="#%E9%85%8D%E7%BD%AE%E8%BF%9C%E7%A8%8B">配置远程</a><ul>
-<li><a href="#telnet">telnet</a></li>
-<li><a href="#ftp">ftp</a></li>
-<li><a href="#ssh">ssh</a><ul>
-<li><a href="#%E7%BC%96%E8%AF%91%E4%BE%9D%E8%B5%96">编译依赖</a></li>
-<li><a href="#%E7%BC%96%E8%AF%91openssh">编译OpenSSH</a></li>
-<li><a href="#%E9%85%8D%E7%BD%AEopenssh">配置OpenSSH</a></li>
-<li><a href="#ssh%E6%98%BE%E7%A4%BA%E6%AC%A2%E8%BF%8E%E7%95%8C%E9%9D%A2">ssh显示欢迎界面</a></li>
-</ul>
-</li>
-<li><a href="#%E5%BC%80%E6%9C%BA%E8%87%AA%E5%8A%A8%E5%90%AF%E5%8A%A8%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1">开机自动启动远程服务</a></li>
-</ul>
-</li>
-<li><a href="#%E5%AE%89%E8%A3%85alsa">安装Alsa</a><ul>
-<li><a href="#%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91alsa-libs">交叉编译alsa-libs</a></li>
-<li><a href="#%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91alsa-utils">交叉编译alsa-utils</a></li>
-<li><a href="#%E5%AE%89%E8%A3%85%E5%88%B0%E5%BC%80%E5%8F%91%E6%9D%BF">安装到开发板</a></li>
-</ul>
-</li>
-<li><a href="#%E5%AE%89%E8%A3%85ffmpeg">安装ffmpeg</a><ul>
-<li><a href="#%E5%8C%85%E7%AE%A1%E7%90%86%E5%99%A8%E5%AE%89%E8%A3%85">包管理器安装</a></li>
-<li><a href="#%E4%BB%8E%E6%BA%90%E7%A0%81%E6%9E%84%E5%BB%BA">从源码构建</a><ul>
-<li><a href="#%E4%B8%8B%E8%BD%BD%E6%BA%90%E7%A0%81">下载源码</a></li>
-<li><a href="#%E9%85%8D%E7%BD%AE%E7%BC%96%E8%AF%91%E5%8F%82%E6%95%B0">配置编译参数</a></li>
-<li><a href="#%E5%AE%89%E8%A3%85">安装</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#%E5%AE%89%E8%A3%85valgrind">安装Valgrind</a><ul>
-<li><a href="#%E4%B8%8B%E8%BD%BD%E6%BA%90%E7%A0%81-1">下载源码</a></li>
-<li><a href="#%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE">修改配置</a></li>
-<li><a href="#%E7%BC%96%E8%AF%91%E5%92%8C%E5%AE%89%E8%A3%85">编译和安装</a></li>
-<li><a href="#%E6%B5%8B%E8%AF%95valgrind">测试valgrind</a></li>
-</ul>
-</li>
-<li><a href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E6%89%A9%E5%AE%B9">文件系统扩容</a><ul>
-<li><a href="#%E7%A3%81%E7%9B%98%E5%88%86%E5%8C%BA%E6%89%A9%E5%AE%B9">磁盘分区扩容</a></li>
-<li><a href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E6%89%A9%E5%AE%B9-1">文件系统扩容</a></li>
-</ul>
-</li>
-</ul>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"anakin0607.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Linux系统根文件系统的基本结构，各个常用目录的含义，以及在Linux根文件系统中添加、配置一些功能和工具（如dhcp服务器，用户密码设置，远程连接，多媒体驱动库）的方法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="完善rootfs">
+<meta property="og:url" content="https://anakin0607.github.io/:%E5%AE%8C%E5%96%84rootfs/index.html">
+<meta property="og:site_name" content="Anakin0607">
+<meta property="og:description" content="Linux系统根文件系统的基本结构，各个常用目录的含义，以及在Linux根文件系统中添加、配置一些功能和工具（如dhcp服务器，用户密码设置，远程连接，多媒体驱动库）的方法">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://anakin0607.github.io/img_folder/Raspberry/fdisk.png">
+<meta property="article:published_time" content="2024-09-19T05:35:48.000Z">
+<meta property="article:modified_time" content="2024-09-19T06:58:19.939Z">
+<meta property="article:author" content="Anakin">
+<meta property="article:tag" content="嵌入式">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="树莓派">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://anakin0607.github.io/img_folder/Raspberry/fdisk.png">
+
+
+<link rel="canonical" href="https://anakin0607.github.io/:%E5%AE%8C%E5%96%84rootfs/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://anakin0607.github.io/:%E5%AE%8C%E5%96%84rootfs/","path":":完善rootfs/","title":"完善rootfs"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>完善rootfs | Anakin0607</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Anakin0607</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">7</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">3</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">7</span></a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#rootfs%E4%B8%AD%E7%9A%84%E5%B8%B8%E7%94%A8%E7%9B%AE%E5%BD%95"><span class="nav-number">1.</span> <span class="nav-text">rootfs中的常用目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#etc%E4%B8%AD%E7%9A%84%E5%B8%B8%E7%94%A8%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">2.</span> <span class="nav-text">&#x2F;etc中的常用配置文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#inittab%E6%96%87%E4%BB%B6"><span class="nav-number">2.1.</span> <span class="nav-text">inittab文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rcS%E6%96%87%E4%BB%B6"><span class="nav-number">2.2.</span> <span class="nav-text">rcS文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#fstab%E6%96%87%E4%BB%B6"><span class="nav-number">2.3.</span> <span class="nav-text">fstab文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rc-local%E6%96%87%E4%BB%B6"><span class="nav-number">2.4.</span> <span class="nav-text">rc.local文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#profile%E6%96%87%E4%BB%B6"><span class="nav-number">2.5.</span> <span class="nav-text">profile文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E8%AE%BE%E5%A4%87%E6%96%87%E4%BB%B6"><span class="nav-number">3.</span> <span class="nav-text">添加设备文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEdhcp%E8%87%AA%E5%8A%A8%E8%8E%B7%E5%8F%96ip%E5%9C%B0%E5%9D%80"><span class="nav-number">4.</span> <span class="nav-text">配置dhcp自动获取ip地址</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A0%E5%85%A5default-script%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">4.1.</span> <span class="nav-text">加入default.script配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E6%9C%BA%E8%87%AA%E5%8A%A8%E5%90%AF%E5%8A%A8dhcp%E6%9C%8D%E5%8A%A1"><span class="nav-number">4.2.</span> <span class="nav-text">开机自动启动dhcp服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E7%BD%91%E7%BA%BF%E7%83%AD%E6%8F%92%E6%8B%94"><span class="nav-number">4.3.</span> <span class="nav-text">实现网线热插拔</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86"><span class="nav-number">5.</span> <span class="nav-text">添加用户管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E7%94%A8%E6%88%B7%E7%9B%B8%E5%85%B3%E6%96%87%E4%BB%B6"><span class="nav-number">5.1.</span> <span class="nav-text">添加用户相关文件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B4%A6%E5%8F%B7%E6%96%87%E4%BB%B6"><span class="nav-number">5.1.1.</span> <span class="nav-text">账号文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E5%AF%86%E7%A0%81"><span class="nav-number">5.1.2.</span> <span class="nav-text">设置密码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E7%BB%84%E6%96%87%E4%BB%B6"><span class="nav-number">5.1.3.</span> <span class="nav-text">用户组文件</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E5%BC%80%E6%9C%BA%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95"><span class="nav-number">5.2.</span> <span class="nav-text">设置开机自动登录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A0%E5%BC%BA%E5%AF%86%E7%A0%81%E5%AE%89%E5%85%A8%E6%80%A7"><span class="nav-number">5.3.</span> <span class="nav-text">加强密码安全性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E8%BF%9C%E7%A8%8B"><span class="nav-number">6.</span> <span class="nav-text">配置远程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#telnet"><span class="nav-number">6.1.</span> <span class="nav-text">telnet</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ftp"><span class="nav-number">6.2.</span> <span class="nav-text">ftp</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ssh"><span class="nav-number">6.3.</span> <span class="nav-text">ssh</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E4%BE%9D%E8%B5%96"><span class="nav-number">6.3.1.</span> <span class="nav-text">编译依赖</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%96%E8%AF%91OpenSSH"><span class="nav-number">6.3.2.</span> <span class="nav-text">编译OpenSSH</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEOpenSSH"><span class="nav-number">6.3.3.</span> <span class="nav-text">配置OpenSSH</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ssh%E6%98%BE%E7%A4%BA%E6%AC%A2%E8%BF%8E%E7%95%8C%E9%9D%A2"><span class="nav-number">6.3.4.</span> <span class="nav-text">ssh显示欢迎界面</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E6%9C%BA%E8%87%AA%E5%8A%A8%E5%90%AF%E5%8A%A8%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1"><span class="nav-number">6.4.</span> <span class="nav-text">开机自动启动远程服务</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Alsa"><span class="nav-number">7.</span> <span class="nav-text">安装Alsa</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91alsa-libs"><span class="nav-number">7.1.</span> <span class="nav-text">交叉编译alsa-libs</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91alsa-utils"><span class="nav-number">7.2.</span> <span class="nav-text">交叉编译alsa-utils</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E5%88%B0%E5%BC%80%E5%8F%91%E6%9D%BF"><span class="nav-number">7.3.</span> <span class="nav-text">安装到开发板</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85ffmpeg"><span class="nav-number">8.</span> <span class="nav-text">安装ffmpeg</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8C%85%E7%AE%A1%E7%90%86%E5%99%A8%E5%AE%89%E8%A3%85"><span class="nav-number">8.1.</span> <span class="nav-text">包管理器安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8E%E6%BA%90%E7%A0%81%E6%9E%84%E5%BB%BA"><span class="nav-number">8.2.</span> <span class="nav-text">从源码构建</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD%E6%BA%90%E7%A0%81"><span class="nav-number">8.2.1.</span> <span class="nav-text">下载源码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E7%BC%96%E8%AF%91%E5%8F%82%E6%95%B0"><span class="nav-number">8.2.2.</span> <span class="nav-text">配置编译参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">8.2.3.</span> <span class="nav-text">安装</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Valgrind"><span class="nav-number">9.</span> <span class="nav-text">安装Valgrind</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD%E6%BA%90%E7%A0%81-1"><span class="nav-number">9.1.</span> <span class="nav-text">下载源码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE"><span class="nav-number">9.2.</span> <span class="nav-text">修改配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E5%92%8C%E5%AE%89%E8%A3%85"><span class="nav-number">9.3.</span> <span class="nav-text">编译和安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95valgrind"><span class="nav-number">9.4.</span> <span class="nav-text">测试valgrind</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E6%89%A9%E5%AE%B9"><span class="nav-number">10.</span> <span class="nav-text">文件系统扩容</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A3%81%E7%9B%98%E5%88%86%E5%8C%BA%E6%89%A9%E5%AE%B9"><span class="nav-number">10.1.</span> <span class="nav-text">磁盘分区扩容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E6%89%A9%E5%AE%B9-1"><span class="nav-number">10.2.</span> <span class="nav-text">文件系统扩容</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Anakin</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://anakin0607.github.io/:%E5%AE%8C%E5%96%84rootfs/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Anakin">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Anakin0607">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="完善rootfs | Anakin0607">
+      <meta itemprop="description" content="Linux系统根文件系统的基本结构，各个常用目录的含义，以及在Linux根文件系统中添加、配置一些功能和工具（如dhcp服务器，用户密码设置，远程连接，多媒体驱动库）的方法">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          完善rootfs
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-09-19 13:35:48 / 修改时间：14:58:19" itemprop="dateCreated datePublished" datetime="2024-09-19T13:35:48+08:00">2024-09-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%BC%80%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">嵌入式开发</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">Linux系统根文件系统的基本结构，各个常用目录的含义，以及在Linux根文件系统中添加、配置一些功能和工具（如dhcp服务器，用户密码设置，远程连接，多媒体驱动库）的方法</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>Linux系统就是一个内核加各种程序组成，这些常用的如ls, mkdir, ifconfi g命令都是一个个小程序，<a href="Raspberry-Euler.md">构建树莓派镜像</a>一文中使用的busybox工具是一个工具集合，里面包含了一些最常用的小程序。<br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/zhuangquan/p/11557781.html">源码分析</a><br>如果想选择默认功能更为丰富的rootfs构建工具，可以选择debian系的工具debootstrap，或者使用buildroot</p>
 <h2 id="rootfs中的常用目录"><a href="#rootfs中的常用目录" class="headerlink" title="rootfs中的常用目录"></a>rootfs中的常用目录</h2><table>
 <thead>
 <tr>
@@ -223,17 +375,17 @@
 <li>每一行的配置项中4个配置值中最重要的是action和process，action是一个条件&#x2F;状态，process是一个可被执行的程序的pathname。合起来的意思就是：当满足action的条件时就会执行process这个程序。</li>
 </ul>
 <p>busybox官方给出的说明以及样例在&#x2F;examples&#x2F;inittab文件中<br>如果没有inittab，busybox会按照以下默认配置运行init</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs sh">::sysinit:/etc/init.d/rcS <span class="hljs-comment"># 执行rcS</span><br>::askfirst:/bin/sh <span class="hljs-comment">#执行命令行</span><br>::ctrlaltdel:/sbin/reboot<br>::shutdown:/sbin/swapoff -a<br>::shutdown:/bin/umount -a -r<br>::restart:/sbin/init<br>tty2::askfirst:/bin/sh<br>tty3::askfirst:/bin/sh<br>tty4::askfirst:/bin/sh<br></code></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">::sysinit:/etc/init.d/rcS <span class="comment"># 执行rcS</span></span><br><span class="line">::askfirst:/bin/sh <span class="comment">#执行命令行</span></span><br><span class="line">::ctrlaltdel:/sbin/reboot</span><br><span class="line">::shutdown:/sbin/swapoff -a</span><br><span class="line">::shutdown:/bin/umount -a -r</span><br><span class="line">::restart:/sbin/init</span><br><span class="line">tty2::askfirst:/bin/sh</span><br><span class="line">tty3::askfirst:/bin/sh</span><br><span class="line">tty4::askfirst:/bin/sh</span><br></pre></td></tr></table></figure>
 <p>inittab的关键就是：“当满足action的条件时就会执行process这个程序”。</p>
 <h3 id="rcS文件"><a href="#rcS文件" class="headerlink" title="rcS文件"></a>rcS文件</h3><p>可以看到inittab的第一步即解析rcS文件，其在系统初始化阶段会被init进程调用，并且执行里面的命令，因此该文件用于执行一些系统初始化指令</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">mkdir</span> rootfs/etc/init.d<br><span class="hljs-built_in">sudo</span> vim rootfs/etc/init.d/rcS<br></code></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> rootfs/etc/init.d</span><br><span class="line"><span class="built_in">sudo</span> vim rootfs/etc/init.d/rcS</span><br></pre></td></tr></table></figure>
 
 <p>内容为：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-meta">#!/bin/sh</span><br>PATH=/sbin:/bin:/usr/sbin:/usr/bin<br><span class="hljs-built_in">export</span> PATH<br><span class="hljs-built_in">umask</span> 022<br><br>mount -a<br><span class="hljs-built_in">mkdir</span> /dev/pts<br>mount -t devpts devpts /dev/pts<br><br>hostname euler<br><br>ifconfig lo 127.0.0.1<br></code></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line">PATH=/sbin:/bin:/usr/sbin:/usr/bin</span><br><span class="line"><span class="built_in">export</span> PATH</span><br><span class="line"><span class="built_in">umask</span> 022</span><br><span class="line"></span><br><span class="line">mount -a</span><br><span class="line"><span class="built_in">mkdir</span> /dev/pts</span><br><span class="line">mount -t devpts devpts /dev/pts</span><br><span class="line"></span><br><span class="line">hostname euler</span><br><span class="line"></span><br><span class="line">ifconfig lo 127.0.0.1</span><br></pre></td></tr></table></figure>
 
 
 <h3 id="fstab文件"><a href="#fstab文件" class="headerlink" title="fstab文件"></a>fstab文件</h3><p>这个文件是供mount读取设备所用，在rcS中有mount -a命令，负责挂载系统所用到的设备，mount -a从fstab中读取参数<br>先加入三个内核自带的三个虚拟文件系统</p>
-<figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs tcl"><span class="hljs-comment">#&lt;file system&gt;  &lt;mount point&gt;   &lt;type&gt;  &lt;options&gt;       &lt;dump&gt;  &lt;pass&gt;</span><br><span class="hljs-keyword">proc</span>            /<span class="hljs-keyword">proc</span><span class="hljs-title">           proc</span> <span class="hljs-title">   defaults</span>        0       0<span class="hljs-title"></span><br><span class="hljs-title">tmpfs</span>           /tmp<span class="hljs-title">            tmpfs</span> <span class="hljs-title">  defaults</span>        0       0<span class="hljs-title"></span><br><span class="hljs-title">sysfs</span>           /sys<span class="hljs-title">            sysfs</span> <span class="hljs-title">  defaults</span>        0       0<br></code></pre></td></tr></table></figure>
+<figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#&lt;file system&gt;  &lt;mount point&gt;   &lt;type&gt;  &lt;options&gt;       &lt;dump&gt;  &lt;pass&gt;</span></span><br><span class="line"><span class="keyword">proc</span>            /<span class="keyword">proc</span><span class="title">           proc</span> <span class="title">   defaults</span>        0       0<span class="title"></span></span><br><span class="line"><span class="title">tmpfs</span>           /tmp<span class="title">            tmpfs</span> <span class="title">  defaults</span>        0       0<span class="title"></span></span><br><span class="line"><span class="title">sysfs</span>           /sys<span class="title">            sysfs</span> <span class="title">  defaults</span>        0       0</span><br></pre></td></tr></table></figure>
 <p>这三个目录为linux内核文件系统，存在于内存中</p>
 <ul>
 <li><p>proc用于在系统运行时访问内核内部数据结构，改变内核设置，proc只存在于内存当中，以文件系统的方式为访问内核数据提供接口，其被挂在于根目录的&#x2F;proc目录下。</p>
@@ -246,27 +398,27 @@
 <p>除这三个目录外，通常还需要再根据物理设备以及分区情况，加入其他文件系统。</p>
 <h3 id="rc-local文件"><a href="#rc-local文件" class="headerlink" title="rc.local文件"></a>rc.local文件</h3><p>&#x2F;etc&#x2F;rc.local是被init.d&#x2F;rcS 文件调用执行的特殊文件，与Linux 系统硬件平台相关，如安装核心模块、进行网络配置、运行应用程序、启动图形界面等。<br>因此可以将rcS文件中非核心操作的内容移动到rc.local中，使得配置文件更加清晰</p>
 <p>rcS文件修改如下：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-meta">#!/bin/sh</span><br><br><span class="hljs-built_in">umask</span> 022<br><br>PATH=/sbin:/bin:/usr/sbin:/usr/bin<br><span class="hljs-built_in">export</span> PATH<br><br>mount -a<br><span class="hljs-built_in">mkdir</span> /dev/pts<br>mount -t devpts devpts /dev/pts<br><br><span class="hljs-built_in">exec</span> /etc/rc.local<br></code></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">umask</span> 022</span><br><span class="line"></span><br><span class="line">PATH=/sbin:/bin:/usr/sbin:/usr/bin</span><br><span class="line"><span class="built_in">export</span> PATH</span><br><span class="line"></span><br><span class="line">mount -a</span><br><span class="line"><span class="built_in">mkdir</span> /dev/pts</span><br><span class="line">mount -t devpts devpts /dev/pts</span><br><span class="line"></span><br><span class="line"><span class="built_in">exec</span> /etc/rc.local</span><br></pre></td></tr></table></figure>
 <p>rc.local中的内容如下：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-meta">#!/bin/sh</span><br><br>hostname Euler<br><br><span class="hljs-built_in">echo</span> /sbin/mdev &gt; /proc/sys/kernel/hotplug<br>mdev -s<br><br>ifconfig lo 127.0.0.1<br>telnetd <span class="hljs-comment"># 启动telnet服务供远程登录</span><br><br><br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;**************************************************&quot;</span><br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;*                                                *&quot;</span><br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;*                 Openeuler-22.04                *&quot;</span><br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;*                                                *&quot;</span><br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;*          Linux Kernel version 5.10.0           *&quot;</span><br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;*                                                *&quot;</span><br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;*                 2024-07-03                     *&quot;</span><br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;*                                                *&quot;</span><br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;**************************************************&quot;</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line"></span><br><span class="line">hostname Euler</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> /sbin/mdev &gt; /proc/sys/kernel/hotplug</span><br><span class="line">mdev -s</span><br><span class="line"></span><br><span class="line">ifconfig lo 127.0.0.1</span><br><span class="line">telnetd <span class="comment"># 启动telnet服务供远程登录</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;**************************************************&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;*                                                *&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;*                 Openeuler-22.04                *&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;*                                                *&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;*          Linux Kernel version 5.10.0           *&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;*                                                *&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;*                 2024-07-03                     *&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;*                                                *&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;**************************************************&quot;</span></span><br></pre></td></tr></table></figure>
 
 <h3 id="profile文件"><a href="#profile文件" class="headerlink" title="profile文件"></a>profile文件</h3><p>profile文件在每个用户登录时被执行一次，用于设置每个用户的环境信息，root用户的环境信息由init进程设置，而其他用户则通过login进程读取profile文件设置</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs sh">PATH=/bin:/sbin:/usr/bin:/usr/sbin<br>LD_LIBRARY_PATH=/lib:/usr/lib<br><br>HOSTNAME=`/bin/hostname`<br>PS1=<span class="hljs-string">&#x27;\u@\h:\w\$ &#x27;</span><br><br><span class="hljs-built_in">export</span> PATH LD_LIBRARY_PATH HOSTNAME PS1<br></code></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">PATH=/bin:/sbin:/usr/bin:/usr/sbin</span><br><span class="line">LD_LIBRARY_PATH=/lib:/usr/lib</span><br><span class="line"></span><br><span class="line">HOSTNAME=`/bin/hostname`</span><br><span class="line">PS1=<span class="string">&#x27;\u@\h:\w\$ &#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> PATH LD_LIBRARY_PATH HOSTNAME PS1</span><br></pre></td></tr></table></figure>
 <h2 id="添加设备文件"><a href="#添加设备文件" class="headerlink" title="添加设备文件"></a>添加设备文件</h2><p>busybox中自动利用mdev管理设备，在编译时已经设置好，其工作过程参考这个<a target="_blank" rel="noopener" href="http://www.360doc.com/content/10/0428/11/496343_25245348.shtml">博客</a></p>
 <h2 id="配置dhcp自动获取ip地址"><a href="#配置dhcp自动获取ip地址" class="headerlink" title="配置dhcp自动获取ip地址"></a>配置dhcp自动获取ip地址</h2><p>udhcpc的<a target="_blank" rel="noopener" href="https://www.cnblogs.com/arnoldlu/p/13567937.html">工作过程</a></p>
 <h3 id="加入default-script配置文件"><a href="#加入default-script配置文件" class="headerlink" title="加入default.script配置文件"></a>加入default.script配置文件</h3><p>将busybox的默认配置复制到根文件系统中，以正确使用udhcpc获取ip地址<br>具体解析可以看这个<a target="_blank" rel="noopener" href="https://www.cnblogs.com/arnoldlu/p/13567937.html">博客</a></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">mkdir</span> rootfs/usr/share/udhcpc<br><span class="hljs-built_in">cp</span> busybox-1.36.1/examples/udhcp/simple.script rootfs/usr/share/udhcpc/default.script<br></code></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> rootfs/usr/share/udhcpc</span><br><span class="line"><span class="built_in">cp</span> busybox-1.36.1/examples/udhcp/simple.script rootfs/usr/share/udhcpc/default.script</span><br></pre></td></tr></table></figure>
 <h3 id="开机自动启动dhcp服务"><a href="#开机自动启动dhcp服务" class="headerlink" title="开机自动启动dhcp服务"></a>开机自动启动dhcp服务</h3><p>在rcS文件的末尾添加</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">udhcpc<br></code></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">udhcpc</span><br></pre></td></tr></table></figure>
 <h3 id="实现网线热插拔"><a href="#实现网线热插拔" class="headerlink" title="实现网线热插拔"></a>实现网线热插拔</h3><p><a target="_blank" rel="noopener" href="http://blog.chinaunix.net/uid-16759545-id-4891833.html">http://blog.chinaunix.net/uid-16759545-id-4891833.html</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/xuesong10210/article/details/113858728">https://blog.csdn.net/xuesong10210/article/details/113858728</a></p>
 <h2 id="添加用户管理"><a href="#添加用户管理" class="headerlink" title="添加用户管理"></a>添加用户管理</h2><h3 id="添加用户相关文件"><a href="#添加用户相关文件" class="headerlink" title="添加用户相关文件"></a>添加用户相关文件</h3><p>linux中，用户管理涉及到两个文件：账号文件 &#x2F;etc&#x2F;passwd和用户组文件 &#x2F;etc&#x2F;group。</p>
 <h4 id="账号文件"><a href="#账号文件" class="headerlink" title="账号文件"></a>账号文件</h4><p>首先先创建账号文件</p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">vim <span class="hljs-regexp">/etc/</span>passwd<br></code></pre></td></tr></table></figure>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim <span class="regexp">/etc/</span>passwd</span><br></pre></td></tr></table></figure>
 <p>添加内容</p>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs elixir"><span class="hljs-symbol">root:</span><span class="hljs-symbol">x:</span><span class="hljs-number">0</span><span class="hljs-symbol">:</span><span class="hljs-number">0</span><span class="hljs-symbol">:root</span><span class="hljs-symbol">:/root</span><span class="hljs-symbol">:/bin/sh</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">root:</span><span class="symbol">x:</span><span class="number">0</span><span class="symbol">:</span><span class="number">0</span><span class="symbol">:root</span><span class="symbol">:/root</span><span class="symbol">:/bin/sh</span></span><br></pre></td></tr></table></figure>
 <h4 id="设置密码"><a href="#设置密码" class="headerlink" title="设置密码"></a>设置密码</h4><p>如果需要设置用户初始密码，可以通过修改x字段的值来实现</p>
 <p>密码生成方式为：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">openssl passwd -1 -salt [username] <span class="hljs-comment">#passwd代表设置密码，-1代表使用MD5加密 -salt代表加盐 username替换成要设置密码的用户名</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl passwd -1 -salt [username] <span class="comment">#passwd代表设置密码，-1代表使用MD5加密 -salt代表加盐 username替换成要设置密码的用户名</span></span><br></pre></td></tr></table></figure>
 <p>然后输入密码，将生成的内容复制，替换x字段即可为用户设置密码</p>
 <p>账号文件的每一行是一个用户和其对应的设置，用”:”隔开，每字段的含义为</p>
 <blockquote>
@@ -282,9 +434,9 @@
 <li>使用的shell：shell是当前用户登录系统是运行的程序的名称，通常是 &#x2F;bin&#x2F;bash。同时系统中可能存在其它的shell，比如 tsh。用户可以自己指定shell，也可以随时更改，比较流行的就行 &#x2F;bin&#x2F;bash，在busybox中一般是&#x2F;bin&#x2F;sh</li>
 </ol>
 <h4 id="用户组文件"><a href="#用户组文件" class="headerlink" title="用户组文件"></a>用户组文件</h4><p>创建文件</p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">vim <span class="hljs-regexp">/etc/g</span>roup<br></code></pre></td></tr></table></figure>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim <span class="regexp">/etc/g</span>roup</span><br></pre></td></tr></table></figure>
 <p>添加内容</p>
-<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">root</span>:x:<span class="hljs-number">0</span>:root<br></code></pre></td></tr></table></figure>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">root</span>:x:<span class="number">0</span>:root</span><br></pre></td></tr></table></figure>
 <p>该文件用于保存用户组的所有信息，通过它可以更好地对系统中的用户进行管理。对用户分组是一种有效的手段，用户组和用户之间属于多对多的关系，一个用户可以属于多个组，一个组也可以包含多个用户。用户登录时默认的组存放在 &#x2F;etc&#x2F;passwd 中。</p>
 <p>用户组文件也是每行代表一个用户组的信息，含义为</p>
 <blockquote>
@@ -298,9 +450,9 @@
 </ol>
 <p>至此系统中已经默认自带root用户，并且可以在系统运行之后新建，切换用户。但在开机时依然不会登录，直接选择进入命令行</p>
 <h3 id="设置开机自动登录"><a href="#设置开机自动登录" class="headerlink" title="设置开机自动登录"></a>设置开机自动登录</h3><p>开机自动登录功能需要修改inittab文件来实现，即在运行shell之前先运行一个login程序，将inittab中的askfirst:&#x2F;bin&#x2F;sh替换为，即先启动getty，然后再运行login进程来进行登录</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">console::respawn:/sbin/getty -L -n -l /etc/autologin console 0 vt100<br></code></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">console::respawn:/sbin/getty -L -n -l /etc/autologin console 0 vt100</span><br></pre></td></tr></table></figure>
 <p>然后添加autologin脚本</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-meta">#!/bin/sh</span><br>/bin/login -f root<br></code></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line">/bin/login -f root</span><br></pre></td></tr></table></figure>
 <p>其中选项-f表示不对root用户进行验证</p>
 <h3 id="加强密码安全性"><a href="#加强密码安全性" class="headerlink" title="加强密码安全性"></a>加强密码安全性</h3><h2 id="配置远程"><a href="#配置远程" class="headerlink" title="配置远程"></a>配置远程</h2><h3 id="telnet"><a href="#telnet" class="headerlink" title="telnet"></a>telnet</h3><p>telnet服务器由busybox中的telnetd程序来实现，默认端口为23端口</p>
 <h3 id="ftp"><a href="#ftp" class="headerlink" title="ftp"></a>ftp</h3><p>ftp服务为ftpd</p>
@@ -308,57 +460,57 @@
 <p>下面将从源码构建OpenSSH</p>
 <h4 id="编译依赖"><a href="#编译依赖" class="headerlink" title="编译依赖"></a>编译依赖</h4><p><a target="_blank" rel="noopener" href="https://openssl-library.org/source/">OpenSSL</a></p>
 <p><a target="_blank" rel="noopener" href="https://www.zlib.net/">zlib</a><br>首先新建一个文件夹，将源码下载到这个文件夹中，并将其作为工作目录<br><strong>编译Zlib</strong></p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-built_in">export</span> WORK_DIR=<span class="hljs-variable">$&#123;PWD&#125;</span><br><span class="hljs-built_in">cd</span> zlib-1.3.1<br><span class="hljs-built_in">export</span> CHOST arm-linux-gnueabihf <span class="hljs-comment">#配置交叉编译选项</span><br>./configure --prefix=<span class="hljs-variable">$&#123;WORK_DIR&#125;</span>/zlib_install<br>make -j10<br>make install<br></code></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> WORK_DIR=<span class="variable">$&#123;PWD&#125;</span></span><br><span class="line"><span class="built_in">cd</span> zlib-1.3.1</span><br><span class="line"><span class="built_in">export</span> CHOST arm-linux-gnueabihf <span class="comment">#配置交叉编译选项</span></span><br><span class="line">./configure --prefix=<span class="variable">$&#123;WORK_DIR&#125;</span>/zlib_install</span><br><span class="line">make -j10</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
 <p>这一步很多教程让自己修改Makefile，但是修改Makefile很麻烦还容易出错，故不推荐使用这种方法。阅读zlib的configure文件发现其通过CHOST环境变量来控制交叉编译选项，因此只需将CHOST设置为交叉编译前缀即可。</p>
 <p>下面是configure文件中控制交叉编译的部分：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-comment"># set command prefix for cross-compilation</span><br><span class="hljs-keyword">if</span> [ -n <span class="hljs-string">&quot;<span class="hljs-variable">$&#123;CHOST&#125;</span>&quot;</span> ]; <span class="hljs-keyword">then</span><br>    <span class="hljs-built_in">uname</span>=<span class="hljs-variable">$&#123;CHOST&#125;</span><br>    mname=<span class="hljs-variable">$&#123;CHOST&#125;</span><br>    CROSS_PREFIX=<span class="hljs-string">&quot;<span class="hljs-variable">$&#123;CHOST&#125;</span>-&quot;</span><br><span class="hljs-keyword">else</span><br>    mname=`(<span class="hljs-built_in">uname</span> -a || <span class="hljs-built_in">echo</span> unknown) 2&gt;/dev/null`<br><span class="hljs-keyword">fi</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># set command prefix for cross-compilation</span></span><br><span class="line"><span class="keyword">if</span> [ -n <span class="string">&quot;<span class="variable">$&#123;CHOST&#125;</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">uname</span>=<span class="variable">$&#123;CHOST&#125;</span></span><br><span class="line">    mname=<span class="variable">$&#123;CHOST&#125;</span></span><br><span class="line">    CROSS_PREFIX=<span class="string">&quot;<span class="variable">$&#123;CHOST&#125;</span>-&quot;</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    mname=`(<span class="built_in">uname</span> -a || <span class="built_in">echo</span> unknown) 2&gt;/dev/null`</span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
 
 <p><strong>编译OpenSSL</strong></p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs sh"><br>./Configure --prefix=<span class="hljs-variable">$&#123;WORK_DIR&#125;</span>/openssl_install --cross-compile-prefix=arm-linux-gnueabihf- no-asm linux-armv4 -fPIC<br>make -j10<br>make install<br></code></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">./Configure --prefix=<span class="variable">$&#123;WORK_DIR&#125;</span>/openssl_install --cross-compile-prefix=arm-linux-gnueabihf- no-asm linux-armv4 -fPIC</span><br><span class="line">make -j10</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
 <p>这里一定要加-fPIC，以生成位置无关代码，否则后面编译OpenSSH时会找不到相应的库</p>
-<h4 id="编译OpenSSH"><a href="#编译OpenSSH" class="headerlink" title="编译OpenSSH"></a>编译OpenSSH</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sh">./configure --host=arm-linux-gnueabihf --with-libs --with-zlib=<span class="hljs-variable">$&#123;WORK_DIR&#125;</span>/zlib_install/ --with-ssl-dir=<span class="hljs-variable">$&#123;WORK_DIR&#125;</span>/openssl_install/ --disable-etc-default-login CC=arm-linux-gnueabihf-gcc AR=arm-linux-gnueabihf-ar<br>make -j10<br></code></pre></td></tr></table></figure>
+<h4 id="编译OpenSSH"><a href="#编译OpenSSH" class="headerlink" title="编译OpenSSH"></a>编译OpenSSH</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">./configure --host=arm-linux-gnueabihf --with-libs --with-zlib=<span class="variable">$&#123;WORK_DIR&#125;</span>/zlib_install/ --with-ssl-dir=<span class="variable">$&#123;WORK_DIR&#125;</span>/openssl_install/ --disable-etc-default-login CC=arm-linux-gnueabihf-gcc AR=arm-linux-gnueabihf-ar</span><br><span class="line">make -j10</span><br></pre></td></tr></table></figure>
 <p>编译好后不着急install，先生成四个key文件</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs sh">ssh-keygen -t rsa -f ssh_host_rsa_key -N <span class="hljs-string">&quot;&quot;</span><br>ssh-keygen -t dsa -f ssh_host_dsa_key -N <span class="hljs-string">&quot;&quot;</span><br>ssh-keygen -t ecdsa -f ssh_host_ecdsa_key -N <span class="hljs-string">&quot;&quot;</span><br>ssh-keygen -t dsa -f ssh_host_ed25519_key -N <span class="hljs-string">&quot;&quot;</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa -f ssh_host_rsa_key -N <span class="string">&quot;&quot;</span></span><br><span class="line">ssh-keygen -t dsa -f ssh_host_dsa_key -N <span class="string">&quot;&quot;</span></span><br><span class="line">ssh-keygen -t ecdsa -f ssh_host_ecdsa_key -N <span class="string">&quot;&quot;</span></span><br><span class="line">ssh-keygen -t dsa -f ssh_host_ed25519_key -N <span class="string">&quot;&quot;</span></span><br></pre></td></tr></table></figure>
 <p>然后准备复制到rootfs中，切换工作目录到${rootfs}，创建下面三个文件夹</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-built_in">mkdir</span> /usr/libexec  <br><span class="hljs-built_in">mkdir</span> /usr/local/etc  <br><span class="hljs-built_in">mkdir</span> /usr/local/bin<br><span class="hljs-built_in">mkdir</span> /usr/local/libexec<br></code></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> /usr/libexec  </span><br><span class="line"><span class="built_in">mkdir</span> /usr/local/etc  </span><br><span class="line"><span class="built_in">mkdir</span> /usr/local/bin</span><br><span class="line"><span class="built_in">mkdir</span> /usr/local/libexec</span><br></pre></td></tr></table></figure>
 <p>复制文件到相应目录</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-built_in">cp</span> scp sftp ssh sshd ssh-add ssh-agent ssh-keygen ssh-keyscan <span class="hljs-variable">$&#123;ROOTFS_WORKDIR&#125;</span>/usr/local/bin<br><br><span class="hljs-comment">#这四个key文件需要确保权限为600</span><br><span class="hljs-comment">#ssh_host_rsa_key、ssh_host_dsa_key、ssh_host_ecdsa_key和ssh_host_ed25519_key</span><br><br><span class="hljs-built_in">cp</span> moduli ssh_config sshd_config ssh_host_rsa_key ssh_host_dsa_key ssh_host_ecdsa_key ssh_host_ed25519_key <span class="hljs-variable">$&#123;ROOTFS_WORKDIR&#125;</span>/usr/local/etc<br><br><span class="hljs-built_in">cp</span> sftp-server ssh-keysign <span class="hljs-variable">$&#123;ROOTFS_WORKDIR&#125;</span>/usr/libexec<br><span class="hljs-built_in">cp</span> sshd-session <span class="hljs-variable">$&#123;ROOTFS_WORKDIR&#125;</span>/usr/local/libexec<br></code></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> scp sftp ssh sshd ssh-add ssh-agent ssh-keygen ssh-keyscan <span class="variable">$&#123;ROOTFS_WORKDIR&#125;</span>/usr/local/bin</span><br><span class="line"></span><br><span class="line"><span class="comment">#这四个key文件需要确保权限为600</span></span><br><span class="line"><span class="comment">#ssh_host_rsa_key、ssh_host_dsa_key、ssh_host_ecdsa_key和ssh_host_ed25519_key</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">cp</span> moduli ssh_config sshd_config ssh_host_rsa_key ssh_host_dsa_key ssh_host_ecdsa_key ssh_host_ed25519_key <span class="variable">$&#123;ROOTFS_WORKDIR&#125;</span>/usr/local/etc</span><br><span class="line"></span><br><span class="line"><span class="built_in">cp</span> sftp-server ssh-keysign <span class="variable">$&#123;ROOTFS_WORKDIR&#125;</span>/usr/libexec</span><br><span class="line"><span class="built_in">cp</span> sshd-session <span class="variable">$&#123;ROOTFS_WORKDIR&#125;</span>/usr/local/libexec</span><br></pre></td></tr></table></figure>
 
 <p>然后再&#x2F;etc&#x2F;passwd文件中增加两行</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sh">sshd:x:74:74:Privilege-separated<br>SSH:/var/empty/sshd:/sbin/nologin<br></code></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sshd:x:74:74:Privilege-separated</span><br><span class="line">SSH:/var/empty/sshd:/sbin/nologin</span><br></pre></td></tr></table></figure>
 <p>在&#x2F;etc&#x2F;group文件中添加</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">sshd:x:74:<br></code></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sshd:x:74:</span><br></pre></td></tr></table></figure>
 <p>最后将相应的库复制到rootfs中</p>
-<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">cp</span> libssl.so.<span class="hljs-number">3</span> libcrypto.so.<span class="hljs-number">3</span> <span class="hljs-variable">$&#123;ROOTFS_WORKDIR&#125;</span>/lib<br><span class="hljs-attribute">cp</span> libz.so.<span class="hljs-number">1</span>.<span class="hljs-number">3</span>.<span class="hljs-number">1</span> <span class="hljs-variable">$&#123;ROOTFS_WORKDIR&#125;</span>/lib<br></code></pre></td></tr></table></figure>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">cp</span> libssl.so.<span class="number">3</span> libcrypto.so.<span class="number">3</span> <span class="variable">$&#123;ROOTFS_WORKDIR&#125;</span>/lib</span><br><span class="line"><span class="attribute">cp</span> libz.so.<span class="number">1</span>.<span class="number">3</span>.<span class="number">1</span> <span class="variable">$&#123;ROOTFS_WORKDIR&#125;</span>/lib</span><br></pre></td></tr></table></figure>
 
 <h4 id="配置OpenSSH"><a href="#配置OpenSSH" class="headerlink" title="配置OpenSSH"></a>配置OpenSSH</h4><p>ssh_config，sshd_config配置文件在&#x2F;usr&#x2F;local&#x2F;etc&#x2F;中，不同于常规ubuntu位于&#x2F;etc&#x2F;ssh中，其他具体配置可参考网上的教程</p>
 <h4 id="ssh显示欢迎界面"><a href="#ssh显示欢迎界面" class="headerlink" title="ssh显示欢迎界面"></a>ssh显示欢迎界面</h4><ol>
-<li>在sshd_config中设置banner字段<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-comment"># sshd_config</span><br><br><span class="hljs-comment">#Banner</span><br>banner /etc/banner <span class="hljs-comment"># 这个文件中的内容会在SSH登录请求时显示</span><br></code></pre></td></tr></table></figure></li>
+<li>在sshd_config中设置banner字段<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># sshd_config</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#Banner</span></span><br><span class="line">banner /etc/banner <span class="comment"># 这个文件中的内容会在SSH登录请求时显示</span></span><br></pre></td></tr></table></figure></li>
 <li>在&#x2F;etc&#x2F;motd文件中添加内容，这个文件中的内容会在登录成功时显示<br>motd是message of to day（今日信息）的缩写，在Ubuntu系统中，会开机自动生成，而其他系统中，一般为固定内容</li>
 </ol>
 <h3 id="开机自动启动远程服务"><a href="#开机自动启动远程服务" class="headerlink" title="开机自动启动远程服务"></a>开机自动启动远程服务</h3><p>既然都使用远程了，我们肯定不希望先连接显示器键盘，输入命令开启远程服务后，再进行远程连接，因此远程服务需要在开机时自动启动。<br>在inittab中设置一个once，来启动telnet和ftp，其中网络的基本设置在sysinit中完成，而telnet和ftp服务器进程需要等网络基本设置完成后启动，并且持续运行，因此使用once活动来实现</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">::once:/etc/initremote<br></code></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">::once:/etc/initremote</span><br></pre></td></tr></table></figure>
 <p>&#x2F;etc&#x2F;initremote内容如下：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-comment">#!bin/sh</span><br>telnetd<br>tcpsvd -vE 0.0.0.0 21 ftpd -w /home/euler &amp;<br>/usr/local/bin/sshd<br></code></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!bin/sh</span></span><br><span class="line">telnetd</span><br><span class="line">tcpsvd -vE 0.0.0.0 21 ftpd -w /home/euler &amp;</span><br><span class="line">/usr/local/bin/sshd</span><br></pre></td></tr></table></figure>
 
 <h2 id="安装Alsa"><a href="#安装Alsa" class="headerlink" title="安装Alsa"></a>安装Alsa</h2><p>ALSA，全称是Advanced Linux Sound Architecture，是Linux中提供声音设备驱动的内核组件，应用可以通过ALSA接口实现音频播放、录音、设备通路控制、音量控制、通话等功能。</p>
 <p>可以去<a target="_blank" rel="noopener" href="https://www.alsa-project.org/main/index.php/Download">官网</a>下载源码，这里需要alsa-lib和alsa-utils</p>
 <h3 id="交叉编译alsa-libs"><a href="#交叉编译alsa-libs" class="headerlink" title="交叉编译alsa-libs"></a>交叉编译alsa-libs</h3><p>由于alsa-utils依赖于alsa-libs，因此先编译libs<br>先新建一个alsa目录，然后将源码下载到该目录下并解压。</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-built_in">export</span> WORK_DIR=<span class="hljs-variable">$PWD</span><br><span class="hljs-built_in">mkdir</span> alsa_install<br><span class="hljs-built_in">cd</span> alsa-lib-1.2.12<br>./configure\<br> --host=arm-linux-gnueabihf\<br> --prefix=<span class="hljs-variable">$&#123;WORK_DIR&#125;</span>/alsa_install\<br> --enable-shared\<br> --disable-python\<br> --with-configdir=/usr/local/share/alsa\<br> --with-plugindir=<span class="hljs-variable">$&#123;OUTPUT&#125;</span>/alsa_plugin<br>make -j10<br><span class="hljs-built_in">sudo</span> make install<br></code></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> WORK_DIR=<span class="variable">$PWD</span></span><br><span class="line"><span class="built_in">mkdir</span> alsa_install</span><br><span class="line"><span class="built_in">cd</span> alsa-lib-1.2.12</span><br><span class="line">./configure\</span><br><span class="line"> --host=arm-linux-gnueabihf\</span><br><span class="line"> --prefix=<span class="variable">$&#123;WORK_DIR&#125;</span>/alsa_install\</span><br><span class="line"> --enable-shared\</span><br><span class="line"> --disable-python\</span><br><span class="line"> --with-configdir=/usr/local/share/alsa\</span><br><span class="line"> --with-plugindir=<span class="variable">$&#123;OUTPUT&#125;</span>/alsa_plugin</span><br><span class="line">make -j10</span><br><span class="line"><span class="built_in">sudo</span> make install</span><br></pre></td></tr></table></figure>
 <p>注意这个configdir的目录必须和下载到开发板时的目录完全相同才行，否则会报错。</p>
-<h3 id="交叉编译alsa-utils"><a href="#交叉编译alsa-utils" class="headerlink" title="交叉编译alsa-utils"></a>交叉编译alsa-utils</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-built_in">cd</span> <span class="hljs-variable">$&#123;WORK_DIR&#125;</span><br><span class="hljs-built_in">cd</span> alsa-utils-1.2.12<br>./configure --host=arm-linux-gnueabihf\<br> --prefix=<span class="hljs-variable">$&#123;WORK_DIR&#125;</span>/alsa_install\<br> CFLAGS=<span class="hljs-string">&quot;-I<span class="hljs-variable">$&#123;WORK_DIR&#125;</span>/alsa_install/include&quot;</span>\<br> LDFLAGS=<span class="hljs-string">&quot;-L<span class="hljs-variable">$&#123;WORK_DIR&#125;</span>/alsa_install/lib -lasound&quot;</span>\<br> --disable-alsamixer\<br> --disable-xmlto\<br> --with-alsa-inc-prefix=<span class="hljs-variable">$&#123;WORK_DIR&#125;</span>/alsa_install/include\<br> --with-alsa-prefix=<span class="hljs-variable">$&#123;WORK_DIR&#125;</span>/alsa_install/lib<br>make -j10<br><span class="hljs-built_in">sudo</span> make install<br></code></pre></td></tr></table></figure>
+<h3 id="交叉编译alsa-utils"><a href="#交叉编译alsa-utils" class="headerlink" title="交叉编译alsa-utils"></a>交叉编译alsa-utils</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> <span class="variable">$&#123;WORK_DIR&#125;</span></span><br><span class="line"><span class="built_in">cd</span> alsa-utils-1.2.12</span><br><span class="line">./configure --host=arm-linux-gnueabihf\</span><br><span class="line"> --prefix=<span class="variable">$&#123;WORK_DIR&#125;</span>/alsa_install\</span><br><span class="line"> CFLAGS=<span class="string">&quot;-I<span class="variable">$&#123;WORK_DIR&#125;</span>/alsa_install/include&quot;</span>\</span><br><span class="line"> LDFLAGS=<span class="string">&quot;-L<span class="variable">$&#123;WORK_DIR&#125;</span>/alsa_install/lib -lasound&quot;</span>\</span><br><span class="line"> --disable-alsamixer\</span><br><span class="line"> --disable-xmlto\</span><br><span class="line"> --with-alsa-inc-prefix=<span class="variable">$&#123;WORK_DIR&#125;</span>/alsa_install/include\</span><br><span class="line"> --with-alsa-prefix=<span class="variable">$&#123;WORK_DIR&#125;</span>/alsa_install/lib</span><br><span class="line">make -j10</span><br><span class="line"><span class="built_in">sudo</span> make install</span><br></pre></td></tr></table></figure>
 
-<h3 id="安装到开发板"><a href="#安装到开发板" class="headerlink" title="安装到开发板"></a>安装到开发板</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-built_in">cp</span> <span class="hljs-variable">$&#123;WORK_DIR&#125;</span>/alsa_install/lib/libasound.* <span class="hljs-variable">$&#123;TARGET_ROOT&#125;</span>/lib/<br><span class="hljs-built_in">cp</span> <span class="hljs-variable">$&#123;WORK_DIR&#125;</span>/alsa_install/bin/* <span class="hljs-variable">$&#123;TARGET_ROOT&#125;</span>/bin/<br><span class="hljs-built_in">cp</span> <span class="hljs-variable">$&#123;WORK_DIR&#125;</span>/alsa_install/sbin/* <span class="hljs-variable">$&#123;TARGET_ROOT&#125;</span>/sbin/<br><span class="hljs-built_in">cp</span> -r /usr/local/share/alsa <span class="hljs-variable">$&#123;TARGET_ROOT&#125;</span>/usr/local/share/alsa<br></code></pre></td></tr></table></figure>
+<h3 id="安装到开发板"><a href="#安装到开发板" class="headerlink" title="安装到开发板"></a>安装到开发板</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> <span class="variable">$&#123;WORK_DIR&#125;</span>/alsa_install/lib/libasound.* <span class="variable">$&#123;TARGET_ROOT&#125;</span>/lib/</span><br><span class="line"><span class="built_in">cp</span> <span class="variable">$&#123;WORK_DIR&#125;</span>/alsa_install/bin/* <span class="variable">$&#123;TARGET_ROOT&#125;</span>/bin/</span><br><span class="line"><span class="built_in">cp</span> <span class="variable">$&#123;WORK_DIR&#125;</span>/alsa_install/sbin/* <span class="variable">$&#123;TARGET_ROOT&#125;</span>/sbin/</span><br><span class="line"><span class="built_in">cp</span> -r /usr/local/share/alsa <span class="variable">$&#123;TARGET_ROOT&#125;</span>/usr/local/share/alsa</span><br></pre></td></tr></table></figure>
 
 <h2 id="安装ffmpeg"><a href="#安装ffmpeg" class="headerlink" title="安装ffmpeg"></a>安装ffmpeg</h2><h3 id="包管理器安装"><a href="#包管理器安装" class="headerlink" title="包管理器安装"></a>包管理器安装</h3><p>ffmpeg是一个开源的音视频编解码工具，官方文档在<a target="_blank" rel="noopener" href="https://trac.ffmpeg.org/">这里</a>如果有包管理工具可以直接通过包管理工具安装</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-built_in">sudo</span> apt install ffmpeg<br></code></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt install ffmpeg</span><br></pre></td></tr></table></figure>
 <p>如果没有包管理器，也可以通过源码构建</p>
 <h3 id="从源码构建"><a href="#从源码构建" class="headerlink" title="从源码构建"></a>从源码构建</h3><h4 id="下载源码"><a href="#下载源码" class="headerlink" title="下载源码"></a>下载源码</h4><p>新建一个工作目录ffmpeg，然后下载源码。</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">git <span class="hljs-built_in">clone</span> https://git.ffmpeg.org/ffmpeg.git ffmpeg<br></code></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://git.ffmpeg.org/ffmpeg.git ffmpeg</span><br></pre></td></tr></table></figure>
 <p>下载好后还有一个ffmpeg目录，进入这个目录</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-built_in">cd</span> ffmpeg<br></code></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ffmpeg</span><br></pre></td></tr></table></figure>
 <h4 id="配置编译参数"><a href="#配置编译参数" class="headerlink" title="配置编译参数"></a>配置编译参数</h4><p>ffmpeg的编译参数通过configure脚本设置，先执行一下，发现输入–help命令可以查看帮助，查看一下这些参数的含义，根据需求选择，在此处我们往32位的树莓派上交叉编译。</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs sh">./configure --<span class="hljs-built_in">arch</span>=arm\<br> --cross-prefix=arm-linux-gnueabihf-\<br> --target-os=linux\<br> --prefix=/home/anakin/Data/code/euler/rootfs/usr\<br> --disable-ffprobe\<br> --enable-mmal\<br> --enable-omx-rpi\<br> --enable-gpl\<br> --enable-nonfree<br></code></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">./configure --<span class="built_in">arch</span>=arm\</span><br><span class="line"> --cross-prefix=arm-linux-gnueabihf-\</span><br><span class="line"> --target-os=linux\</span><br><span class="line"> --prefix=/home/anakin/Data/code/euler/rootfs/usr\</span><br><span class="line"> --disable-ffprobe\</span><br><span class="line"> --enable-mmal\</span><br><span class="line"> --enable-omx-rpi\</span><br><span class="line"> --enable-gpl\</span><br><span class="line"> --enable-nonfree</span><br></pre></td></tr></table></figure>
 <p>  首先先设置目标架构arm，交叉编译工具armhf，目标系统Linux。</p>
 <p>  –prefix为euler系统的根文件系统的&#x2F;usr目录，这一步非常重要，否则后面会安装到自己的电脑上。</p>
 <p>  然后裁剪掉一些不需要的库，比如媒体分析工具ffprobe</p>
@@ -373,46 +525,46 @@
 <blockquote>
 <p>WARNING: arm-linux-gnueabihf-pkg-config not found, library detection may fail.<br>则安装pkg-config即可</p>
 </blockquote>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-built_in">sudo</span> apt install pkg-config-arm-linux-gnueabihf<br></code></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt install pkg-config-arm-linux-gnueabihf</span><br></pre></td></tr></table></figure>
 <p>都完成后开始编译</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">make -j10<br></code></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make -j10</span><br></pre></td></tr></table></figure>
 <h4 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h4><p>编译完成之后，用make install命令安装即可</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">make install<br></code></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make install</span><br></pre></td></tr></table></figure>
 <h2 id="安装Valgrind"><a href="#安装Valgrind" class="headerlink" title="安装Valgrind"></a>安装Valgrind</h2><p>Valgrind 是一款用于内存调试，内存泄漏检测以及性能分析，检测线程错误的开发工具。</p>
 <h3 id="下载源码-1"><a href="#下载源码-1" class="headerlink" title="下载源码"></a>下载源码</h3><p>在<a target="_blank" rel="noopener" href="https://valgrind.org/downloads/">官网</a>下载对应的包，然后解压，得到一个目录valgrind，进入这个目录</p>
-<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">wget</span> https://sourceware.org/pub/valgrind/valgrind-<span class="hljs-number">3</span>.<span class="hljs-number">23</span>.<span class="hljs-number">0</span>.tar.bz2<br><span class="hljs-attribute">tar</span> -xvf valgrind-<span class="hljs-number">3</span>.<span class="hljs-number">23</span>.<span class="hljs-number">0</span>.tar.bz2<br><span class="hljs-attribute">cd</span> valgrind-<span class="hljs-number">3</span>.<span class="hljs-number">23</span>.<span class="hljs-number">0</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">wget</span> https://sourceware.org/pub/valgrind/valgrind-<span class="number">3</span>.<span class="number">23</span>.<span class="number">0</span>.tar.bz2</span><br><span class="line"><span class="attribute">tar</span> -xvf valgrind-<span class="number">3</span>.<span class="number">23</span>.<span class="number">0</span>.tar.bz2</span><br><span class="line"><span class="attribute">cd</span> valgrind-<span class="number">3</span>.<span class="number">23</span>.<span class="number">0</span></span><br></pre></td></tr></table></figure>
 <h3 id="修改配置"><a href="#修改配置" class="headerlink" title="修改配置"></a>修改配置</h3><p>查看目录里面的README和README.aarch64（没有arm32的，看着这俩猜一猜怎么设置交叉编译工具链），然后再打开configure脚本看看。<br>看到大概有这样一段和交叉编译相关的内容</p>
-<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs routeros">Development so far was however done by cross compiling, viz:<br>  <span class="hljs-built_in">export</span> <span class="hljs-attribute">CC</span>=aarch64-linux-gnu-gcc<br>  <span class="hljs-built_in">export</span> <span class="hljs-attribute">LD</span>=aarch64-linux-gnu-ld<br>  <span class="hljs-built_in">export</span> <span class="hljs-attribute">AR</span>=aarch64-linux-gnu-ar<br><br>  ./autogen.sh<br>  ./configure <span class="hljs-attribute">--prefix</span>=`pwd`/Inst <span class="hljs-attribute">--host</span>=aarch64-unknown-linux \<br>              --enable-only64bit<br>  make -j4<br>  make -j4 install<br><br>Doing this assumes that the install path (`pwd`/Inst) is valid on<br>both host <span class="hljs-keyword">and</span> target, which isn<span class="hljs-string">&#x27;t normally the case.  To avoid</span><br><span class="hljs-string">this limitation, do instead:</span><br><span class="hljs-string"></span><br><span class="hljs-string">  ./configure --prefix=/install/path/on/target \</span><br><span class="hljs-string">              --host=aarch64-unknown-linux \</span><br><span class="hljs-string">              --enable-only64bit</span><br><span class="hljs-string">  make -j4</span><br><span class="hljs-string">  make -j4 install DESTDIR=/a/temp/dir/on/host</span><br><span class="hljs-string">  # and then copy the contents of DESTDIR to the target.</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">Development so far was however done by cross compiling, viz:</span><br><span class="line">  <span class="built_in">export</span> <span class="attribute">CC</span>=aarch64-linux-gnu-gcc</span><br><span class="line">  <span class="built_in">export</span> <span class="attribute">LD</span>=aarch64-linux-gnu-ld</span><br><span class="line">  <span class="built_in">export</span> <span class="attribute">AR</span>=aarch64-linux-gnu-ar</span><br><span class="line"></span><br><span class="line">  ./autogen.sh</span><br><span class="line">  ./configure <span class="attribute">--prefix</span>=`pwd`/Inst <span class="attribute">--host</span>=aarch64-unknown-linux \</span><br><span class="line">              --enable-only64bit</span><br><span class="line">  make -j4</span><br><span class="line">  make -j4 install</span><br><span class="line"></span><br><span class="line">Doing this assumes that the install path (`pwd`/Inst) is valid on</span><br><span class="line">both host <span class="keyword">and</span> target, which isn<span class="string">&#x27;t normally the case.  To avoid</span></span><br><span class="line"><span class="string">this limitation, do instead:</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">  ./configure --prefix=/install/path/on/target \</span></span><br><span class="line"><span class="string">              --host=aarch64-unknown-linux \</span></span><br><span class="line"><span class="string">              --enable-only64bit</span></span><br><span class="line"><span class="string">  make -j4</span></span><br><span class="line"><span class="string">  make -j4 install DESTDIR=/a/temp/dir/on/host</span></span><br><span class="line"><span class="string">  # and then copy the contents of DESTDIR to the target.</span></span><br></pre></td></tr></table></figure>
 <p>大概意思就是，先设置交叉编译工具链，然后运行autogen，然后利用configure配置</p>
 <p>我们首先需要修改交叉编译工具为arm32位的交叉编译工具：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-built_in">export</span> CC=arm-linux-gnueabihf-gcc<br><span class="hljs-built_in">export</span> LD=arm-linux-gnueabihf-ld<br><span class="hljs-built_in">export</span> AR=arm-linux-gnueabihf-ar<br></code></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> CC=arm-linux-gnueabihf-gcc</span><br><span class="line"><span class="built_in">export</span> LD=arm-linux-gnueabihf-ld</span><br><span class="line"><span class="built_in">export</span> AR=arm-linux-gnueabihf-ar</span><br></pre></td></tr></table></figure>
 <p>然后修改configure里面的host为arm-linux，并且去掉only64bit，因为我们是32bit。</p>
 <p>注意这个–prefix参数，这里要填写的是在目标机器上的安装路径，在这里我们安装到&#x2F;usr路径下，所以可以得到命令</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sh">./autogen.sh<br>./configure --prefix=/usr --host=arm-linux<br></code></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">./autogen.sh</span><br><span class="line">./configure --prefix=/usr --host=arm-linux</span><br></pre></td></tr></table></figure>
 <p>至此就完成了编译前配置，设置完后会列出相应的配置：</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">Version:</span> <span class="hljs-number">3.23</span><span class="hljs-number">.0</span><br>        <span class="hljs-attr">Maximum build arch:</span> <span class="hljs-string">arm</span><br>        <span class="hljs-attr">Primary build arch:</span> <span class="hljs-string">arm</span><br>      <span class="hljs-attr">Secondary build arch:</span><br>                  <span class="hljs-attr">Build OS:</span> <span class="hljs-string">linux</span><br>    <span class="hljs-attr">Link Time Optimisation:</span> <span class="hljs-literal">no</span><br>      <span class="hljs-attr">Primary build target:</span> <span class="hljs-string">ARM_LINUX</span><br>    <span class="hljs-attr">Secondary build target:</span><br>          <span class="hljs-attr">Platform variant:</span> <span class="hljs-string">vanilla</span><br>     <span class="hljs-attr">Primary -DVGPV string:</span> <span class="hljs-string">-DVGPV_arm_linux_vanilla=1</span><br>        <span class="hljs-attr">Default supp files:</span> <span class="hljs-string">./xfree-3.supp</span> <span class="hljs-string">./xfree-4.supp</span> <span class="hljs-string">glibc-2.X-drd.supp</span> <span class="hljs-string">glibc-2.X-helgrind.supp</span> <span class="hljs-string">glibc-2.X.supp</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Version:</span> <span class="number">3.23</span><span class="number">.0</span></span><br><span class="line">        <span class="attr">Maximum build arch:</span> <span class="string">arm</span></span><br><span class="line">        <span class="attr">Primary build arch:</span> <span class="string">arm</span></span><br><span class="line">      <span class="attr">Secondary build arch:</span></span><br><span class="line">                  <span class="attr">Build OS:</span> <span class="string">linux</span></span><br><span class="line">    <span class="attr">Link Time Optimisation:</span> <span class="literal">no</span></span><br><span class="line">      <span class="attr">Primary build target:</span> <span class="string">ARM_LINUX</span></span><br><span class="line">    <span class="attr">Secondary build target:</span></span><br><span class="line">          <span class="attr">Platform variant:</span> <span class="string">vanilla</span></span><br><span class="line">     <span class="attr">Primary -DVGPV string:</span> <span class="string">-DVGPV_arm_linux_vanilla=1</span></span><br><span class="line">        <span class="attr">Default supp files:</span> <span class="string">./xfree-3.supp</span> <span class="string">./xfree-4.supp</span> <span class="string">glibc-2.X-drd.supp</span> <span class="string">glibc-2.X-helgrind.supp</span> <span class="string">glibc-2.X.supp</span></span><br></pre></td></tr></table></figure>
 <p>确认无误后开始编译</p>
-<h3 id="编译和安装"><a href="#编译和安装" class="headerlink" title="编译和安装"></a>编译和安装</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sh">make -j4<br>make -j4 install DESTDIR=&#123;<span class="hljs-variable">$ROOTFS_DIR</span>&#125; <span class="hljs-comment">#直接放到rootfs里面，因为自带前缀/usr，故不用带/usr路径</span><br></code></pre></td></tr></table></figure>
+<h3 id="编译和安装"><a href="#编译和安装" class="headerlink" title="编译和安装"></a>编译和安装</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">make -j4</span><br><span class="line">make -j4 install DESTDIR=&#123;<span class="variable">$ROOTFS_DIR</span>&#125; <span class="comment">#直接放到rootfs里面，因为自带前缀/usr，故不用带/usr路径</span></span><br></pre></td></tr></table></figure>
 <p>如果编译过程中出现问题：</p>
 <blockquote>
 <p>sorry, unimplemented: Thumb-1 hard-float VFP ABI</p>
 </blockquote>
 <p>打开configure文件，把里面的-march&#x3D;armv6修改成-marm即可</p>
 <p>上下文大概如下：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-keyword">case</span> <span class="hljs-string">&quot;<span class="hljs-variable">$&#123;host_cpu&#125;</span>&quot;</span> <span class="hljs-keyword">in</span><br>...)<br>  ......<br>arm*)<br>        &#123; <span class="hljs-variable">$as_echo</span> <span class="hljs-string">&quot;<span class="hljs-variable">$as_me</span>:<span class="hljs-variable">$&#123;as_lineno-$LINENO&#125;</span>: result: ok (<span class="hljs-variable">$&#123;host_cpu&#125;</span>)&quot;</span> &gt;&amp;5<br><span class="hljs-variable">$as_echo</span> <span class="hljs-string">&quot;ok (<span class="hljs-variable">$&#123;host_cpu&#125;</span>)&quot;</span> &gt;&amp;6; &#125;<br>        VGCONF_PLATFORM_ARM_ARCH=<span class="hljs-string">&quot;-marm&quot;</span> <span class="hljs-comment">#这里原来是-march=armv6</span><br>        ARCH_MAX=<span class="hljs-string">&quot;arm&quot;</span><br>        ;;<br></code></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> <span class="string">&quot;<span class="variable">$&#123;host_cpu&#125;</span>&quot;</span> <span class="keyword">in</span></span><br><span class="line">...)</span><br><span class="line">  ......</span><br><span class="line">arm*)</span><br><span class="line">        &#123; <span class="variable">$as_echo</span> <span class="string">&quot;<span class="variable">$as_me</span>:<span class="variable">$&#123;as_lineno-$LINENO&#125;</span>: result: ok (<span class="variable">$&#123;host_cpu&#125;</span>)&quot;</span> &gt;&amp;5</span><br><span class="line"><span class="variable">$as_echo</span> <span class="string">&quot;ok (<span class="variable">$&#123;host_cpu&#125;</span>)&quot;</span> &gt;&amp;6; &#125;</span><br><span class="line">        VGCONF_PLATFORM_ARM_ARCH=<span class="string">&quot;-marm&quot;</span> <span class="comment">#这里原来是-march=armv6</span></span><br><span class="line">        ARCH_MAX=<span class="string">&quot;arm&quot;</span></span><br><span class="line">        ;;</span><br></pre></td></tr></table></figure>
 <p>将rootfs同步到树莓派，进行测试即可</p>
 <h3 id="测试valgrind"><a href="#测试valgrind" class="headerlink" title="测试valgrind"></a>测试valgrind</h3><p>参考这几篇博客</p>
 <p><a target="_blank" rel="noopener" href="http://blog.chinaunix.net/uid-23629988-id-3033741.html">http://blog.chinaunix.net/uid-23629988-id-3033741.html</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_45518728/article/details/119865117">https://blog.csdn.net/weixin_45518728/article/details/119865117</a></p>
 <h2 id="文件系统扩容"><a href="#文件系统扩容" class="headerlink" title="文件系统扩容"></a>文件系统扩容</h2><p>从镜像刷写到SD卡后，rootfs的容量和镜像中的划分大小是一样的，也就是只有500多M的空间可用，因此需要将root分区扩容至SD卡剩余的所有空间。因此需要将磁盘逻辑分区扩大，然后将文件系统也调整至相应容量</p>
 <p>以下操作都需要离线进行，即将树莓派系统的SD卡插到电脑上进行。</p>
 <h3 id="磁盘分区扩容"><a href="#磁盘分区扩容" class="headerlink" title="磁盘分区扩容"></a>磁盘分区扩容</h3><p>用fdisk -l命令查看SD卡的物理空间和分区表。</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">fdisk -l<br></code></pre></td></tr></table></figure>
-<p>根据容量找到SD卡的盘符，可以看到我的是&#x2F;dev&#x2F;sdc，并且&#x2F;dev&#x2F;sdc3分区是root分区，但是只有502M的可用空间，显然没有占满整个SD卡<br><img src="/../img_folder/Raspberry/fdisk.png"></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fdisk -l</span><br></pre></td></tr></table></figure>
+<p>根据容量找到SD卡的盘符，可以看到我的是&#x2F;dev&#x2F;sdc，并且&#x2F;dev&#x2F;sdc3分区是root分区，但是只有502M的可用空间，显然没有占满整个SD卡<br><img src="/img_folder/Raspberry/fdisk.png"></p>
 <p>下面需要用fdisk工具，将root对应的分区扩容至所有剩余空间，整个操作思路为，删除原有分区，然后再新建一个和原root分区起始块号相同，大小为SD卡中全部可用块的分区。</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-built_in">sudo</span> fdisk /dev/sdc <span class="hljs-comment">#sdc换成你对应的设备号</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> fdisk /dev/sdc <span class="comment">#sdc换成你对应的设备号</span></span><br></pre></td></tr></table></figure>
 <p>进入菜单之后：</p>
 <ol>
-<li>按p，查看分区表，会看到一个和上面图片差不多的内容，比如我的是这样<figure class="highlight tap"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs tap">Device     Boot   Start     End Sectors  Size Id Type<br>/dev/sdc1  *      <span class="hljs-number"> 8192 </span><span class="hljs-number"> 593919 </span><span class="hljs-number"> 585728 </span> 286M  c W95 FAT32 (LBA)<br>/dev/sdc2       <span class="hljs-number"> 593920 </span>1593343 <span class="hljs-number"> 999424 </span> 488M<span class="hljs-number"> 82 </span>Linux swap / Solaris<br>/dev/sdc3      <span class="hljs-number"> 1593344 </span>2621439<span class="hljs-number"> 1028096 </span> 502M<span class="hljs-number"> 83 </span>Linux<br></code></pre></td></tr></table></figure></li>
+<li>按p，查看分区表，会看到一个和上面图片差不多的内容，比如我的是这样<figure class="highlight tap"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Device     Boot   Start     End Sectors  Size Id Type</span><br><span class="line">/dev/sdc1  *      <span class="number"> 8192 </span><span class="number"> 593919 </span><span class="number"> 585728 </span> 286M  c W95 FAT32 (LBA)</span><br><span class="line">/dev/sdc2       <span class="number"> 593920 </span>1593343 <span class="number"> 999424 </span> 488M<span class="number"> 82 </span>Linux swap / Solaris</span><br><span class="line">/dev/sdc3      <span class="number"> 1593344 </span>2621439<span class="number"> 1028096 </span> 502M<span class="number"> 83 </span>Linux</span><br></pre></td></tr></table></figure></li>
 </ol>
 <p>记下Linux类型分区的Start块号，后面有用</p>
 <ol start="2">
@@ -426,12 +578,101 @@
 <p>现在就完成了磁盘逻辑分区的调整，可以再次使用fdisk -l命令查看分区表</p>
 <h3 id="文件系统扩容-1"><a href="#文件系统扩容-1" class="headerlink" title="文件系统扩容"></a>文件系统扩容</h3><p>磁盘分区扩容完成后，需要修改文件系统数据结构，使其能识别全部的分区块</p>
 <p>先用e2fsck命令检查分区表</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-built_in">sudo</span> e2fsck /dev/sdc3<br></code></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> e2fsck /dev/sdc3</span><br></pre></td></tr></table></figure>
 <p>e2fsck工具常用选项如下：</p>
-<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs diff"><span class="hljs-deletion">-a：不询问使用者意见，便自动修复文件系统；</span><br><span class="hljs-deletion">-b&lt;superblock&gt;：指定superblock，而不使用预设的superblock；</span><br><span class="hljs-deletion">-B&lt;区块大小&gt;：指定区块的大小，单位为字节；</span><br><span class="hljs-deletion">-c：一并执行badblocks，以标示损坏的区块；</span><br><span class="hljs-deletion">-C：将检查过程的信息完整记录在file descriptor中，使得整个检查过程都能完整监控；</span><br><span class="hljs-deletion">-d：显示排错信息；</span><br><span class="hljs-deletion">-f：即使文件系统没有错误迹象，仍强制地检查正确性；</span><br><span class="hljs-deletion">-F：执行前先清除设备的缓冲区；</span><br><span class="hljs-deletion">-l&lt;文件&gt;：将文件中指定的区块加到损坏区块列表；</span><br><span class="hljs-deletion">-L&lt;文件&gt;：先清除损坏区块列表，再将文件中指定的区块加到损坏区块列表。因此损坏区块列表的区块跟文件中指定的区块是一样的；</span><br><span class="hljs-deletion">-n：以只读模式开启文件系统，并采取非互动方式执行，所有的问题对话均设置以&quot;no&quot;回答；</span><br><span class="hljs-deletion">-p：不询问使用者意见，便自动修复文件系统；</span><br><span class="hljs-deletion">-r：此参数只为了兼容性而存在，并无实际作用；</span><br><span class="hljs-deletion">-s：如果文件系统的字节顺序不适当，就交换字节顺序，否则不做任何动作；</span><br><span class="hljs-deletion">-S：不管文件系统的字节顺序，一律交换字节顺序；</span><br><span class="hljs-deletion">-t：显示时间信息；</span><br><span class="hljs-deletion">-v：执行时显示详细的信息；</span><br><span class="hljs-deletion">-V：显示版本信息；</span><br><span class="hljs-deletion">-y：采取非互动方式执行，所有的问题均设置以&quot;yes&quot;回答。</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="deletion">-a：不询问使用者意见，便自动修复文件系统；</span></span><br><span class="line"><span class="deletion">-b&lt;superblock&gt;：指定superblock，而不使用预设的superblock；</span></span><br><span class="line"><span class="deletion">-B&lt;区块大小&gt;：指定区块的大小，单位为字节；</span></span><br><span class="line"><span class="deletion">-c：一并执行badblocks，以标示损坏的区块；</span></span><br><span class="line"><span class="deletion">-C：将检查过程的信息完整记录在file descriptor中，使得整个检查过程都能完整监控；</span></span><br><span class="line"><span class="deletion">-d：显示排错信息；</span></span><br><span class="line"><span class="deletion">-f：即使文件系统没有错误迹象，仍强制地检查正确性；</span></span><br><span class="line"><span class="deletion">-F：执行前先清除设备的缓冲区；</span></span><br><span class="line"><span class="deletion">-l&lt;文件&gt;：将文件中指定的区块加到损坏区块列表；</span></span><br><span class="line"><span class="deletion">-L&lt;文件&gt;：先清除损坏区块列表，再将文件中指定的区块加到损坏区块列表。因此损坏区块列表的区块跟文件中指定的区块是一样的；</span></span><br><span class="line"><span class="deletion">-n：以只读模式开启文件系统，并采取非互动方式执行，所有的问题对话均设置以&quot;no&quot;回答；</span></span><br><span class="line"><span class="deletion">-p：不询问使用者意见，便自动修复文件系统；</span></span><br><span class="line"><span class="deletion">-r：此参数只为了兼容性而存在，并无实际作用；</span></span><br><span class="line"><span class="deletion">-s：如果文件系统的字节顺序不适当，就交换字节顺序，否则不做任何动作；</span></span><br><span class="line"><span class="deletion">-S：不管文件系统的字节顺序，一律交换字节顺序；</span></span><br><span class="line"><span class="deletion">-t：显示时间信息；</span></span><br><span class="line"><span class="deletion">-v：执行时显示详细的信息；</span></span><br><span class="line"><span class="deletion">-V：显示版本信息；</span></span><br><span class="line"><span class="deletion">-y：采取非互动方式执行，所有的问题均设置以&quot;yes&quot;回答。</span></span><br></pre></td></tr></table></figure>
 
 <p>用resize2fs工具修改ext4文件系统索引</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-built_in">sudo</span> resize2fs /dev/sdc3<br></code></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> resize2fs /dev/sdc3</span><br></pre></td></tr></table></figure>
 
 <p>至此便完成了扩容，可以将&#x2F;dev&#x2F;sdc3挂载后，使用df -h命令查看分区的大小验证操作是否成功。</p>
-</div><div class="tags"></div><div class="post-nav"><a class="pre" href="/:%E4%BB%8E%E6%BA%90%E7%A0%81%E6%9E%84%E5%BB%BA%E6%A0%91%E8%8E%93%E6%B4%BE%E7%B3%BB%E7%BB%9F%E9%95%9C%E5%83%8F/">从源码构建树莓派系统镜像</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="https://Anakin0607.github.io"/></form></div><div class="widget"><div class="author-info"><a class="info-avatar" href="/about/" title="关于"><img class="nofancybox" src="/img/avatar.png"/></a><p>To be a better man.</p></div></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/RaspberryPi/">RaspberryPi</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/:%E4%BB%8E%E6%BA%90%E7%A0%81%E6%9E%84%E5%BB%BA%E6%A0%91%E8%8E%93%E6%B4%BE%E7%B3%BB%E7%BB%9F%E9%95%9C%E5%83%8F/">从源码构建树莓派系统镜像</a></li><li class="post-list-item"><a class="post-list-link" href="/:%E5%AE%8C%E5%96%84rootfs/">完善rootfs</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="http://www.example1.com/" title="site-name1" target="_blank">site-name1</a><ul></ul><a href="http://www.example2.com/" title="site-name2" target="_blank">site-name2</a><ul></ul><a href="http://www.example3.com/" title="site-name3" target="_blank">site-name3</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2024 <a href="/." rel="nofollow">Anakin0607.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=1.0.0" async></script><script type="text/javascript" src="https://unpkg.com/@fancyapps/fancybox/dist/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=1.0.0" async></script><link rel="stylesheet" type="text/css" href="https://unpkg.com/@fancyapps/fancybox/dist/jquery.fancybox.min.css"><script type="text/javascript" src="/js/copycode.js?v=1.0.0" successtext="复制成功！"></script><link rel="stylesheet" type="text/css" href="/css/copycode.css?v=1.0.0"><script type="text/javascript" src="/js/codeblock-resizer.js?v=1.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=1.0.0"></script></div></body></html>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%B5%8C%E5%85%A5%E5%BC%8F/" rel="tag"># 嵌入式</a>
+              <a href="/tags/Linux/" rel="tag"># Linux</a>
+              <a href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" rel="tag"># 树莓派</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+            </div>
+            <div class="post-nav-item">
+                <a href="/:%E4%BB%8E%E6%BA%90%E7%A0%81%E6%9E%84%E5%BB%BA%E6%A0%91%E8%8E%93%E6%B4%BE%E7%B3%BB%E7%BB%9F%E9%95%9C%E5%83%8F/" rel="next" title="从源码构建树莓派系统镜像">
+                  从源码构建树莓派系统镜像 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Anakin</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
