@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"anakin0607.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="在Ubuntu下安装nvidia显卡的驱动，并安装cuda的整套流程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ubuntu下安装nvidia驱动和cuda">
+<meta property="og:url" content="https://anakin0607.github.io/Ubuntu%E4%B8%8B%E5%AE%89%E8%A3%85nvidia%E9%A9%B1%E5%8A%A8%E5%92%8Ccuda/index.html">
+<meta property="og:site_name" content="Anakin0607">
+<meta property="og:description" content="在Ubuntu下安装nvidia显卡的驱动，并安装cuda的整套流程">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://anakin0607.github.io/img_folder/nvidia-driver/nvidia-driver.png">
+<meta property="og:image" content="https://anakin0607.github.io/img_folder/nvidia-driver/cuda-version.png">
+<meta property="og:image" content="https://anakin0607.github.io/img_folder/nvidia-driver/driver-install.png">
+<meta property="og:image" content="https://anakin0607.github.io/img_folder/nvidia-driver/driver-install-success.png">
+<meta property="article:published_time" content="2024-09-26T05:16:54.000Z">
+<meta property="article:modified_time" content="2024-09-26T09:28:31.140Z">
+<meta property="article:author" content="Anakin">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://anakin0607.github.io/img_folder/nvidia-driver/nvidia-driver.png">
+
+
+<link rel="canonical" href="https://anakin0607.github.io/Ubuntu%E4%B8%8B%E5%AE%89%E8%A3%85nvidia%E9%A9%B1%E5%8A%A8%E5%92%8Ccuda/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://anakin0607.github.io/Ubuntu%E4%B8%8B%E5%AE%89%E8%A3%85nvidia%E9%A9%B1%E5%8A%A8%E5%92%8Ccuda/","path":"Ubuntu下安装nvidia驱动和cuda/","title":"Ubuntu下安装nvidia驱动和cuda"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Ubuntu下安装nvidia驱动和cuda | Anakin0607</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Anakin0607</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">7</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">3</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">8</span></a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8"><span class="nav-number">1.</span> <span class="nav-text">安装显卡驱动</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E5%BF%85%E8%A6%81%E4%BE%9D%E8%B5%96"><span class="nav-number">1.1.</span> <span class="nav-text">安装必要依赖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A6%81%E7%94%A8nouveau"><span class="nav-number">1.2.</span> <span class="nav-text">禁用nouveau</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%B8%E8%BD%BD%E4%B9%8B%E5%89%8D%E7%9A%84%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8"><span class="nav-number">1.3.</span> <span class="nav-text">卸载之前的显卡驱动</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E9%A9%B1%E5%8A%A8"><span class="nav-number">1.4.</span> <span class="nav-text">安装驱动</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E5%90%88%E9%80%82%E7%9A%84%E9%A9%B1%E5%8A%A8%E7%89%88%E6%9C%AC"><span class="nav-number">1.4.1.</span> <span class="nav-text">查询合适的驱动版本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E9%A9%B1%E5%8A%A8-1"><span class="nav-number">1.4.2.</span> <span class="nav-text">安装驱动</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85cuda%E8%BD%AF%E4%BB%B6%E5%8C%85"><span class="nav-number">2.</span> <span class="nav-text">安装cuda软件包</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BDcudatoolkit%E5%B7%A5%E5%85%B7%E5%8C%85"><span class="nav-number">2.1.</span> <span class="nav-text">下载cudatoolkit工具包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85cudatoolkit%E5%B7%A5%E5%85%B7%E5%8C%85"><span class="nav-number">2.2.</span> <span class="nav-text">安装cudatoolkit工具包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="nav-number">2.3.</span> <span class="nav-text">添加环境变量</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83"><span class="nav-number">3.</span> <span class="nav-text">配置深度学习环境</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BAconda%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83"><span class="nav-number">3.1.</span> <span class="nav-text">创建conda虚拟环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85cudatoolkit"><span class="nav-number">3.2.</span> <span class="nav-text">安装cudatoolkit</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85cudnn"><span class="nav-number">3.3.</span> <span class="nav-text">安装cudnn</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85pytorch"><span class="nav-number">3.4.</span> <span class="nav-text">安装pytorch</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Anakin</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://anakin0607.github.io/Ubuntu%E4%B8%8B%E5%AE%89%E8%A3%85nvidia%E9%A9%B1%E5%8A%A8%E5%92%8Ccuda/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Anakin">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Anakin0607">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Ubuntu下安装nvidia驱动和cuda | Anakin0607">
+      <meta itemprop="description" content="在Ubuntu下安装nvidia显卡的驱动，并安装cuda的整套流程">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Ubuntu下安装nvidia驱动和cuda
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-09-26 13:16:54 / 修改时间：17:28:31" itemprop="dateCreated datePublished" datetime="2024-09-26T13:16:54+08:00">2024-09-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%9D%82%E9%A1%B9/" itemprop="url" rel="index"><span itemprop="name">杂项</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">在Ubuntu下安装nvidia显卡的驱动，并安装cuda的整套流程</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="安装显卡驱动"><a href="#安装显卡驱动" class="headerlink" title="安装显卡驱动"></a>安装显卡驱动</h1><p>Nvidia的软件分为两个部分，第一部分是对于硬件的驱动，也就是driver，如果只用GPU作为显示卡，只安装这一部分即可，第二部分是一些用于并行加速的库，也就是我们常见的cudatoolkit等，如果需要gpu来做一些并行计算的工作，如深度学习模型的训练和推理，则需要在安装驱动后再安装这一部分。</p>
+<h2 id="安装必要依赖"><a href="#安装必要依赖" class="headerlink" title="安装必要依赖"></a>安装必要依赖</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get update      <span class="comment">#更新软件列表</span></span><br><span class="line"><span class="built_in">sudo</span> apt-get install g++</span><br><span class="line"><span class="built_in">sudo</span> apt-get install gcc</span><br><span class="line"><span class="built_in">sudo</span> apt-get install make</span><br></pre></td></tr></table></figure>
+
+<h2 id="禁用nouveau"><a href="#禁用nouveau" class="headerlink" title="禁用nouveau"></a>禁用nouveau</h2><p>nouveau是Ubuntu自带的显卡驱动，一般用于核显亮机，在安装独显时最好把他禁掉，否则可能会出现黑屏的问题。</p>
+<ol>
+<li><p>创建黑名单文件</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> vim /etc/modprobe.d/blacklist-nouveau.conf <span class="comment"># 如果没有则创建这个文件，一定要在连接显示屏的界面操作，如果远程ssh的话会报错</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在文件中加入如下内容</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">blacklist nouveau</span><br><span class="line">options nouveau modeset=0</span><br></pre></td></tr></table></figure></li>
+<li><p>输入以下命令使黑名单生效，然后重启</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> update-initramfs -u</span><br><span class="line"><span class="built_in">sudo</span> reboot</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>重启后验证黑名单是否生效，若输入下面的命令，没有输出，则成功</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lsmod | grep nouveau</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="卸载之前的显卡驱动"><a href="#卸载之前的显卡驱动" class="headerlink" title="卸载之前的显卡驱动"></a>卸载之前的显卡驱动</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get remove --purge nvidia*</span><br></pre></td></tr></table></figure>
+
+<h2 id="安装驱动"><a href="#安装驱动" class="headerlink" title="安装驱动"></a>安装驱动</h2><h3 id="查询合适的驱动版本"><a href="#查询合适的驱动版本" class="headerlink" title="查询合适的驱动版本"></a>查询合适的驱动版本</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ubuntu-drivers devices</span><br></pre></td></tr></table></figure>
+
+<p>会出现下面这样的界面<br><img src="/img_folder/nvidia-driver/nvidia-driver.png"></p>
+<p>其中recommended是系统推荐安装的版本，我的是nvidia-driver-560，一般就安装这个推荐的版本就可以</p>
+<h3 id="安装驱动-1"><a href="#安装驱动-1" class="headerlink" title="安装驱动"></a>安装驱动</h3><p>在命令行中输入命令，然后安装即可</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> add-apt-repository ppa:graphics-drivers/ppa</span><br><span class="line"><span class="built_in">sudo</span> apt-get update</span><br><span class="line"><span class="built_in">sudo</span> apt-get install nvidia-driver-560 <span class="comment">#此处数字要对应上面查询到的版本号</span></span><br><span class="line"><span class="built_in">sudo</span> apt-get install mesa-common-dev</span><br></pre></td></tr></table></figure>
+
+<p>在网上看到有这样的问题：如果前面没有禁用secure boot，则在安装过程中会提示设置一个密码，在重启时需要输入密码验证以禁用secure boot，重启后会出现蓝屏，这时候不能直接选择continue,而应该按下按键，选择Enroll MOK, 确认后在下一个选项中选择continue,接着输入安装驱动时设置的密码，开机。</p>
+<p>安装完成后重启，然后输入命令验证是否安装成功即可</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvidia-smi</span><br></pre></td></tr></table></figure>
+<p>如果出现gpu列表，则安装成功</p>
+<h1 id="安装cuda软件包"><a href="#安装cuda软件包" class="headerlink" title="安装cuda软件包"></a>安装cuda软件包</h1><p>一般查看CUDA版本有两种命令，第一个是nvidia-smi，第二种是nvcc -V，查阅资料后得知：</p>
+<p>nvcc 属于CUDA的编译器，将程序编译成可执行的二进制文件，nvidia-smi 全称是 NVIDIA System Management Interface ，是一种命令行实用工具，旨在帮助管理和监控NVIDIA GPU设备。</p>
+<p>CUDA有 driver api 和 runtime api，也就是前文中提到的驱动硬件的部分和进行并行计算的部分，两者都有对应的CUDA版本， nvidia-smi显示的是前者对应的CUDA版本。nvcc -V 显示的就是后者对应的CUDA版本</p>
+<p>用于支持driver api的必要文件由 GPU driver installer 安装，nvidia-smi就属于这一类API；而用于支持runtime api的必要文件是由 CUDA Toolkit installer 安装的。上一部分完成了driver的安装，这一部分要安装的就是属于runtime api这一部分的内容。</p>
+<p>CUDA Toolkit Installer通常会集成了GPU driver Installer，如果你的CUDA均通过CUDA Tooklkit Installer来安装，那么runtime api 和 driver api的版本应该是一致的，也就是说， nvcc –version 和 nvidia-smi 显示的版本应该一样。否则，你可能使用了单独的GPU driver installer来安装GPU dirver，这样就会导致 nvidia-smi 和 nvcc –version 显示的版本不一致了。</p>
+<h2 id="下载cudatoolkit工具包"><a href="#下载cudatoolkit工具包" class="headerlink" title="下载cudatoolkit工具包"></a>下载cudatoolkit工具包</h2><p>由于cudatoolkit依赖于driver，且driver通常向下兼容toolkit，兼容的版本在输入命令nvidia-smi，右上角的CUDA Version处显示。</p>
+<p><img src="/img_folder/nvidia-driver/cuda-version.png"></p>
+<p>如图，我的驱动最高支持cuda-12.6版本的cudatoolkit，一般推荐安装驱动能支持的最高版本，如果有特殊需求，如torch版本等，自行参考安装。cudatoolkit，如果需要低版本的，在conda中安装即可（系统的cudatoolkit可以向下兼容conda中的cudatoolkit）。</p>
+<p>去官网的<a target="_blank" rel="noopener" href="https://developer.nvidia.com/cuda-toolkit-archive">归档</a>去查找想要的版本，然后<br>选择相应的系统和架构版本。</p>
+<p><strong>注意：如果前面安装过driver，则下载的时候一定要选择runfile，不要选择deb，因为deb是打包了显卡驱动和cudatoolkit，如果前面已经安装过nvidia-driver，再安装会导致安装失败，如果之前没有安装过驱动则随意。</strong></p>
+<h2 id="安装cudatoolkit工具包"><a href="#安装cudatoolkit工具包" class="headerlink" title="安装cudatoolkit工具包"></a>安装cudatoolkit工具包</h2><p>下载好后，得到一个.run文件，执行即可</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> ./cuda_12.1.0_530.30.02_linux.run <span class="comment"># 不同的版本名字不一样</span></span><br></pre></td></tr></table></figure>
+
+<p>等待一段时间后会出来一个界面，选择continue，然后accept，进入如图的安装界面<br><img src="/img_folder/nvidia-driver/driver-install.png"></p>
+<p>中括号里有X的代表要安装，没有X的代表不安装，其中第一行driver一定要点掉，因为前面已经安装过了，这里再安装一次会出错。</p>
+<p>然后nvidia-fs是12.X的cudatoolkit工具包新出现的东西，是NVIDIA提供的一个文件系统插件，它可以在NVIDIA GPU上提供一些额外的文件系统操作。 nvidia-fs可以使GPU显存和主机内存之间的数据传输更加高效，从而提高GPU的性能。可以先选上，安装一下试试，如果成功最好，如果报安装失败的错误，把这一项取消掉，只装中间三个就可以。</p>
+<p>安装成功后会出现如下提示：<br><img src="/img_folder/nvidia-driver/driver-install-success.png"></p>
+<h2 id="添加环境变量"><a href="#添加环境变量" class="headerlink" title="添加环境变量"></a>添加环境变量</h2><p>安装成功提示中有如下提示：</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Please make sure that</span><br><span class="line"> -   PATH <span class="keyword">includes</span> <span class="regexp">/usr/</span>local<span class="regexp">/cuda-12.1/</span>bin</span><br><span class="line"> -   LD_LIBRARY_PATH <span class="keyword">includes</span> <span class="regexp">/usr/</span>local<span class="regexp">/cuda-12.1/</span>lib64, or, add <span class="regexp">/usr/</span>local<span class="regexp">/cuda-12.1/</span>lib64 to <span class="regexp">/etc/</span>ld.so.conf and run ldconfig as root</span><br></pre></td></tr></table></figure>
+<p>意思是需要将里面cudatoolkit的路径添加到对应的环境变量中，具体操作方法如下：</p>
+<p>打开配置文件</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim ~/.bashrc</span><br></pre></td></tr></table></figure>
+<p>在最后添加如下内容</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># cuda env</span></span><br><span class="line"><span class="built_in">export</span> PATH=/usr/local/cuda-12.1/bin:<span class="variable">$&#123;PATH&#125;</span> <span class="comment"># 路径替换成提示中的路径</span></span><br><span class="line"><span class="built_in">export</span> LD_LIBRARY_PATH=/usr/local/cuda-12.1/lib64:<span class="variable">$&#123;LD_LIBRARY_PATH&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>添加完成后输入nvcc -V验证即可，如果出现cuda版本，则说明安装成功</p>
+<h1 id="配置深度学习环境"><a href="#配置深度学习环境" class="headerlink" title="配置深度学习环境"></a>配置深度学习环境</h1><p>安装完上面的软件后，就可以开始配置深度学习的训练和推理环境了。由于不同版本的框架对于各种依赖的要求不同，因此极力推荐使用conda进行环境隔离。一般安装miniconda就够用。去<a target="_blank" rel="noopener" href="https://docs.anaconda.com/miniconda/">官网</a>下载直接安装就行。</p>
+<p>安装好conda后，如果不想让他每次自动启动base环境，输入以下命令即可</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda config --<span class="built_in">set</span> auto_activate_base <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="创建conda虚拟环境"><a href="#创建conda虚拟环境" class="headerlink" title="创建conda虚拟环境"></a>创建conda虚拟环境</h2><p>一个深度学习环境基本上包括下面几个内容需要管理版本：</p>
+<ol>
+<li>python</li>
+<li>cuda</li>
+<li>cudnn</li>
+<li>深度学习框架（torch，tensorflow等）</li>
+</ol>
+<p>这几个软件的安装顺序一般是上面从1到4的安装顺序，但是4一般会对前面软件的版本有要求。因此安装所有软件前一定要先确定好兼容性。通常情况下一个环境会对至少一个软件的版本有限制。因此需要根据这个限制的版本，去查找其兼容那些版本的其他软件。</p>
+<h2 id="安装cudatoolkit"><a href="#安装cudatoolkit" class="headerlink" title="安装cudatoolkit"></a>安装cudatoolkit</h2><h2 id="安装cudnn"><a href="#安装cudnn" class="headerlink" title="安装cudnn"></a>安装cudnn</h2><h2 id="安装pytorch"><a href="#安装pytorch" class="headerlink" title="安装pytorch"></a>安装pytorch</h2>
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Linux/" rel="tag"># Linux</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/%E5%AE%9E%E7%94%A8%E5%B0%8F%E5%B7%A5%E5%85%B7/" rel="prev" title="实用小工具">
+                  <i class="fa fa-angle-left"></i> 实用小工具
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Anakin</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+  <script src="/js/third-party/pace.js"></script>
+
+
+  
+
+
+
+
+
+</body>
+</html>
