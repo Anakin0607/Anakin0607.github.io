@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"anakin0607.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="使用adb调起安卓手机上的钉钉，来实现定时自动打卡">
+<meta property="og:type" content="article">
+<meta property="og:title" content="安卓手机钉钉自动打卡">
+<meta property="og:url" content="https://anakin0607.github.io/%E5%AE%89%E5%8D%93%E6%89%8B%E6%9C%BA%E9%92%89%E9%92%89%E8%87%AA%E5%8A%A8%E6%89%93%E5%8D%A1/index.html">
+<meta property="og:site_name" content="Anakin0607">
+<meta property="og:description" content="使用adb调起安卓手机上的钉钉，来实现定时自动打卡">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-10-03T07:41:00.000Z">
+<meta property="article:modified_time" content="2024-10-03T07:56:30.203Z">
+<meta property="article:author" content="Anakin">
+<meta property="article:tag" content="Android">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://anakin0607.github.io/%E5%AE%89%E5%8D%93%E6%89%8B%E6%9C%BA%E9%92%89%E9%92%89%E8%87%AA%E5%8A%A8%E6%89%93%E5%8D%A1/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://anakin0607.github.io/%E5%AE%89%E5%8D%93%E6%89%8B%E6%9C%BA%E9%92%89%E9%92%89%E8%87%AA%E5%8A%A8%E6%89%93%E5%8D%A1/","path":"安卓手机钉钉自动打卡/","title":"安卓手机钉钉自动打卡"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>安卓手机钉钉自动打卡 | Anakin0607</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Anakin0607</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">8</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">3</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">9</span></a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85adb"><span class="nav-number">1.</span> <span class="nav-text">安装adb</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95adb%E5%8A%9F%E8%83%BD"><span class="nav-number">2.</span> <span class="nav-text">测试adb功能</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E6%89%93%E5%8D%A1%E7%A8%8B%E5%BA%8F"><span class="nav-number">3.</span> <span class="nav-text">运行打卡程序</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%91%E8%8E%93%E6%B4%BE%EF%BC%88debian%E7%B3%BB%E7%BB%9F%EF%BC%89%E4%BF%AE%E6%94%B9%E6%97%B6%E5%8C%BA"><span class="nav-number">3.1.</span> <span class="nav-text">树莓派（debian系统）修改时区</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%91%E8%8E%93%E6%B4%BE%EF%BC%88debian%E7%B3%BB%E7%BB%9F%EF%BC%89%E4%BF%AE%E6%94%B9%E6%97%B6%E9%97%B4"><span class="nav-number">3.2.</span> <span class="nav-text">树莓派（debian系统）修改时间</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Anakin</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://anakin0607.github.io/%E5%AE%89%E5%8D%93%E6%89%8B%E6%9C%BA%E9%92%89%E9%92%89%E8%87%AA%E5%8A%A8%E6%89%93%E5%8D%A1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Anakin">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Anakin0607">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="安卓手机钉钉自动打卡 | Anakin0607">
+      <meta itemprop="description" content="使用adb调起安卓手机上的钉钉，来实现定时自动打卡">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          安卓手机钉钉自动打卡
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-10-03 15:41:00 / 修改时间：15:56:30" itemprop="dateCreated datePublished" datetime="2024-10-03T15:41:00+08:00">2024-10-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%9D%82%E9%A1%B9/" itemprop="url" rel="index"><span itemprop="name">杂项</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">使用adb调起安卓手机上的钉钉，来实现定时自动打卡</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="安装adb"><a href="#安装adb" class="headerlink" title="安装adb"></a>安装adb</h1><p>首先需要一台能安装adb的设备，我这里使用的是树莓派4B，其他的Windows或Linux设备也可以。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get update</span><br><span class="line"><span class="built_in">sudo</span> apt-get install -y android-tools-adb android-tools-fastboot</span><br></pre></td></tr></table></figure>
+<p>安装好后在命令行中输入adb，如果有非报错输出，说明安装成功</p>
+<h1 id="测试adb功能"><a href="#测试adb功能" class="headerlink" title="测试adb功能"></a>测试adb功能</h1><p>将安卓手机打开开发者模式，然后打开usb调试功能，用数据线连接到安装好adb的设备<br>输入以下命令</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb devices -l </span><br></pre></td></tr></table></figure>
+<p>如果不为空，并且能看到设备序列号，说明手机成功连接，并且能与adb通信</p>
+<p>再输入以下命令，尝试启动钉钉。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb shell am start -n com.alibaba.android.rimet/com.alibaba.android.rimet.biz.LaunchHomeActivity</span><br></pre></td></tr></table></figure>
+<p>如果输入命令后手机上自动启动了钉钉，说明成功</p>
+<h1 id="运行打卡程序"><a href="#运行打卡程序" class="headerlink" title="运行打卡程序"></a>运行打卡程序</h1><p>下面需要进行最后的设置：</p>
+<ol>
+<li>确保钉钉开启了自动打卡功能，即在打开钉钉程序后，能够自动完成打卡，因为我们的脚本只能实现定点调用钉钉程序的功能，并不能执行其他操作</li>
+<li>确保系统时间准确，树莓派可以用以下方法修改时间和时区：</li>
+</ol>
+<h2 id="树莓派（debian系统）修改时区"><a href="#树莓派（debian系统）修改时区" class="headerlink" title="树莓派（debian系统）修改时区"></a>树莓派（debian系统）修改时区</h2><p>输入命令</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dpkg-reconfigure tzdata</span><br></pre></td></tr></table></figure>
+<p>然后在界面中选择对应的时区即可，中国一般选shanghai</p>
+<h2 id="树莓派（debian系统）修改时间"><a href="#树莓派（debian系统）修改时间" class="headerlink" title="树莓派（debian系统）修改时间"></a>树莓派（debian系统）修改时间</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get install ntpdate</span><br><span class="line"><span class="built_in">sudo</span> ntpdate -u cn.pool.ntp.org  </span><br></pre></td></tr></table></figure>
+<p>然后输入date命令查看系统时间即可</p>
+<p>完成上面的设置后，运行下面这个脚本即可，设备到指定的时间会自动调起钉钉进行打卡</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"><span class="keyword">import</span> os,subprocess</span><br><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line">PATH = <span class="keyword">lambda</span> p: os.path.abspath(p)</span><br><span class="line"></span><br><span class="line">isScreenshoting = <span class="literal">False</span></span><br><span class="line"><span class="comment">#打卡</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">onWork</span>():</span><br><span class="line">    <span class="comment"># 开个线程截图</span></span><br><span class="line">    <span class="comment">#ts = threading.Thread(target=runLoopScreenshot, args=())</span></span><br><span class="line">    <span class="comment">#ts.setDaemon(True)</span></span><br><span class="line">    <span class="comment">#global isScreenshoting</span></span><br><span class="line">    <span class="comment">#isScreenshoting = True</span></span><br><span class="line">    <span class="comment">#ts.start()</span></span><br><span class="line">    os.system(<span class="string">&#x27;adb shell input keyevent 26&#x27;</span>)</span><br><span class="line">    os.system(<span class="string">&#x27;adb shell input keyevent 3&#x27;</span>)</span><br><span class="line">    os.system(<span class="string">&#x27;adb shell am start -n com.alibaba.android.rimet/com.alibaba.android.rimet.biz.LaunchHomeActivity&#x27;</span>)</span><br><span class="line">    <span class="comment"># 等15秒后关闭</span></span><br><span class="line">    time.sleep(<span class="number">15</span>)</span><br><span class="line">    os.system(<span class="string">&#x27;adb shell input keyevent 3&#x27;</span>)</span><br><span class="line">    os.system(<span class="string">&#x27;adb shell input keyevent 6&#x27;</span>)</span><br><span class="line">    <span class="comment">#isScreenshoting = False</span></span><br><span class="line">    <span class="comment"># 打卡完毕</span></span><br><span class="line">    tend = threading.Thread(target=enddk, args=())</span><br><span class="line">    tend.start()</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">enddk</span>():</span><br><span class="line">    <span class="comment"># 通知你想通知的地方</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;end&quot;</span>)</span><br><span class="line">    time.sleep(<span class="number">10</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">runLoopScreenshot</span>():</span><br><span class="line">    <span class="keyword">global</span> isScreenshoting</span><br><span class="line">    <span class="keyword">while</span> isScreenshoting:</span><br><span class="line">        <span class="comment"># os.popen(&quot;adb wait-for-device&quot;)</span></span><br><span class="line">        s = os.popen(<span class="string">&quot;adb shell screencap -p  | base64&quot;</span>).read()</span><br><span class="line">        <span class="built_in">print</span>(s)</span><br><span class="line">        os.popen(<span class="string">&quot;adb shell screencap -p /data/local/tmp/tmp.png&quot;</span>)</span><br><span class="line">        path = <span class="string">&#x27;/home/pi&#x27;</span></span><br><span class="line">        os.popen(<span class="string">&quot;adb pull /data/local/tmp/tmp.png &quot;</span> + PATH(path + <span class="string">&quot;/s.png&quot;</span>))</span><br><span class="line">        <span class="comment"># os.popen(&quot;adb shell rm /data/local/tmp/tmp.png&quot;)</span></span><br><span class="line">        <span class="comment"># 图片转了base64 可以发到你想发的地方</span></span><br><span class="line">        <span class="keyword">with</span> <span class="built_in">open</span>(path + <span class="string">&quot;/s.png&quot;</span>, <span class="string">&quot;rb&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">            base64_data = base64.b64encode(f.read())</span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;success&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    <span class="comment"># 设置多几个打卡时间</span></span><br><span class="line">    dakaTime = [<span class="string">&#x27;07:54:02&#x27;</span>, <span class="string">&#x27;07:31:32&#x27;</span>, <span class="string">&#x27;08:34:25&#x27;</span>]</span><br><span class="line">    nextDakaTime = <span class="literal">None</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            <span class="comment"># 看有没有设备连接</span></span><br><span class="line">            device = os.popen(<span class="string">&#x27;adb devices -l&#x27;</span>).read()</span><br><span class="line">            out = device.split(<span class="string">&#x27; &#x27;</span>)</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&#x27;&#123;&quot;action&quot;:&quot;device&quot;,&quot;data&quot;:&quot;%s,%s,%s&quot;&#125;&#x27;</span> % (out[<span class="number">11</span>], out[<span class="number">12</span>], out[<span class="number">13</span>]))</span><br><span class="line">            currentTime = time.strftime(<span class="string">&quot;%H:%M:%S&quot;</span>, time.localtime())</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> nextDakaTime == <span class="literal">None</span>:</span><br><span class="line">                r = random.randint(<span class="number">0</span>, <span class="built_in">len</span>(dakaTime) - <span class="number">1</span>)</span><br><span class="line">                nextDakaTime = dakaTime[r]</span><br><span class="line">            <span class="built_in">print</span>(currentTime,nextDakaTime)</span><br><span class="line">            <span class="keyword">if</span> currentTime == nextDakaTime:</span><br><span class="line">                <span class="comment"># 开个线程打卡</span></span><br><span class="line">                t = threading.Thread(target=onWork, args=())</span><br><span class="line">                t.setDaemon(<span class="literal">True</span>)</span><br><span class="line">                t.start()</span><br><span class="line">        <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;something wrong:&quot;</span>, e)</span><br><span class="line">        time.sleep(<span class="number">1</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/Ubuntu%E4%B8%8B%E5%AE%89%E8%A3%85nvidia%E9%A9%B1%E5%8A%A8%E5%92%8Ccuda/" rel="prev" title="Ubuntu下安装nvidia驱动和cuda">
+                  <i class="fa fa-angle-left"></i> Ubuntu下安装nvidia驱动和cuda
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Anakin</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+  <script src="/js/third-party/pace.js"></script>
+
+
+  
+
+
+
+
+
+</body>
+</html>
