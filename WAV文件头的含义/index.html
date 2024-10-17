@@ -22,16 +22,16 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"anakin0607.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="文件格式概述WAVE文件是计算机领域最常用的数字化声音文件格式之一，它是微软专门为Windows系统定义的波形文件格式（Waveform Audio），由于其扩展名为”*.wav”。 wav文件是资源交换文件格式（英语：Resource Interchange File Format，缩写为RIFF），又译资源互换文件格式，是一种文件格式（meta-format）标准，把资料存储在被标记的区块（t">
+    <meta name="description" content="详细解读了WAV文件格式以及文件头各项的含义">
 <meta property="og:type" content="article">
 <meta property="og:title" content="WAV文件格式">
 <meta property="og:url" content="https://anakin0607.github.io/WAV%E6%96%87%E4%BB%B6%E5%A4%B4%E7%9A%84%E5%90%AB%E4%B9%89/index.html">
 <meta property="og:site_name" content="Anakin0607">
-<meta property="og:description" content="文件格式概述WAVE文件是计算机领域最常用的数字化声音文件格式之一，它是微软专门为Windows系统定义的波形文件格式（Waveform Audio），由于其扩展名为”*.wav”。 wav文件是资源交换文件格式（英语：Resource Interchange File Format，缩写为RIFF），又译资源互换文件格式，是一种文件格式（meta-format）标准，把资料存储在被标记的区块（t">
+<meta property="og:description" content="详细解读了WAV文件格式以及文件头各项的含义">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://anakin0607.github.io/img_folder/pcm_format.jpg">
 <meta property="article:published_time" content="2024-10-10T09:14:07.000Z">
-<meta property="article:modified_time" content="2024-10-16T02:50:49.516Z">
+<meta property="article:modified_time" content="2024-10-17T02:33:44.045Z">
 <meta property="article:author" content="Anakin">
 <meta property="article:tag" content="Media">
 <meta name="twitter:card" content="summary">
@@ -92,7 +92,7 @@
 
 
 <nav class="site-nav">
-  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">9</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">4</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">10</span></a></li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">9</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">4</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">11</span></a></li>
   </ul>
 </nav>
 
@@ -130,7 +130,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-count">11</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -182,7 +182,7 @@
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
       <meta itemprop="name" content="WAV文件格式 | Anakin0607">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="详细解读了WAV文件格式以及文件头各项的含义">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
@@ -204,7 +204,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-10-16 10:50:49" itemprop="dateModified" datetime="2024-10-16T10:50:49+08:00">2024-10-16</time>
+      <time title="修改时间：2024-10-17 10:33:44" itemprop="dateModified" datetime="2024-10-17T10:33:44+08:00">2024-10-17</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -219,6 +219,7 @@
   
 </div>
 
+            <div class="post-description">详细解读了WAV文件格式以及文件头各项的含义</div>
         </div>
       </header>
 
@@ -405,6 +406,9 @@
                 </a>
             </div>
             <div class="post-nav-item">
+                <a href="/%E5%85%B1%E4%BA%AB%E5%B7%A5%E4%BD%9C%E7%AB%99%E8%BF%90%E7%BB%B4/" rel="next" title="共享工作站运维">
+                  共享工作站运维 <i class="fa fa-angle-right"></i>
+                </a>
             </div>
           </div>
     </footer>

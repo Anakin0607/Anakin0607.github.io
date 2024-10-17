@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"anakin0607.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="配置了新的工作站，需要多用户共享conda环境和数据，但每个人也需要自己的用户空间，且用户空间不能相互访问。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="共享工作站运维">
+<meta property="og:url" content="https://anakin0607.github.io/%E5%85%B1%E4%BA%AB%E5%B7%A5%E4%BD%9C%E7%AB%99%E8%BF%90%E7%BB%B4/index.html">
+<meta property="og:site_name" content="Anakin0607">
+<meta property="og:description" content="配置了新的工作站，需要多用户共享conda环境和数据，但每个人也需要自己的用户空间，且用户空间不能相互访问。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-10-17T02:31:07.000Z">
+<meta property="article:modified_time" content="2024-10-17T02:33:47.949Z">
+<meta property="article:author" content="Anakin">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://anakin0607.github.io/%E5%85%B1%E4%BA%AB%E5%B7%A5%E4%BD%9C%E7%AB%99%E8%BF%90%E7%BB%B4/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://anakin0607.github.io/%E5%85%B1%E4%BA%AB%E5%B7%A5%E4%BD%9C%E7%AB%99%E8%BF%90%E7%BB%B4/","path":"共享工作站运维/","title":"共享工作站运维"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>共享工作站运维 | Anakin0607</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Anakin0607</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">9</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">4</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">11</span></a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B1%E4%BA%AB%E5%B7%A5%E4%BD%9C%E7%AB%99%E8%BF%90%E7%BB%B4"><span class="nav-number">1.</span> <span class="nav-text">共享工作站运维</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E7%AE%A1%E7%90%86"><span class="nav-number">1.1.</span> <span class="nav-text">用户空间管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%A1%E7%90%86%E7%AD%96%E7%95%A5"><span class="nav-number">1.1.1.</span> <span class="nav-text">管理策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B7%E4%BD%93%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.1.2.</span> <span class="nav-text">具体实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E7%AE%A1%E7%90%86"><span class="nav-number">1.2.</span> <span class="nav-text">环境管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#conda%E5%AE%89%E8%A3%85"><span class="nav-number">1.2.1.</span> <span class="nav-text">conda安装</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E5%AE%98%E7%BD%91%E4%B8%8B%E8%BD%BDconda"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">1. 官网下载conda</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E5%85%88%E8%BF%9B%E5%85%A5root%E7%94%A8%E6%88%B7%EF%BC%8C%E7%84%B6%E5%90%8E%E8%BF%9B%E8%A1%8C%E5%AE%89%E8%A3%85"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">2. 先进入root用户，然后进行安装</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#conda%E9%85%8D%E7%BD%AE"><span class="nav-number">1.2.2.</span> <span class="nav-text">conda配置</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Anakin</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://anakin0607.github.io/%E5%85%B1%E4%BA%AB%E5%B7%A5%E4%BD%9C%E7%AB%99%E8%BF%90%E7%BB%B4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Anakin">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Anakin0607">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="共享工作站运维 | Anakin0607">
+      <meta itemprop="description" content="配置了新的工作站，需要多用户共享conda环境和数据，但每个人也需要自己的用户空间，且用户空间不能相互访问。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          共享工作站运维
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-10-17 10:31:07 / 修改时间：10:33:47" itemprop="dateCreated datePublished" datetime="2024-10-17T10:31:07+08:00">2024-10-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%9D%82%E9%A1%B9/" itemprop="url" rel="index"><span itemprop="name">杂项</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">配置了新的工作站，需要多用户共享conda环境和数据，但每个人也需要自己的用户空间，且用户空间不能相互访问。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="共享工作站运维"><a href="#共享工作站运维" class="headerlink" title="共享工作站运维"></a>共享工作站运维</h1><h2 id="用户空间管理"><a href="#用户空间管理" class="headerlink" title="用户空间管理"></a>用户空间管理</h2><h3 id="管理策略"><a href="#管理策略" class="headerlink" title="管理策略"></a>管理策略</h3><p>每个人有一个自己的账号，在&#x2F;home下有自己的文件夹（固态系统盘），然后不同用户之前看不到对方文件夹中的内容。同时&#x2F;home&#x2F;user下有两个文件夹，挂载上存放数据的仓库盘，仓库盘中也做用户隔离，同时设有一个共享区域。</p>
+<p>大体目录结构如下：</p>
+<figure class="highlight xl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">/home</span><br><span class="line">├── user1</span><br><span class="line">│   ├── <span class="function"><span class="title">data</span> -&gt;</span> /mnt/<span class="keyword">data</span>/user1</span><br><span class="line">│   └── <span class="function"><span class="title">share</span> -&gt;</span> /mnt/<span class="keyword">data</span>/share</span><br><span class="line">├── user2</span><br><span class="line">│   ├── <span class="function"><span class="title">data</span> -&gt;</span> /mnt/<span class="keyword">data</span>/user2</span><br><span class="line">│   └── <span class="function"><span class="title">share</span> -&gt;</span> /mnt/<span class="keyword">data</span>/share</span><br><span class="line">├── user3</span><br><span class="line">│   ├── <span class="function"><span class="title">data</span> -&gt;</span> /mnt/<span class="keyword">data</span>/user3</span><br><span class="line">│   └── <span class="function"><span class="title">share</span> -&gt;</span> /mnt/<span class="keyword">data</span>/share</span><br><span class="line">└── user4</span><br><span class="line">    ├── <span class="function"><span class="title">data</span> -&gt;</span> /mnt/<span class="keyword">data</span>/user4</span><br><span class="line">    └── <span class="function"><span class="title">share</span> -&gt;</span> /mnt/<span class="keyword">data</span>/share</span><br></pre></td></tr></table></figure>
+
+<p>其中数据盘挂载到&#x2F;mnt&#x2F;data路径下，下面分分别有每个用户的文件夹和共享空间</p>
+<h3 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h3><p>所有用户的个人文件夹的所有权限为user:user，在创建时用户时默认，然后将访问权限改为700（其他用户不可访问）。下面所有命令将会加入执行用户备注。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># (root)</span></span><br><span class="line">adduser user1</span><br><span class="line"><span class="built_in">chmod</span> 700 /home/user1</span><br></pre></td></tr></table></figure>
+<p>数据盘中每个人的文件夹所有权限为user:user，由root创建然后修改所有者设置，最后链接到用户目录下，方便访问</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># (root)</span></span><br><span class="line"><span class="built_in">mkdir</span> /mnt/data/user1</span><br><span class="line"><span class="built_in">chown</span> user1:user1 /mnt/data/user1</span><br><span class="line"><span class="built_in">chmod</span> 700 /mnt/data/user1</span><br><span class="line"><span class="built_in">ln</span> -s /mnt/data/user1 /home/user1/data</span><br></pre></td></tr></table></figure>
+<p>数据盘中的共享文件夹由root创建，所有权限为root:shareData，其中所有需要访问的用户都加入shareData组，且所有组用户可以访问share目录。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># (root)</span></span><br><span class="line"><span class="built_in">mkdir</span> /mnt/share</span><br><span class="line"><span class="built_in">chown</span> root:shareData</span><br><span class="line"><span class="built_in">chmod</span> 770 /mnt/share</span><br></pre></td></tr></table></figure>
+
+<h2 id="环境管理"><a href="#环境管理" class="headerlink" title="环境管理"></a>环境管理</h2><p>所有人需要共享conda环境，既节省了配环境的时间，也可以避免存储空间浪费（conda默认为只为当前用户安装），因此需要在根目录的相应目录下安装conda</p>
+<h3 id="conda安装"><a href="#conda安装" class="headerlink" title="conda安装"></a>conda安装</h3><h4 id="1-官网下载conda"><a href="#1-官网下载conda" class="headerlink" title="1. 官网下载conda"></a>1. <a target="_blank" rel="noopener" href="https://docs.anaconda.com/miniconda/">官网</a>下载conda</h4><h4 id="2-先进入root用户，然后进行安装"><a href="#2-先进入root用户，然后进行安装" class="headerlink" title="2. 先进入root用户，然后进行安装"></a>2. 先进入root用户，然后进行安装</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">su root</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># (root)</span></span><br><span class="line">./Miniconda3-latest-Linux-x86_64.sh</span><br></pre></td></tr></table></figure>
+<p><strong>注意！！：在安装过程中，提示选择路径的时候一定要改成&#x2F;opt&#x2F;miniconda3或&#x2F;usr&#x2F;local&#x2F;miniconda3，一定不能放在&#x2F;home&#x2F;username&#x2F;miniconda3里面</strong></p>
+<p>其他的都选择yes就行</p>
+<h3 id="conda配置"><a href="#conda配置" class="headerlink" title="conda配置"></a>conda配置</h3><p>创建用户组</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># (root)</span></span><br><span class="line">groupadd conda </span><br></pre></td></tr></table></figure>
+<p>将相关用户添加到用户组，之后每创建一个用户都要进行这个操作</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># (root)</span></span><br><span class="line">usermod -aG conda user1</span><br></pre></td></tr></table></figure>
+<p>移交目录管理权，注意如果你之前为自己用户安装了miniconda，现在想移动到公共目录下，那只需要在这一步之前，把自己conda安装目录下的envs移动到公共目录的conda下即可，然后可能需要在所有设置完成后重新安装一下pip。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># (root)</span></span><br><span class="line"><span class="comment"># 如果你之前没装过conda，忽略这一条命令</span></span><br><span class="line"><span class="built_in">mv</span> /home/user/miniconda3/envs/* /usr/local/miniconda3/envs/</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># (root)</span></span><br><span class="line"><span class="built_in">chgrp</span> -R conda /usr/local/miniconda3 <span class="comment"># 这里是你的conda安装目录</span></span><br></pre></td></tr></table></figure>
+<p>设置读写权限</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># (root)</span></span><br><span class="line"><span class="built_in">chmod</span> 770 -R /usr/local/miniconda3</span><br></pre></td></tr></table></figure>
+<p>设置继承组</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># (root)</span></span><br><span class="line"><span class="built_in">chmod</span> g+s /usr/local/miniconda3</span><br></pre></td></tr></table></figure>
+<p>设置子目录继承</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># (root)</span></span><br><span class="line"><span class="built_in">chmod</span> -R g+s /usr/local/miniconda3</span><br></pre></td></tr></table></figure>
+<p>配置环境变量</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># (root)</span></span><br><span class="line">vim /etc/profile</span><br></pre></td></tr></table></figure>
+<p>在最后一行添加：export PATH&#x3D;&#x2F;usr&#x2F;local&#x2F;anaconda3&#x2F;bin:$PATH，然后激活文件</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># (root)</span></span><br><span class="line"><span class="built_in">source</span> /etc/profile</span><br></pre></td></tr></table></figure>
+<p>至此root部分配置完成，当新用户要使用conda时，需要先运行一下conda init，然后重新打开shell或运行命令source ~&#x2F;.bashrc，即可正常使用conda</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Linux/" rel="tag"># Linux</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/WAV%E6%96%87%E4%BB%B6%E5%A4%B4%E7%9A%84%E5%90%AB%E4%B9%89/" rel="prev" title="WAV文件格式">
+                  <i class="fa fa-angle-left"></i> WAV文件格式
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Anakin</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+  <script src="/js/third-party/pace.js"></script>
+
+
+  
+
+
+
+
+
+</body>
+</html>
