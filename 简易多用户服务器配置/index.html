@@ -24,26 +24,26 @@
 
     <meta name="description" content="配置了新的工作站，需要多用户共享conda环境和数据，但每个人也需要自己的用户空间，且用户空间不能相互访问。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="共享工作站运维">
-<meta property="og:url" content="https://anakin0607.github.io/%E5%85%B1%E4%BA%AB%E5%B7%A5%E4%BD%9C%E7%AB%99%E8%BF%90%E7%BB%B4/index.html">
+<meta property="og:title" content="简易多用户服务器配置">
+<meta property="og:url" content="https://anakin0607.github.io/%E7%AE%80%E6%98%93%E5%A4%9A%E7%94%A8%E6%88%B7%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%85%8D%E7%BD%AE/index.html">
 <meta property="og:site_name" content="Anakin0607">
 <meta property="og:description" content="配置了新的工作站，需要多用户共享conda环境和数据，但每个人也需要自己的用户空间，且用户空间不能相互访问。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-10-17T02:31:07.000Z">
-<meta property="article:modified_time" content="2024-10-17T02:33:47.949Z">
+<meta property="article:modified_time" content="2025-04-22T02:49:20.265Z">
 <meta property="article:author" content="Anakin">
 <meta property="article:tag" content="Linux">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://anakin0607.github.io/%E5%85%B1%E4%BA%AB%E5%B7%A5%E4%BD%9C%E7%AB%99%E8%BF%90%E7%BB%B4/">
+<link rel="canonical" href="https://anakin0607.github.io/%E7%AE%80%E6%98%93%E5%A4%9A%E7%94%A8%E6%88%B7%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%85%8D%E7%BD%AE/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://anakin0607.github.io/%E5%85%B1%E4%BA%AB%E5%B7%A5%E4%BD%9C%E7%AB%99%E8%BF%90%E7%BB%B4/","path":"共享工作站运维/","title":"共享工作站运维"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://anakin0607.github.io/%E7%AE%80%E6%98%93%E5%A4%9A%E7%94%A8%E6%88%B7%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%85%8D%E7%BD%AE/","path":"简易多用户服务器配置/","title":"简易多用户服务器配置"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>共享工作站运维 | Anakin0607</title>
+<title>简易多用户服务器配置 | Anakin0607</title>
   
 
 
@@ -90,7 +90,7 @@
 
 
 <nav class="site-nav">
-  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">11</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">5</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">17</span></a></li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">11</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">6</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">17</span></a></li>
   </ul>
 </nav>
 
@@ -134,7 +134,7 @@
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -166,7 +166,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://anakin0607.github.io/%E5%85%B1%E4%BA%AB%E5%B7%A5%E4%BD%9C%E7%AB%99%E8%BF%90%E7%BB%B4/">
+    <link itemprop="mainEntityOfPage" href="https://anakin0607.github.io/%E7%AE%80%E6%98%93%E5%A4%9A%E7%94%A8%E6%88%B7%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%85%8D%E7%BD%AE/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -179,12 +179,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="共享工作站运维 | Anakin0607">
+      <meta itemprop="name" content="简易多用户服务器配置 | Anakin0607">
       <meta itemprop="description" content="配置了新的工作站，需要多用户共享conda环境和数据，但每个人也需要自己的用户空间，且用户空间不能相互访问。">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          共享工作站运维
+          简易多用户服务器配置
         </h1>
 
         <div class="post-meta-container">
@@ -194,9 +194,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2024-10-17 10:31:07 / 修改时间：10:33:47" itemprop="dateCreated datePublished" datetime="2024-10-17T10:31:07+08:00">2024-10-17</time>
+      <time title="创建时间：2024-10-17 10:31:07" itemprop="dateCreated datePublished" datetime="2024-10-17T10:31:07+08:00">2024-10-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-04-22 10:49:20" itemprop="dateModified" datetime="2025-04-22T10:49:20+08:00">2025-04-22</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
