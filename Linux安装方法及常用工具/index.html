@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"anakin0607.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Ubuntu安装方法以及一些实用软件和工具">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux安装方法及常用工具">
+<meta property="og:url" content="https://anakin0607.github.io/Linux%E5%AE%89%E8%A3%85%E6%96%B9%E6%B3%95%E5%8F%8A%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/index.html">
+<meta property="og:site_name" content="Anakin0607">
+<meta property="og:description" content="Ubuntu安装方法以及一些实用软件和工具">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-03-21T07:07:33.000Z">
+<meta property="article:modified_time" content="2025-04-22T02:35:53.629Z">
+<meta property="article:author" content="Anakin">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://anakin0607.github.io/Linux%E5%AE%89%E8%A3%85%E6%96%B9%E6%B3%95%E5%8F%8A%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://anakin0607.github.io/Linux%E5%AE%89%E8%A3%85%E6%96%B9%E6%B3%95%E5%8F%8A%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/","path":"Linux安装方法及常用工具/","title":"Linux安装方法及常用工具"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Linux安装方法及常用工具 | Anakin0607</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Anakin0607</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">11</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">5</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">17</span></a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Ubuntu"><span class="nav-number">1.</span> <span class="nav-text">安装Ubuntu</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8rufus%E5%88%B6%E4%BD%9C%E5%90%AF%E5%8A%A8%E7%9B%98"><span class="nav-number">1.1.</span> <span class="nav-text">使用rufus制作启动盘</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.2.</span> <span class="nav-text">安装系统</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9B%B4%E6%8D%A2KDE%E6%A1%8C%E9%9D%A2%E7%8E%AF%E5%A2%83"><span class="nav-number">2.</span> <span class="nav-text">更换KDE桌面环境</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E4%B8%AD%E6%96%87%E8%BE%93%E5%85%A5%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">安装中文输入法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91"><span class="nav-number">4.</span> <span class="nav-text">科学上网</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E8%AE%BE%E7%BD%AE"><span class="nav-number">5.</span> <span class="nav-text">网络设置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E9%85%8D%E7%BD%AE"><span class="nav-number">6.</span> <span class="nav-text">环境变量配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BF%9C%E7%A8%8B%E4%BC%A0%E8%BE%93%E6%96%87%E4%BB%B6"><span class="nav-number">7.</span> <span class="nav-text">远程传输文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#shell%E8%84%9A%E6%9C%AC%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95"><span class="nav-number">8.</span> <span class="nav-text">shell脚本常用方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%86%E5%91%BD%E4%BB%A4%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C%E8%B5%8B%E5%80%BC%E7%BB%99%E5%8F%98%E9%87%8F"><span class="nav-number">8.1.</span> <span class="nav-text">将命令运行结果赋值给变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8%E6%8C%87%E5%AE%9A%E5%AD%97%E7%AC%A6%E5%88%86%E5%89%B2%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="nav-number">8.2.</span> <span class="nav-text">用指定字符分割字符串</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AF%94%E8%BE%83%E4%B8%A4%E4%B8%AA%E6%96%87%E4%BB%B6%E7%9A%84%E5%B7%AE%E5%BC%82"><span class="nav-number">8.3.</span> <span class="nav-text">比较两个文件的差异</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E8%B5%84%E6%BA%90%E5%8D%A0%E7%94%A8%E7%9A%84%E5%B7%A5%E5%85%B7"><span class="nav-number">9.</span> <span class="nav-text">查看资源占用的工具</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#CPU"><span class="nav-number">9.1.</span> <span class="nav-text">CPU</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E5%AD%98"><span class="nav-number">9.2.</span> <span class="nav-text">内存</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A3%81%E7%9B%98"><span class="nav-number">9.3.</span> <span class="nav-text">磁盘</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B7%91%E5%88%86"><span class="nav-number">9.4.</span> <span class="nav-text">跑分</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GPU"><span class="nav-number">9.5.</span> <span class="nav-text">GPU</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%86%85%E6%A0%B8%E7%BC%96%E8%AF%91%E9%85%8D%E7%BD%AE%E8%AE%BE%E7%BD%AE"><span class="nav-number">10.</span> <span class="nav-text">内核编译配置设置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E8%BD%AF%E4%BB%B6"><span class="nav-number">11.</span> <span class="nav-text">常用软件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8D%87%E7%BA%A7glibc%E7%89%88%E6%9C%AC"><span class="nav-number">12.</span> <span class="nav-text">升级glibc版本</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Anakin</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://anakin0607.github.io/Linux%E5%AE%89%E8%A3%85%E6%96%B9%E6%B3%95%E5%8F%8A%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Anakin">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Anakin0607">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Linux安装方法及常用工具 | Anakin0607">
+      <meta itemprop="description" content="Ubuntu安装方法以及一些实用软件和工具">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Linux安装方法及常用工具
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-03-21 15:07:33" itemprop="dateCreated datePublished" datetime="2025-03-21T15:07:33+08:00">2025-03-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-04-22 10:35:53" itemprop="dateModified" datetime="2025-04-22T10:35:53+08:00">2025-04-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%9D%82%E9%A1%B9/" itemprop="url" rel="index"><span itemprop="name">杂项</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">Ubuntu安装方法以及一些实用软件和工具</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="安装Ubuntu"><a href="#安装Ubuntu" class="headerlink" title="安装Ubuntu"></a>安装Ubuntu</h1><h2 id="使用rufus制作启动盘"><a href="#使用rufus制作启动盘" class="headerlink" title="使用rufus制作启动盘"></a>使用rufus制作启动盘</h2><h2 id="安装系统"><a href="#安装系统" class="headerlink" title="安装系统"></a>安装系统</h2><h1 id="更换KDE桌面环境"><a href="#更换KDE桌面环境" class="headerlink" title="更换KDE桌面环境"></a>更换KDE桌面环境</h1><p>安装kubuntu桌面</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> add-apt-repository ppa:kubuntu-ppa/backports <span class="comment"># 添加源</span></span><br><span class="line"><span class="built_in">sudo</span> apt-get update <span class="comment"># 更新源</span></span><br><span class="line"><span class="built_in">sudo</span> apt-get install kubuntu-desktop</span><br><span class="line"><span class="built_in">sudo</span> apt-get install kde</span><br></pre></td></tr></table></figure>
+
+<p>安装kde软件包：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get install kde-full <span class="comment"># 也可以根据需求选择kde-standard或者kde-plasma-desktop</span></span><br></pre></td></tr></table></figure>
+
+<p>卸载gnome桌面</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt purge *gnome*</span><br><span class="line"><span class="built_in">sudo</span> aptitude purge ubuntu-desktop</span><br><span class="line"><span class="built_in">sudo</span> apt autoremove</span><br></pre></td></tr></table></figure>
+<h1 id="安装中文输入法"><a href="#安装中文输入法" class="headerlink" title="安装中文输入法"></a>安装中文输入法</h1><p>Ubuntu下通常有几个常用的输入法框架，ibus，fcix等，Ubuntu自带ibus，因此只需安装其支持的拼音输入法即可<br>如果需要使用中文输入法，安装搜狗输入法Linux版即可</p>
+<h1 id="科学上网"><a href="#科学上网" class="headerlink" title="科学上网"></a>科学上网</h1><p>Clash现在没有了，使用<a target="_blank" rel="noopener" href="https://www.clashverge.dev/install.html">Clash-Verge</a></p>
+<h1 id="网络设置"><a href="#网络设置" class="headerlink" title="网络设置"></a>网络设置</h1><p>netplan</p>
+<h1 id="环境变量配置"><a href="#环境变量配置" class="headerlink" title="环境变量配置"></a>环境变量配置</h1><p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1174426">https://cloud.tencent.com/developer/article/1174426</a></p>
+<h1 id="远程传输文件"><a href="#远程传输文件" class="headerlink" title="远程传输文件"></a>远程传输文件</h1><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rsync -avz [<span class="built_in">source</span>] [user@ip]:[dist]</span><br></pre></td></tr></table></figure>
+<p>确定本地主机可以通过ssh登录远程主机后，可以将文件从本地传输到远程<br>例：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rsync -avz /home user@192.168.1.2:/home</span><br></pre></td></tr></table></figure>
+<p>参数中a代表递归模式，v代表显示过程，z代表传输时压缩文件</p>
+<h1 id="shell脚本常用方法"><a href="#shell脚本常用方法" class="headerlink" title="shell脚本常用方法"></a>shell脚本常用方法</h1><h2 id="将命令运行结果赋值给变量"><a href="#将命令运行结果赋值给变量" class="headerlink" title="将命令运行结果赋值给变量"></a>将命令运行结果赋值给变量</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var=$(<span class="built_in">command</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="用指定字符分割字符串"><a href="#用指定字符分割字符串" class="headerlink" title="用指定字符分割字符串"></a>用指定字符分割字符串</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">string=<span class="string">&quot;hello,shell,split,test&quot;</span>  </span><br><span class="line">array=(<span class="variable">$&#123;string//,/ &#125;</span>)</span><br><span class="line"><span class="comment"># 第二句的意思是：$&#123;parameter//pattern/string&#125; </span></span><br><span class="line"><span class="comment"># 即用string来替换parameter变量中所有匹配的pattern，并把结果存在数组中</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> var <span class="keyword">in</span> <span class="variable">$&#123;array[@]&#125;</span> <span class="comment">#将分割出来的字符打印出来</span></span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">   <span class="built_in">echo</span> <span class="variable">$var</span></span><br><span class="line"><span class="keyword">done</span> </span><br></pre></td></tr></table></figure>
+
+<h2 id="比较两个文件的差异"><a href="#比较两个文件的差异" class="headerlink" title="比较两个文件的差异"></a>比较两个文件的差异</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">diff [file1] [file2] -y --supress-common-lines</span><br></pre></td></tr></table></figure>
+<p>参数含义：<br>-y或–side-by-side 　以并列的方式显示文件的异同之处。<br>–suppress-common-lines 　在使用-y参数时，仅显示不同之处。<br>–left-column 　在使用-y参数时，若两个文件某一行内容相同，则仅在左侧的栏位显示该行内容。</p>
+<h1 id="查看资源占用的工具"><a href="#查看资源占用的工具" class="headerlink" title="查看资源占用的工具"></a>查看资源占用的工具</h1><h2 id="CPU"><a href="#CPU" class="headerlink" title="CPU"></a>CPU</h2><p>top，htop，s-tui</p>
+<h2 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h2><p>free，valgrind</p>
+<h2 id="磁盘"><a href="#磁盘" class="headerlink" title="磁盘"></a>磁盘</h2><p>类似CrystalDiskInfo的软件：QDiskInfo</p>
+<h2 id="跑分"><a href="#跑分" class="headerlink" title="跑分"></a>跑分</h2><p>s-tui stress<br>类似CrystalDiskMark的软件：kdiskmark<br>基于fio开发</p>
+<h2 id="GPU"><a href="#GPU" class="headerlink" title="GPU"></a>GPU</h2><p>nvidia-smi，nvtop</p>
+<h1 id="内核编译配置设置"><a href="#内核编译配置设置" class="headerlink" title="内核编译配置设置"></a>内核编译配置设置</h1><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/bestechshare/p/16447779.html">1</a></p>
+<h1 id="常用软件"><a href="#常用软件" class="headerlink" title="常用软件"></a>常用软件</h1><p>修图：<a target="_blank" rel="noopener" href="https://www.rawtherapee.com/">rawtherapee</a></p>
+<p>office: <a target="_blank" rel="noopener" href="https://www.libreoffice.org/">libreoffice</a></p>
+<p>剪视频：<a target="_blank" rel="noopener" href="https://kdenlive.org/zh/">kdenlive</a></p>
+<h1 id="升级glibc版本"><a href="#升级glibc版本" class="headerlink" title="升级glibc版本"></a>升级glibc版本</h1><p><a target="_blank" rel="noopener" href="https://github.com/apernet/tcp-brutal/issues/7">https://github.com/apernet/tcp-brutal/issues/7</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/youban_47/article/details/125420758">安装conda</a><br><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1611042">创建用户</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Linux/" rel="tag"># Linux</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/Linux%E7%B3%BB%E7%BB%9F%E8%BF%81%E7%A7%BB/" rel="prev" title="Linux系统迁移">
+                  <i class="fa fa-angle-left"></i> Linux系统迁移
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Anakin</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+  <script src="/js/third-party/pace.js"></script>
+
+
+  
+
+
+
+
+
+</body>
+</html>
