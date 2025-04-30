@@ -30,7 +30,7 @@
 <meta property="og:description" content="在Intel和AMD平台上对于基于OpenBLAS和MKL线性代数加速库的numpy包的性能测试以及安装方式">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-04-30T06:41:01.000Z">
-<meta property="article:modified_time" content="2025-04-30T07:29:39.591Z">
+<meta property="article:modified_time" content="2025-04-30T07:35:38.487Z">
 <meta property="article:author" content="Anakin">
 <meta property="article:tag" content="Linux">
 <meta name="twitter:card" content="summary">
@@ -196,7 +196,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-04-30 14:41:01 / 修改时间：15:29:39" itemprop="dateCreated datePublished" datetime="2025-04-30T14:41:01+08:00">2025-04-30</time>
+      <time title="创建时间：2025-04-30 14:41:01 / 修改时间：15:35:38" itemprop="dateCreated datePublished" datetime="2025-04-30T14:41:01+08:00">2025-04-30</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -284,7 +284,7 @@
 <td>43.65 秒</td>
 </tr>
 </tbody></table>
-<p>可以看出，使用openblas时，intel的cpu明显慢于mkl，而7763由于硬件性能较强，使用两个库的差异不明显。</p>
+<p>可以看出，在Intel CPU平台上，OpenBLAS版本明显慢于MKL版本，而在AMD平台上反之，但由于硬件性能较强，使用两个版本的差异不如Intel平台更明显。</p>
 <h1 id="二者有何区别"><a href="#二者有何区别" class="headerlink" title="二者有何区别"></a>二者有何区别</h1><p>维基百科对二者的介绍如下：</p>
 <h2 id="MKL"><a href="#MKL" class="headerlink" title="MKL"></a>MKL</h2><p>英特尔oneAPI数学核心函数库（Intel oneAPI Math Kernel Library），前身为英特尔数学核心函数库，是一个针对科学、工程和金融应用优化的数学例程库。核心数学函数包括BLAS、LAPACK、ScaLAPACK、稀疏求解器、快速傅里叶变换和矢量数学。</p>
 <p>该库支持 x86 CPU 和英特尔 GPU，适用于Windows和Linux 操作系统</p>
@@ -311,7 +311,7 @@
 </li>
 </ul>
 <p>根据前文分析，最后一条并不完全正确，在intel平台上的确如此，而在amd平台上却并不是这样。但前面几条却可以告知我们如何选择不同的库版本：</p>
-<h2 id="基于MKL"><a href="#基于MKL" class="headerlink" title="基于MKL"></a>基于MKL</h2><p>如果需要在Intel平台上使用numpy，使用MKL版本的numpy会有较快的速度，安装方法为从默认的conda源安装：</p>
+<h2 id="基于MKL"><a href="#基于MKL" class="headerlink" title="基于MKL"></a>基于MKL</h2><p>如果需要在Intel平台上使用numpy，使用MKL版本的numpy会有较快的速度，安装方法为从默认的conda源安装（国内一些源不是mkl，如清华源，如果需要mkl版本需要删除这些源再进行安装）：</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda install numpy</span><br></pre></td></tr></table></figure>
 <p><strong>注意：</strong> 在完成环境创建后，一定要先安装numpy，因为在安装numpy后，再安装pytorch或scipy时，会自动检测环境中已有的BLAS版本（mkl或openBlas），来选择这些包的BLAS版本，如果没有的话，具体安装成哪个不好说。</p>
 <h2 id="基于OpenBLAS"><a href="#基于OpenBLAS" class="headerlink" title="基于OpenBLAS"></a>基于OpenBLAS</h2><p>如果需要在AMD平台或ARM平台上使用numpy，则使用OpenBLAS会有较快的速度，安装方法为使用pip安装</p>
