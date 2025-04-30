@@ -34,7 +34,7 @@
 <meta property="og:image" content="https://anakin0607.github.io/img_folder/nvidia-driver/driver-install.png">
 <meta property="og:image" content="https://anakin0607.github.io/img_folder/nvidia-driver/driver-install-success.png">
 <meta property="article:published_time" content="2024-09-26T05:16:54.000Z">
-<meta property="article:modified_time" content="2025-04-22T02:47:47.007Z">
+<meta property="article:modified_time" content="2025-04-23T01:53:21.223Z">
 <meta property="article:author" content="Anakin">
 <meta property="article:tag" content="Linux">
 <meta name="twitter:card" content="summary">
@@ -95,7 +95,7 @@
 
 
 <nav class="site-nav">
-  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">11</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">6</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">17</span></a></li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">11</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">6</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">18</span></a></li>
   </ul>
 </nav>
 
@@ -120,7 +120,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8"><span class="nav-number">1.</span> <span class="nav-text">安装显卡驱动</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E5%BF%85%E8%A6%81%E4%BE%9D%E8%B5%96"><span class="nav-number">1.1.</span> <span class="nav-text">安装必要依赖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A6%81%E7%94%A8nouveau"><span class="nav-number">1.2.</span> <span class="nav-text">禁用nouveau</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%B8%E8%BD%BD%E4%B9%8B%E5%89%8D%E7%9A%84%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8"><span class="nav-number">1.3.</span> <span class="nav-text">卸载之前的显卡驱动</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E9%A9%B1%E5%8A%A8"><span class="nav-number">1.4.</span> <span class="nav-text">安装驱动</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E5%90%88%E9%80%82%E7%9A%84%E9%A9%B1%E5%8A%A8%E7%89%88%E6%9C%AC"><span class="nav-number">1.4.1.</span> <span class="nav-text">查询合适的驱动版本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E9%A9%B1%E5%8A%A8-1"><span class="nav-number">1.4.2.</span> <span class="nav-text">安装驱动</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85cuda%E8%BD%AF%E4%BB%B6%E5%8C%85"><span class="nav-number">2.</span> <span class="nav-text">安装cuda软件包</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BDcudatoolkit%E5%B7%A5%E5%85%B7%E5%8C%85"><span class="nav-number">2.1.</span> <span class="nav-text">下载cudatoolkit工具包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85cudatoolkit%E5%B7%A5%E5%85%B7%E5%8C%85"><span class="nav-number">2.2.</span> <span class="nav-text">安装cudatoolkit工具包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="nav-number">2.3.</span> <span class="nav-text">添加环境变量</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83"><span class="nav-number">3.</span> <span class="nav-text">配置深度学习环境</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BAconda%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83"><span class="nav-number">3.1.</span> <span class="nav-text">创建conda虚拟环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0conda%E6%BA%90"><span class="nav-number">3.2.</span> <span class="nav-text">添加conda源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85cudatoolkit"><span class="nav-number">3.3.</span> <span class="nav-text">安装cudatoolkit</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85cudnn"><span class="nav-number">3.4.</span> <span class="nav-text">安装cudnn</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85pytorch"><span class="nav-number">3.5.</span> <span class="nav-text">安装pytorch</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8"><span class="nav-number">1.</span> <span class="nav-text">安装显卡驱动</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E5%BF%85%E8%A6%81%E4%BE%9D%E8%B5%96"><span class="nav-number">1.1.</span> <span class="nav-text">安装必要依赖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A6%81%E7%94%A8nouveau"><span class="nav-number">1.2.</span> <span class="nav-text">禁用nouveau</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%B8%E8%BD%BD%E4%B9%8B%E5%89%8D%E7%9A%84%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8"><span class="nav-number">1.3.</span> <span class="nav-text">卸载之前的显卡驱动</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E9%A9%B1%E5%8A%A8"><span class="nav-number">1.4.</span> <span class="nav-text">安装驱动</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E5%90%88%E9%80%82%E7%9A%84%E9%A9%B1%E5%8A%A8%E7%89%88%E6%9C%AC"><span class="nav-number">1.4.1.</span> <span class="nav-text">查询合适的驱动版本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E9%A9%B1%E5%8A%A8-1"><span class="nav-number">1.4.2.</span> <span class="nav-text">安装驱动</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85cuda%E8%BD%AF%E4%BB%B6%E5%8C%85"><span class="nav-number">2.</span> <span class="nav-text">安装cuda软件包</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BDcudatoolkit%E5%B7%A5%E5%85%B7%E5%8C%85"><span class="nav-number">2.1.</span> <span class="nav-text">下载cudatoolkit工具包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85cudatoolkit%E5%B7%A5%E5%85%B7%E5%8C%85"><span class="nav-number">2.2.</span> <span class="nav-text">安装cudatoolkit工具包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="nav-number">2.3.</span> <span class="nav-text">添加环境变量</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83"><span class="nav-number">3.</span> <span class="nav-text">配置深度学习环境</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A1%AE%E5%AE%9A%E8%A6%81%E5%AE%89%E8%A3%85%E7%9A%84%E8%BD%AF%E4%BB%B6%E5%8C%85%E7%89%88%E6%9C%AC"><span class="nav-number">3.1.</span> <span class="nav-text">确定要安装的软件包版本</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0conda%E6%BA%90"><span class="nav-number">3.1.1.</span> <span class="nav-text">添加conda源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A1%AE%E5%AE%9Acudatoolkit%E7%89%88%E6%9C%AC"><span class="nav-number">3.1.2.</span> <span class="nav-text">确定cudatoolkit版本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A1%AE%E5%AE%9A%E6%A1%86%E6%9E%B6%E7%89%88%E6%9C%AC"><span class="nav-number">3.1.3.</span> <span class="nav-text">确定框架版本</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85cudatoolkit"><span class="nav-number">3.2.</span> <span class="nav-text">安装cudatoolkit</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85cudnn"><span class="nav-number">3.3.</span> <span class="nav-text">安装cudnn</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85pytorch"><span class="nav-number">3.4.</span> <span class="nav-text">安装pytorch</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -133,7 +133,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-count">18</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -207,7 +207,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-04-22 10:47:47" itemprop="dateModified" datetime="2025-04-22T10:47:47+08:00">2025-04-22</time>
+      <time title="修改时间：2025-04-23 09:53:21" itemprop="dateModified" datetime="2025-04-23T09:53:21+08:00">2025-04-23</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -288,19 +288,31 @@
 <p>安装好conda后，如果不想让他每次自动启动base环境，输入以下命令即可</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda config --<span class="built_in">set</span> auto_activate_base <span class="literal">false</span></span><br></pre></td></tr></table></figure>
 
-<h2 id="创建conda虚拟环境"><a href="#创建conda虚拟环境" class="headerlink" title="创建conda虚拟环境"></a>创建conda虚拟环境</h2><p>一个深度学习环境基本上包括下面几个内容需要管理版本：</p>
+<h2 id="确定要安装的软件包版本"><a href="#确定要安装的软件包版本" class="headerlink" title="确定要安装的软件包版本"></a>确定要安装的软件包版本</h2><p>一个深度学习环境基本上包括下面几个内容需要管理版本：</p>
 <ol>
 <li>python</li>
 <li>cuda</li>
 <li>cudnn</li>
 <li>深度学习框架（torch，tensorflow等）</li>
 </ol>
-<p>这几个软件的安装顺序一般是上面从1到4的安装顺序，但是4一般会对前面软件的版本有要求。因此安装所有软件前一定要先确定好兼容性。通常情况下一个环境会对至少一个软件的版本有限制。因此需要根据这个限制的版本，去查找其兼容那些版本的其他软件。</p>
-<h2 id="添加conda源"><a href="#添加conda源" class="headerlink" title="添加conda源"></a>添加conda源</h2><p>默认的conda源中软件包比较少，许多版本的cudatoolkit无法安装，因此为确保顺利安装，先添加清华大学的镜像源到conda源列表中</p>
+<p>这几个软件的安装顺序一般是上面从1到4的安装顺序，但是4一般会对前面软件的版本有要求。因此安装所有软件前一定要先确定好兼容性。否则装到后面发现不好用还需要推倒重装。通常情况下一个环境会对至少一个软件的版本有限制。因此需要根据这个限制的版本，去查找其兼容那些版本的其他软件。一般情况下，我们需要根据硬件确定软件，因此确定版本时一般按照如下顺序来进行：</p>
+<ol>
+<li>cuda版本</li>
+<li>框架版本</li>
+<li>python版本</li>
+</ol>
+<h3 id="添加conda源"><a href="#添加conda源" class="headerlink" title="添加conda源"></a>添加conda源</h3><p>默认的conda源中软件包比较少，许多版本的cudatoolkit无法安装，因此为确保顺利安装，先添加清华大学的镜像源到conda源列表中</p>
 <p>先打开conda配置文件：</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> vim ~/.condarc</span><br></pre></td></tr></table></figure>
 <p>然后复制以下内容进去</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">channels:</span><br><span class="line">  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/</span><br><span class="line">  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/</span><br><span class="line">  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge/</span><br><span class="line">  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/pytorch/</span><br><span class="line">  - defaults</span><br></pre></td></tr></table></figure>
+<h3 id="确定cudatoolkit版本"><a href="#确定cudatoolkit版本" class="headerlink" title="确定cudatoolkit版本"></a>确定cudatoolkit版本</h3><p>设备能够支持的cudatoolkit的版本一般由硬件和驱动程序决定，查看方式为输入命令</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvidia-smi</span><br></pre></td></tr></table></figure>
+<p>然后会看到如下内容，查看CUDA Version字段，即为当前设备驱动程序支持的最高cudatoolkit版本</p>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">+-----------------------------------------------------------------------------------------+</span><br><span class="line">|<span class="string"> NVIDIA-SMI 550.144.03             Driver Version: 550.144.03     CUDA Version: 12.4     </span>|</span><br><span class="line">|<span class="string">-----------------------------------------+------------------------+----------------------+</span></span><br><span class="line"><span class="string"></span>|<span class="string"> GPU  Name                 Persistence-M </span>|<span class="string"> Bus-Id          Disp.A </span>|<span class="string"> Volatile Uncorr. ECC </span>|</span><br><span class="line">|<span class="string"> Fan  Temp   Perf          Pwr:Usage/Cap </span>|<span class="string">           Memory-Usage </span>|<span class="string"> GPU-Util  Compute M. </span>|</span><br><span class="line">|<span class="string">                                         </span>|<span class="string">                        </span>|<span class="string">               MIG M. </span>|</span><br><span class="line">|<span class="string">=========================================+========================+======================</span>|</span><br></pre></td></tr></table></figure>
+
+<p>确认完驱动最高支持cuda版本后，还需查看conda源中有没有对应的版本，如果没有最新版本，可以选择一个存在的版本安装，或是添加新源，或是直接从nvidia官网上安装，再通过环境变量的方式管理cuda版本。<br>确认最高cudatoolkit版本后，cudnn一般都有对应的版本，到时候直接安装即可</p>
+<h3 id="确定框架版本"><a href="#确定框架版本" class="headerlink" title="确定框架版本"></a>确定框架版本</h3><p>深度学习的框架一般每个版本都会有对应支持的cuda版本，可以去官网找到</p>
 <h2 id="安装cudatoolkit"><a href="#安装cudatoolkit" class="headerlink" title="安装cudatoolkit"></a>安装cudatoolkit</h2><h2 id="安装cudnn"><a href="#安装cudnn" class="headerlink" title="安装cudnn"></a>安装cudnn</h2><h2 id="安装pytorch"><a href="#安装pytorch" class="headerlink" title="安装pytorch"></a>安装pytorch</h2>
     </div>
 

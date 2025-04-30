@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"anakin0607.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="在Intel和AMD平台上对于基于openblas和mkl线性代数加速库的numpy包的性能测试以及安装方式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="线性加速运算库的选择方式">
+<meta property="og:url" content="https://anakin0607.github.io/%E7%BA%BF%E6%80%A7%E5%8A%A0%E9%80%9F%E8%BF%90%E7%AE%97%E5%BA%93%E7%9A%84%E9%80%89%E6%8B%A9%E6%96%B9%E5%BC%8F/index.html">
+<meta property="og:site_name" content="Anakin0607">
+<meta property="og:description" content="在Intel和AMD平台上对于基于openblas和mkl线性代数加速库的numpy包的性能测试以及安装方式">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-04-30T06:41:01.000Z">
+<meta property="article:modified_time" content="2025-04-30T07:21:30.925Z">
+<meta property="article:author" content="Anakin">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://anakin0607.github.io/%E7%BA%BF%E6%80%A7%E5%8A%A0%E9%80%9F%E8%BF%90%E7%AE%97%E5%BA%93%E7%9A%84%E9%80%89%E6%8B%A9%E6%96%B9%E5%BC%8F/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://anakin0607.github.io/%E7%BA%BF%E6%80%A7%E5%8A%A0%E9%80%9F%E8%BF%90%E7%AE%97%E5%BA%93%E7%9A%84%E9%80%89%E6%8B%A9%E6%96%B9%E5%BC%8F/","path":"线性加速运算库的选择方式/","title":"线性加速运算库的选择方式"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>线性加速运算库的选择方式 | Anakin0607</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Anakin0607</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">11</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">6</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">18</span></a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%E5%8A%A0%E9%80%9F%E5%BA%93"><span class="nav-number">1.</span> <span class="nav-text">什么是线性代数加速库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E4%BB%A3%E7%A0%81%E5%8F%8A%E7%BB%93%E6%9E%9C"><span class="nav-number">2.</span> <span class="nav-text">测试代码及结果</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E4%BB%A3%E7%A0%81"><span class="nav-number">2.1.</span> <span class="nav-text">测试代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E7%BB%93%E6%9E%9C"><span class="nav-number">2.2.</span> <span class="nav-text">测试结果</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E8%80%85%E6%9C%89%E4%BD%95%E5%8C%BA%E5%88%AB"><span class="nav-number">3.</span> <span class="nav-text">二者有何区别</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#MKL"><span class="nav-number">3.1.</span> <span class="nav-text">MKL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#OpenBLAS"><span class="nav-number">3.2.</span> <span class="nav-text">OpenBLAS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%9F%E5%BA%A6%E5%B7%AE%E5%88%AB%E7%9A%84%E5%8E%9F%E5%9B%A0"><span class="nav-number">3.3.</span> <span class="nav-text">速度差别的原因</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E6%97%B6%E5%BA%93%E7%89%88%E6%9C%AC%E7%9A%84%E9%80%89%E6%8B%A9"><span class="nav-number">4.</span> <span class="nav-text">安装时库版本的选择</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8EMKL"><span class="nav-number">4.1.</span> <span class="nav-text">基于MKL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8EOpenBLAS"><span class="nav-number">4.2.</span> <span class="nav-text">基于OpenBLAS</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Anakin</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://anakin0607.github.io/%E7%BA%BF%E6%80%A7%E5%8A%A0%E9%80%9F%E8%BF%90%E7%AE%97%E5%BA%93%E7%9A%84%E9%80%89%E6%8B%A9%E6%96%B9%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Anakin">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Anakin0607">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="线性加速运算库的选择方式 | Anakin0607">
+      <meta itemprop="description" content="在Intel和AMD平台上对于基于openblas和mkl线性代数加速库的numpy包的性能测试以及安装方式">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          线性加速运算库的选择方式
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-04-30 14:41:01 / 修改时间：15:21:30" itemprop="dateCreated datePublished" datetime="2025-04-30T14:41:01+08:00">2025-04-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%BF%90%E7%BB%B4/" itemprop="url" rel="index"><span itemprop="name">运维</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">在Intel和AMD平台上对于基于openblas和mkl线性代数加速库的numpy包的性能测试以及安装方式</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="什么是线性代数加速库"><a href="#什么是线性代数加速库" class="headerlink" title="什么是线性代数加速库"></a>什么是线性代数加速库</h1><p>BLAS(Basic Linear Algebra Subprograms)即基础线性代数子程序库,可以理解为用于线性代数运算库的API。openblas和mkl是基于BLAS库的两个不同的线性运算库,python著名的numpy、scipy和pytorch库底层就调用了mkl或者openblas，但是由于二者实现方式不同，因此在不同硬件平台上性能有所差别。</p>
+<h1 id="测试代码及结果"><a href="#测试代码及结果" class="headerlink" title="测试代码及结果"></a>测试代码及结果</h1><h2 id="测试代码"><a href="#测试代码" class="headerlink" title="测试代码"></a>测试代码</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> time <span class="keyword">import</span> time</span><br><span class="line"><span class="comment">#print(&#x27;Numpy config:&#x27;)</span></span><br><span class="line"><span class="comment">#np.show_config()</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成测试数据，控制变量，非随机</span></span><br><span class="line">np.random.seed(<span class="number">0</span>)</span><br><span class="line">size = <span class="number">4096</span></span><br><span class="line">A, B = np.random.random((size, size)), np.random.random((size, size))</span><br><span class="line">C, D = np.random.random((size * <span class="number">128</span>,)), np.random.random((size * <span class="number">128</span>,))</span><br><span class="line">E = np.random.random((size // <span class="number">2</span>, size // <span class="number">4</span>))</span><br><span class="line">F = G = np.random.random((size // <span class="number">2</span>, size // <span class="number">2</span>))</span><br><span class="line">F = np.dot(F, F.T)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 矩阵点乘</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">dot</span>(<span class="params">N=<span class="number">20</span></span>):</span><br><span class="line">    t = time()</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(N):</span><br><span class="line">        np.dot(A, B)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&#x27;点乘两个 <span class="subst">&#123;size&#125;</span>x<span class="subst">&#123;size&#125;</span> 矩阵 <span class="subst">&#123;N&#125;</span> 次，平均用时 <span class="subst">&#123;(time() - t) / N&#125;</span> 秒&#x27;</span>)</span><br><span class="line">    </span><br><span class="line"><span class="comment"># 向量乘法</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">v_dot</span>(<span class="params">N=<span class="number">5000</span></span>):</span><br><span class="line">    t = time()</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(N):</span><br><span class="line">        np.dot(C, D)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&#x27;点乘两个 <span class="subst">&#123;size * <span class="number">128</span>&#125;</span> 向量 <span class="subst">&#123;N&#125;</span> 次，平均用时 <span class="subst">&#123;(time() - t) / N * <span class="number">1000</span>&#125;</span> 毫秒&#x27;</span>)</span><br><span class="line">    </span><br><span class="line"><span class="comment"># 奇异值分解</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">svd</span>(<span class="params">N=<span class="number">3</span></span>):</span><br><span class="line">    t = time()</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(N):</span><br><span class="line">        np.linalg.svd(E, full_matrices=<span class="literal">False</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&#x27;分解一个 <span class="subst">&#123;size // <span class="number">2</span>&#125;</span>x<span class="subst">&#123;size // <span class="number">4</span>&#125;</span> 矩阵的奇异值 <span class="subst">&#123;N&#125;</span> 次，平均用时 <span class="subst">&#123;(time() - t) / N&#125;</span> 秒&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 科列斯基分解</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">cholesky</span>(<span class="params">N=<span class="number">3</span></span>):</span><br><span class="line">    t = time()</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(N):</span><br><span class="line">        np.linalg.cholesky(F)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&#x27;对一个 <span class="subst">&#123;size // <span class="number">2</span>&#125;</span>x<span class="subst">&#123;size // <span class="number">2</span>&#125;</span> 矩阵科列斯基分解 <span class="subst">&#123;N&#125;</span> 次，平均用时 <span class="subst">&#123;(time() - t) / N&#125;</span> 秒&#x27;</span>)</span><br><span class="line">    </span><br><span class="line"><span class="comment"># 特征分解</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">eig</span>(<span class="params">N=<span class="number">3</span></span>):</span><br><span class="line">    t = time()</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(N):</span><br><span class="line">        np.linalg.eig(G)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&#x27;对一个 <span class="subst">&#123;size // <span class="number">2</span>&#125;</span>x<span class="subst">&#123;size // <span class="number">2</span>&#125;</span> 矩阵分解特征值 <span class="subst">&#123;N&#125;</span> 次，平均用时 <span class="subst">&#123;(time() - t) / N&#125;</span> 秒&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    dot()</span><br><span class="line">    v_dot()</span><br><span class="line">    svd()</span><br><span class="line">    cholesky()</span><br><span class="line">    eig()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="测试结果"><a href="#测试结果" class="headerlink" title="测试结果"></a>测试结果</h2><p>测试分别在AMD EPYC7763和Intel Core i7-6700K上进行</p>
+<figure class="highlight tap"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">EPYC 7763</span><br><span class="line">mkl</span><br><span class="line">点乘两个 4096x4096 矩阵<span class="number"> 20 </span>次，平均用时 0.4505302309989929 秒</span><br><span class="line">点乘两个<span class="number"> 524288 </span>向量<span class="number"> 5000 </span>次，平均用时 0.16806364059448242 毫秒</span><br><span class="line">分解一个 2048x1024 矩阵的奇异值<span class="number"> 3 </span>次，平均用时 2.4288907051086426 秒</span><br><span class="line">对一个 2048x2048 矩阵科列斯基分解<span class="number"> 3 </span>次，平均用时 0.2743314901987712 秒</span><br><span class="line">对一个 2048x2048 矩阵分解特征值<span class="number"> 3 </span>次，平均用时 17.24505623181661 秒</span><br><span class="line">openblas</span><br><span class="line">点乘两个 4096x4096 矩阵<span class="number"> 20 </span>次，平均用时 0.3454108119010925 秒</span><br><span class="line">点乘两个<span class="number"> 524288 </span>向量<span class="number"> 5000 </span>次，平均用时 0.019277381896972656 毫秒</span><br><span class="line">分解一个 2048x1024 矩阵的奇异值<span class="number"> 3 </span>次，平均用时 0.8641883532206217 秒</span><br><span class="line">对一个 2048x2048 矩阵科列斯基分解<span class="number"> 3 </span>次，平均用时 0.17425012588500977 秒</span><br><span class="line">对一个 2048x2048 矩阵分解特征值<span class="number"> 3 </span>次，平均用时 5.777179718017578 秒</span><br><span class="line"></span><br><span class="line">intel 6700k</span><br><span class="line">mkl</span><br><span class="line">点乘两个 4096x4096 矩阵<span class="number"> 20 </span>次，平均用时 1.6702504277229309 秒</span><br><span class="line">点乘两个<span class="number"> 524288 </span>向量<span class="number"> 5000 </span>次，平均用时 0.400931978225708 毫秒</span><br><span class="line">分解一个 2048x1024 矩阵的奇异值<span class="number"> 3 </span>次，平均用时 0.6932500998179117 秒</span><br><span class="line">对一个 2048x2048 矩阵科列斯基分解<span class="number"> 3 </span>次，平均用时 0.15015165011088052 秒</span><br><span class="line">对一个 2048x2048 矩阵分解特征值<span class="number"> 3 </span>次，平均用时 6.460950613021851 秒</span><br><span class="line"></span><br><span class="line">openblas</span><br><span class="line">点乘两个 4096x4096 矩阵<span class="number"> 20 </span>次，平均用时 1.9671059727668763 秒</span><br><span class="line">点乘两个<span class="number"> 524288 </span>向量<span class="number"> 5000 </span>次，平均用时 4.2454582214355465 毫秒</span><br><span class="line">分解一个 2048x1024 矩阵的奇异值<span class="number"> 3 </span>次，平均用时 13.815521796544393 秒</span><br><span class="line">对一个 2048x2048 矩阵科列斯基分解<span class="number"> 3 </span>次，平均用时 0.6228195826212565 秒</span><br><span class="line">对一个 2048x2048 矩阵分解特征值<span class="number"> 3 </span>次，平均用时 43.647413889567055 秒</span><br></pre></td></tr></table></figure>
+
+<p>可以看出，使用openblas时，intel的cpu明显慢于mkl，而7763由于硬件性能较强，使用两个库的差异不明显。</p>
+<h1 id="二者有何区别"><a href="#二者有何区别" class="headerlink" title="二者有何区别"></a>二者有何区别</h1><p>维基百科对二者的介绍如下：</p>
+<h2 id="MKL"><a href="#MKL" class="headerlink" title="MKL"></a>MKL</h2><p>英特尔oneAPI数学核心函数库（Intel oneAPI Math Kernel Library），前身为英特尔数学核心函数库，是一个针对科学、工程和金融应用优化的数学例程库。核心数学函数包括BLAS、LAPACK、ScaLAPACK、稀疏求解器、快速傅里叶变换和矢量数学。</p>
+<p>该库支持 x86 CPU 和英特尔 GPU，适用于Windows和Linux 操作系统</p>
+<p>MKL 以及由英特尔 C++ 编译器 和英特尔 DPC++ 编译器生成的其他程序使用一种称为函数多版本控制的技术来提高性能：一个函数针对许多 x86指令集扩展进行编译或编写，在运行时，“主函数”使用CPUID指令选择最适合当前 CPU 的版本。但是，只要主函数检测到非英特尔 CPU，它几乎总是选择使用最基本（也是最慢）的函数，而不管 CPU 声称支持什么指令集。</p>
+<p>说白了就是只针对intel的cpu有正向优化效果，其他厂商的cpu都有负优化效果。</p>
+<h2 id="OpenBLAS"><a href="#OpenBLAS" class="headerlink" title="OpenBLAS"></a>OpenBLAS</h2><p>OpenBLAS是BLAS（基本线性代数子程序）和LAPACK API的开源实现，并针对特定处理器类型进行了许多手工优化。它由中科院软件研究所并行软件与计算科学实验室开发。</p>
+<p>OpenBLAS 为多种处理器架构添加了线性代数核的优化实现，包括英特尔Sandy Bridge和龙芯。它声称可以达到与英特尔 MKL相当的性能。在支持 AVX2 指令集的机器上，OpenBLAS 可以达到与 MKL 类似的性能，但目前在支持 AVX512 指令集的 CPU 上几乎没有与 MKL 相媲美的开源库。</p>
+<p>OpenBLAS 是GotoBLAS 2 的一个分支，由德克萨斯高级计算中心的Kazushige Goto创建。</p>
+<p>OpenBLAS是一个开源库，和商用库不同，就是基本实现了这些功能，但是没有针对某个硬件特殊优化。</p>
+<h2 id="速度差别的原因"><a href="#速度差别的原因" class="headerlink" title="速度差别的原因"></a>速度差别的原因</h2><p>二者在intel平台上差距巨大的原因可以归结为两点：</p>
+<p>一是因为epyc 7763性能过强，前几项可并行测试中，硬件性能弥补了优化差距，显得两种版本的库差距不大。</p>
+<p>二是根据MKL和intel的一些其他文档推测，因为intel的cpu为了兼容先前的平台，其实引入了很多的bug以及很多不必要的指令集，mkl实现时可根据bug和指令集特性，直接选择最快的方式计算，而OpenBLAS等开源库却无法做到，故速度在Intel平台上会慢很多。同时mkl的文档中也直言不讳，对除intel平台外的cpu，一律使用最慢的实现方式。究其原因，可能是icc编译器中使用了一些比较激进的优化，在其他平台上会发生错误，因此只能使用较保守的方案进行计算。</p>
+<h1 id="安装时库版本的选择"><a href="#安装时库版本的选择" class="headerlink" title="安装时库版本的选择"></a>安装时库版本的选择</h1><p>根据numpy官网所述：</p>
+<ul>
+<li><p>PyPI 上的 NumPy wheel（pip 安装的内容）使用 OpenBLAS 构建。OpenBLAS 库包含在 wheel 中。这使得 wheel 更大，如果用户还安装了 (例如) SciPy，他们现在将有两个 OpenBLAS 副本在磁盘上。</p>
+</li>
+<li><p>在 conda defaults 通道中，NumPy 基于 Intel MKL 构建。当用户安装 NumPy 时，MKL 将作为单独的软件包安装在用户的环境中。</p>
+</li>
+<li><p>在 conda-forge 通道中，NumPy 基于虚拟“BLAS”包构建。当用户从 conda-forge 安装 NumPy 时，该 BLAS 包将与实际库一起安装 - 默认情况下为 OpenBLAS，但也可以是 MKL（来自 defaults 通道），甚至是 BLIS 或参考 BLAS。</p>
+</li>
+<li><p>MKL 软件包比 OpenBLAS 大得多，在磁盘上大约为 700 MB，而 OpenBLAS 约为 30 MB。</p>
+</li>
+<li><p>MKL 通常比 OpenBLAS 快一些且更健壮。</p>
+</li>
+</ul>
+<p>根据前文分析，最后一条并不完全正确，在intel平台上的确如此，而在amd平台上却并不是这样。但前面几条却可以告知我们如何选择不同的库版本：</p>
+<h2 id="基于MKL"><a href="#基于MKL" class="headerlink" title="基于MKL"></a>基于MKL</h2><p>如果需要在Intel平台上使用numpy，使用MKL版本的numpy会有较快的速度，安装方法为从默认的conda源安装：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda install numpy</span><br></pre></td></tr></table></figure>
+<p><strong>注意：</strong> 在完成环境创建后，一定要先安装numpy，因为在安装numpy后，再安装pytorch或scipy时，会自动检测环境中已有的BLAS版本（mkl或openBlas），来选择这些包的BLAS版本，如果没有的话，具体安装成哪个不好说。</p>
+<h2 id="基于OpenBLAS"><a href="#基于OpenBLAS" class="headerlink" title="基于OpenBLAS"></a>基于OpenBLAS</h2><p>如果需要在AMD平台或ARM平台上使用numpy，则使用OpenBLAS会有较快的速度，安装方法为使用pip安装</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install numpy</span><br></pre></td></tr></table></figure>
+
+<p>安装完毕后，可使用:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line">np.__config__.show()</span><br></pre></td></tr></table></figure>
+<p>来查看blas的版本，若显示中出现openblas字样，则为openblas，若出现mkl则为mkl。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Linux/" rel="tag"># Linux</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/Linux%E5%AE%89%E8%A3%85%E6%96%B9%E6%B3%95%E5%8F%8A%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/" rel="prev" title="Linux安装方法及常用工具">
+                  <i class="fa fa-angle-left"></i> Linux安装方法及常用工具
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Anakin</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+  <script src="/js/third-party/pace.js"></script>
+
+
+  
+
+
+
+
+
+</body>
+</html>
