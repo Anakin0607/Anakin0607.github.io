@@ -29,12 +29,14 @@
 <meta property="og:site_name" content="Anakin0607">
 <meta property="og:description" content="结合Gemini分析使用alsalib播放时遇到underrun的原因并给出了一些解决办法">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://anakin0607.github.io/image_folder/image.png">
 <meta property="article:published_time" content="2025-06-09T06:29:37.000Z">
-<meta property="article:modified_time" content="2025-06-09T06:32:14.293Z">
+<meta property="article:modified_time" content="2025-06-11T08:14:01.399Z">
 <meta property="article:author" content="Anakin">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="Media">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://anakin0607.github.io/image_folder/image.png">
 
 
 <link rel="canonical" href="https://anakin0607.github.io/%E5%A4%84%E7%90%86Alsa%E6%92%AD%E6%94%BE%E4%B8%AD%E7%9A%84underrun%E9%97%AE%E9%A2%98/">
@@ -116,7 +118,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%80%94"><span class="nav-number">1.</span> <span class="nav-text">—</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%80%94-1"><span class="nav-number">2.</span> <span class="nav-text">—</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-ALSA-%E5%8F%82%E6%95%B0%E9%85%8D%E7%BD%AE%EF%BC%88%E6%9C%80%E7%9B%B4%E6%8E%A5%E7%9A%84%E6%96%B9%E6%B3%95%EF%BC%89"><span class="nav-number">2.1.</span> <span class="nav-text">1. ALSA 参数配置（最直接的方法）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1"><span class="nav-number">2.2.</span> <span class="nav-text">2. 应用程序设计</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E7%B3%BB%E7%BB%9F%E7%BA%A7%E4%BC%98%E5%8C%96"><span class="nav-number">2.3.</span> <span class="nav-text">3. 系统级优化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-%E4%BB%8E-Underrun-%E4%B8%AD%E6%81%A2%E5%A4%8D"><span class="nav-number">2.4.</span> <span class="nav-text">4. 从 Underrun 中恢复</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFUnderrun"><span class="nav-number">1.</span> <span class="nav-text">什么是Underrun</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Underrun%E7%9A%84%E8%A7%A6%E5%8F%91"><span class="nav-number">2.</span> <span class="nav-text">Underrun的触发</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E8%83%8C%E6%99%AF%EF%BC%9A%E5%A3%B0%E5%8D%A1%E5%BC%80%E5%90%AF"><span class="nav-number">2.1.</span> <span class="nav-text">1. 背景：声卡开启</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Underrun%E8%A7%A6%E5%8F%91%E6%97%B6%E9%97%B4"><span class="nav-number">2.2.</span> <span class="nav-text">2. Underrun触发时间</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B%E8%AE%A1%E7%AE%97%EF%BC%9A"><span class="nav-number">2.2.1.</span> <span class="nav-text">示例计算：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E7%A4%BA%E4%BE%8B%EF%BC%9A"><span class="nav-number">2.2.2.</span> <span class="nav-text">其他示例：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3Underrun"><span class="nav-number">3.</span> <span class="nav-text">解决Underrun</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ALSA-%E5%8F%82%E6%95%B0%E9%85%8D%E7%BD%AE"><span class="nav-number">3.1.</span> <span class="nav-text">ALSA 参数配置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E5%91%A8%E6%9C%9F%E5%A4%A7%E5%B0%8F%E5%92%8C%E7%BC%93%E5%86%B2%E5%8C%BA%E5%A4%A7%E5%B0%8F"><span class="nav-number">3.1.0.1.</span> <span class="nav-text">(1) 周期大小和缓冲区大小</span></a></li></ol></li></ol></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -195,9 +197,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2025-06-09 14:29:37 / 修改时间：14:32:14" itemprop="dateCreated datePublished" datetime="2025-06-09T14:29:37+08:00">2025-06-09</time>
+      <time title="创建时间：2025-06-09 14:29:37" itemprop="dateCreated datePublished" datetime="2025-06-09T14:29:37+08:00">2025-06-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-11 16:14:01" itemprop="dateModified" datetime="2025-06-11T16:14:01+08:00">2025-06-11</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -219,95 +227,89 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><p>在 ALSA (Advanced Linux Sound Architecture) 中处理 underrun（缓冲区下溢）问题是音频编程中的一个核心任务。Underrun 发生在你的应用程序向声卡提供音频数据的速度跟不上声卡播放数据的速度时，导致声卡缓冲区变空。</p>
-<p><strong>Underrun 的症状：</strong></p>
-<ul>
-<li>音频播放出现<strong>爆音 (clicks&#x2F;pops)、卡顿 (stuttering)、断断续续或短暂的静音</strong>。</li>
-</ul>
-<h3 id="—"><a href="#—" class="headerlink" title="—"></a>—</h3><p><strong>什么是 Underrun？（一个比喻）</strong></p>
+    <div class="post-body" itemprop="articleBody"><p>在 ALSA (Advanced Linux Sound Architecture) 中处理 underrun（缓冲区下溢）问题是音频编程中的一个常见状况。Underrun 发生在应用程序向声卡提供音频数据的速度跟不上声卡播放数据的速度时，导致声卡缓冲区变空时，当音频抛出“UnderRun”异常时，或在音频播放出现音频播放出现<strong>爆音 (clicks&#x2F;pops)、卡顿 (stuttering)、断断续续或短暂的静音</strong>时，考虑出现了underrun问题。</p>
+<h1 id="什么是Underrun"><a href="#什么是Underrun" class="headerlink" title="什么是Underrun"></a>什么是Underrun</h1><p><strong>一个形象的比喻描述Underrun</strong></p>
 <p>想象一下声卡的播放缓冲区是一条匀速前进的传送带，而你的应用程序负责往传送带上放产品（音频数据）。</p>
 <ul>
 <li><strong>正常情况</strong>：你总是能及时地在传送带到达末端前放上新的产品，传送带持续运转，声音连续播放。  </li>
 <li><strong>Underrun 发生时</strong>：你因为某些原因（比如正在忙别的事情，或者拿产品的速度太慢）没能及时放上新产品，传送带上出现了空缺。当这个空缺到达末端时，机器（声卡）无事可做，就会发出一声“咔嗒”（爆音），然后等待下一个产品的到来。</li>
 </ul>
-<h3 id="—-1"><a href="#—-1" class="headerlink" title="—"></a>—</h3><p><strong>如何处理 Underrun 问题</strong></p>
-<p>处理 Underrun 问题可以从三个层面入手：<strong>ALSA参数配置</strong>、<strong>应用程序设计</strong> 和 <strong>系统级优化</strong>。此外，当 Underrun 真的发生时，还需要知道如何从错误中恢复。</p>
-<h4 id="1-ALSA-参数配置（最直接的方法）"><a href="#1-ALSA-参数配置（最直接的方法）" class="headerlink" title="1. ALSA 参数配置（最直接的方法）"></a><strong>1. ALSA 参数配置（最直接的方法）</strong></h4><p>通过调整缓冲区（buffer）和周期（period）的大小，可以为你的应用程序争取更多的时间来准备数据，从而减少 Underrun 的风险。</p>
+<h1 id="Underrun的触发"><a href="#Underrun的触发" class="headerlink" title="Underrun的触发"></a>Underrun的触发</h1><h2 id="1-背景：声卡开启"><a href="#1-背景：声卡开启" class="headerlink" title="1. 背景：声卡开启"></a>1. <strong>背景：声卡开启</strong></h2><ul>
+<li><strong>声卡开启</strong>：<ul>
+<li>在ALSA中，声卡通过<code>snd_pcm_open</code>打开，并通过<code>snd_pcm_hw_params</code>配置硬件参数（如采样率、周期大小、周期数等）。</li>
+<li>声卡开始播放通常由以下操作触发：<ul>
+<li>第一次调用<code>snd_pcm_writei</code>写入足够数据（达到启动阈值）。</li>
+<li>显式调用<code>snd_pcm_start</code>（手动启动播放）。</li>
+</ul>
+</li>
+<li>一旦声卡启动，它会以固定速率（取决于采样率，音频格式和通道数）从缓冲区读取数据。</li>
+</ul>
+</li>
+<li><strong>欠载（Underrun）</strong>：<ul>
+<li>当声卡尝试读取数据但缓冲区为空时，发生Underrun。</li>
+<li>Underrun通常导致音频中断、静音或杂音，下一次调用<code>snd_pcm_writei</code>返回<code>-EPIPE</code>，需要调用<code>snd_pcm_prepare</code>或<code>snd_pcm_recover</code>恢复。</li>
+</ul>
+</li>
+<li><strong>不写入数据</strong>：<ul>
+<li>如果声卡启动后，应用程序完全不调用<code>snd_pcm_writei</code>或写入零数据，缓冲区会因声卡持续消耗而耗尽，导致Underrun。</li>
+</ul>
+</li>
+</ul>
+<h2 id="2-Underrun触发时间"><a href="#2-Underrun触发时间" class="headerlink" title="2. Underrun触发时间"></a>2. <strong>Underrun触发时间</strong></h2><p>Underrun触发的时间取决于<strong>缓冲区耗尽的时间</strong>，当缓冲区中的数据被播放完毕后，Underrun会被触发，可以通过以下公式计算：</p>
+<p>[<br>\text{欠载时间（秒）} &#x3D; \frac{\text{缓冲区大小（帧）}}{\text{采样率（Hz）}}<br>]</p>
 <ul>
-<li><strong>Buffer Size (缓冲区大小)</strong>: snd_pcm_hw_params_set_buffer_size_near()  <ul>
-<li>这是声卡硬件中用于存储音频数据的总空间。  </li>
-<li><strong>增加 Buffer Size</strong>：可以有效抵御系统偶然的延迟或抖动。比如，即使你的程序有短暂的卡顿，只要卡顿时间小于播放完整个缓冲区所需的时间，就不会发生 Underrun。  </li>
-<li><strong>缺点</strong>：增加缓冲区大小会**增大音频延迟 (latency)**。对于实时交互应用（如乐器、VoIP）需要低延迟，而对于音乐播放器，稍高的延迟通常可以接受。</li>
+<li><strong>缓冲区大小</strong>：<ul>
+<li>缓冲区大小 &#x3D; 周期大小（period size） × 周期数（periods），以帧为单位。</li>
+<li>周期大小通过<code>snd_pcm_hw_params_set_period_size</code>设置，例如1024帧。</li>
+<li>周期数通过<code>snd_pcm_hw_params_set_periods</code>设置，通常为2或3。</li>
+<li>例如，周期大小1024帧，周期数2，缓冲区大小 &#x3D; 1024 × 2 &#x3D; 2048帧。</li>
 </ul>
 </li>
-<li><strong>Period Size (周期大小)</strong>: snd_pcm_hw_params_set_period_size_near()  <ul>
-<li>ALSA 通过周期性的中断来通知应用程序“可以填充更多数据了”。Period Size 就是两次中断之间播放的数据帧数。  </li>
-<li><strong>增加 Period Size</strong>：可以减少中断发生的频率，从而降低 CPU 的开销。如果你的程序因为频繁被中断而无法及时处理数据，增大周期大小会有帮助。  </li>
-<li><strong>关系</strong>：Buffer Size 必须是 Period Size 的整数倍。通常 buffer_size = period_size * N，其中 N (periods) 通常是 2, 3, 4。</li>
+<li><strong>采样率</strong>：<ul>
+<li>通过<code>snd_pcm_hw_params_set_rate</code>设置，例如44100Hz（44.1kHz）。</li>
+</ul>
+</li>
+<li><strong>帧</strong>：<ul>
+<li>1帧包含所有通道的样本（例如，16位立体声，帧大小 &#x3D; 2通道 × 2字节 &#x3D; 4字节），但时间计算只关心帧数。</li>
 </ul>
 </li>
 </ul>
-<p>配置建议：<br>如果你遇到了 Underrun，首先尝试将 buffer_size 和 period_size 调大一些。例如，从一个较小的 buffer (如 512 帧) 增加到一个较大的值 (如 4096 或 8192 帧)。</p>
-<h4 id="2-应用程序设计"><a href="#2-应用程序设计" class="headerlink" title="2. 应用程序设计"></a><strong>2. 应用程序设计</strong></h4><p>这是从根本上解决问题的关键。</p>
+<h3 id="示例计算："><a href="#示例计算：" class="headerlink" title="示例计算："></a>示例计算：</h3><ul>
+<li>假设：<ul>
+<li>周期大小 &#x3D; 1024帧</li>
+<li>周期数 &#x3D; 2</li>
+<li>采样率 &#x3D; 44100Hz</li>
+</ul>
+</li>
+<li>缓冲区大小 &#x3D; 1024 × 2 &#x3D; 2048帧</li>
+<li>Underrun时间：<br>[<br>\text{Underrun时间} &#x3D; \frac{2048}{44100} \approx 0.04644 , \text{秒} \approx 46.44 , \text{毫秒}<br>]</li>
+<li><strong>结论</strong>：声卡启动后，如果完全不写入数据，<strong>约46.44毫秒</strong>后会触发Underrun。</li>
+</ul>
+<h3 id="其他示例："><a href="#其他示例：" class="headerlink" title="其他示例："></a>其他示例：</h3><ul>
+<li><strong>高采样率</strong>（192kHz，1024帧 × 2周期）：<br>[<br>\text{欠载时间} &#x3D; \frac{2048}{192000} \approx 0.01067 , \text{秒} \approx 10.67 , \text{毫秒}<br>]</li>
+<li><strong>低采样率</strong>（8000Hz，1024帧 × 2周期，VoIP场景）：<br>[<br>\text{欠载时间} &#x3D; \frac{2048}{8000} \approx 0.256 , \text{秒} \approx 256 , \text{毫秒}<br>]</li>
+<li><strong>更大缓冲区</strong>（2048帧 × 3周期，44100Hz）：<br>[<br>\text{欠载时间} &#x3D; \frac{2048 \times 3}{44100} \approx 0.13932 , \text{秒} \approx 139.32 , \text{毫秒}<br>]</li>
+</ul>
+<h1 id="解决Underrun"><a href="#解决Underrun" class="headerlink" title="解决Underrun"></a>解决Underrun</h1><h2 id="ALSA-参数配置"><a href="#ALSA-参数配置" class="headerlink" title="ALSA 参数配置"></a>ALSA 参数配置</h2><p>通过调整缓冲区（buffer）和周期（period）的大小，可以为应用程序争取更多的时间来准备数据，从而减少 Underrun 的风险。</p>
+<h4 id="1-周期大小和缓冲区大小"><a href="#1-周期大小和缓冲区大小" class="headerlink" title="(1) 周期大小和缓冲区大小"></a>(1) <strong>周期大小和缓冲区大小</strong></h4><p>Alsa播放中，<br><img src="/image_folder/image.png" alt="alt text"></p>
 <ul>
-<li>使用独立的音频线程：<br>将所有与音频处理（生成、写入数据）相关的代码放到一个独立的、高优先级的线程中。这个线程不应该被 UI 更新、文件 I&#x2F;O、网络请求等耗时操作阻塞。  </li>
-<li>避免在音频线程中做“重活”：<br>音频线程的循环应该是轻量级的。避免在其中进行：  <ul>
-<li>内存分配 (malloc, new) 或释放 (free, delete)。  </li>
-<li>文件读写。  </li>
-<li>复杂的计算或算法。  </li>
-<li>任何可能导致阻塞的操作。  </li>
-<li><strong>策略</strong>：使用另一个“工作线程”来准备数据，并通过一个锁无关（lock-free）的环形缓冲区（ring buffer）或队列将数据传递给音频线程。</li>
+<li><strong>周期大小（Period Size）</strong>：<ul>
+<li>较大的周期大小（如2048帧）增加缓冲区容量，延长欠载时间。</li>
+<li>设置方法：<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">snd_pcm_uframes_t</span> period_size = <span class="number">2048</span>;</span><br><span class="line">snd_pcm_hw_params_set_period_size_near(pcm_handle, params, &amp;period_size, &amp;dir);</span><br></pre></td></tr></table></figure></li>
 </ul>
 </li>
-<li>使用 poll() &#x2F; select() 进行非阻塞写入：<br>不要让 snd_pcm_writei() 长时间阻塞。使用 poll() 或 select() 来等待 PCM 设备变为可写状态，这样你的音频线程可以在等待时做其他事情或让出 CPU。</li>
-</ul>
-<h4 id="3-系统级优化"><a href="#3-系统级优化" class="headerlink" title="3. 系统级优化"></a><strong>3. 系统级优化</strong></h4><ul>
-<li><strong>提高进程&#x2F;线程优先级</strong>：  <ul>
-<li>使用 nice 和 renice 命令来提高进程的静态优先级。  </li>
-<li>在代码中，使用 pthread_setschedparam() 将音频线程的调度策略设置为实时策略，如 SCHED_FIFO 或 SCHED_RR，并赋予其较高的实时优先级。</li>
+<li><strong>周期数（Periods）</strong>：<ul>
+<li>更多的周期数（如3或4）增加缓冲区，延迟欠载。</li>
+<li>设置方法：<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">unsigned</span> <span class="type">int</span> periods = <span class="number">3</span>;</span><br><span class="line">snd_pcm_hw_params_set_periods_near(pcm_handle, params, &amp;periods, &amp;dir);</span><br></pre></td></tr></table></figure></li>
 </ul>
 </li>
-<li>获取实时权限：<br>普通用户通常没有权限设置实时优先级。你需要配置系统以允许你的用户或程序组这样做。  <ul>
-<li>编辑 &#x2F;etc&#x2F;security&#x2F;limits.conf 或在 &#x2F;etc&#x2F;security&#x2F;limits.d&#x2F; 下创建新文件，添加如下内容：<br># 允许 audio 组的用户设置高实时优先级和锁定内存<br>@audio   -  rtprio     99<br>@audio   -  memlock    unlimited<br>然后将你的用户添加到 audio 组。  </li>
-<li>现代 Linux 系统通常使用 rtkit (Real-Time Kit) 来动态、安全地为需要的线程提供实时优先级，很多音频框架（如 PipeWire, JACK）都在后台使用它。</li>
-</ul>
-</li>
-</ul>
-<h4 id="4-从-Underrun-中恢复"><a href="#4-从-Underrun-中恢复" class="headerlink" title="4. 从 Underrun 中恢复"></a><strong>4. 从 Underrun 中恢复</strong></h4><p>即使做了以上所有优化，Underrun 仍然可能在极端情况下发生。当 snd_pcm_writei() 或相关函数因为 Underrun 返回错误码 -EPIPE 时，PCM 流会进入 SND_PCM_STATE_XRUN 状态，此时你无法再向其写入数据。</p>
-<p>你必须手动从这个状态中恢复：</p>
-<ul>
-<li>snd_pcm_prepare(pcm_handle)：<br>当检测到 Underrun 后，调用此函数。它会将流的状态从 SND_PCM_STATE_XRUN 重新设置为 SND_PCM_STATE_PREPARED，之后你就可以继续写入数据了。  </li>
-<li>snd_pcm_recover(pcm_handle, err, 0)：<br>这是一个更高级的恢复函数。它会检查错误码 err，如果是 -EPIPE (underrun) 或 -ESTRPIPE (suspend event)，它会尝试恢复流。如果成功，它会返回 0。这是一个更方便的选择，因为它能处理多种错误情况。</li>
-</ul>
-<p>**恢复代码示例 (在写入循环中)**：</p>
-<p>C</p>
-<p>while (frames_to_deliver &gt; 0) {<br>    &#x2F;&#x2F; … 准备你的音频数据到 buffer …</p>
-<pre><code>// 写入数据  
-err \= snd\_pcm\_writei(pcm\_handle, buffer, frames\_to\_write);
-
-if (err \&lt; 0) &#123;  
-    // 从错误中恢复  
-    // snd\_pcm\_recover 是一个方便的函数，它内部会处理 snd\_pcm\_prepare  
-    if (snd\_pcm\_recover(pcm\_handle, err, 0) \&lt; 0) &#123;  
-        fprintf(stderr, &quot;写入错误后无法恢复: %s\\n&quot;, snd\_strerror(err));  
-        exit(EXIT\_FAILURE);  
-    &#125;  
-    // 成功恢复，继续循环  
-    continue;   
-&#125;
-
-// 更新剩余待写入的帧数  
-frames\_to\_deliver \-= err;  
+<li><strong>查询缓冲区大小</strong>：<pre><code class="c">snd_pcm_uframes_t buffer_size;
+snd_pcm_hw_params_get_buffer_size(params, &amp;buffer_size);
+printf(&quot;Buffer size: %zd frames, Underrun time: %.2f ms\n&quot;,
+       buffer_size, (double)buffer_size / rate * 1000);
 </code></pre>
-<p>}</p>
-<p><strong>总结的排查和处理流程</strong>：</p>
-<ol>
-<li><strong>确认问题</strong>：你的应用是否真的遇到了 Underrun（检查 snd_pcm_writei 的返回值是否为 -EPIPE）。  </li>
-<li><strong>快速修复</strong>：尝试在 ALSA 配置中<strong>增大缓冲区和周期大小</strong>。这是最简单、最快的方法，但会增加延迟。  </li>
-<li><strong>代码审查</strong>：检查你的音频处理循环，确保它足够高效，没有阻塞操作。考虑使用生产者-消费者模型和专门的音频线程。  </li>
-<li><strong>添加恢复逻辑</strong>：在你的写入循环中，捕获 -EPIPE 错误，并调用 snd_pcm_recover() 或 snd_pcm_prepare() 来使音频流恢复正常。  </li>
-<li><strong>系统调优</strong>：如果以上方法仍然无法解决问题，特别是在高负载情况下，考虑为你的应用设置实时优先级。</li>
-</ol>
+</li>
+</ul>
 
     </div>
 
