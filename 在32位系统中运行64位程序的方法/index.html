@@ -59,6 +59,8 @@
   </noscript>
 <!-- hexo injector head_end start -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
 <!-- hexo injector head_end end --></head>
 
 <body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
@@ -118,7 +120,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#arm64-linux%E4%B8%AD%E8%BF%90%E8%A1%8C32%E4%BD%8D%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-number">1.</span> <span class="nav-text">arm64-linux中运行32位程序的方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD%E4%BE%9D%E8%B5%96%E5%8A%A8%E6%80%81%E5%BA%93"><span class="nav-number">1.1.</span> <span class="nav-text">下载依赖动态库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BB%BA%E7%AB%8B%E8%BD%AF%E9%93%BE%E6%8E%A5"><span class="nav-number">1.2.</span> <span class="nav-text">建立软链接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E5%85%B6%E4%BB%96%E5%BA%93"><span class="nav-number">1.3.</span> <span class="nav-text">添加其他库</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">2.</span> <span class="nav-text">总结</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#arm%E5%90%84%E6%9E%B6%E6%9E%84%E6%94%AF%E6%8C%81%E7%9A%84%E7%A8%8B%E5%BA%8F%E4%BD%8D%E6%95%B0"><span class="nav-number">2.1.</span> <span class="nav-text">arm各架构支持的程序位数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E7%A8%8B%E5%BA%8F%E4%BE%9D%E8%B5%96%E5%BA%93%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-number">2.2.</span> <span class="nav-text">查看程序依赖库的方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8file%E5%91%BD%E4%BB%A4%E6%9F%A5%E7%9C%8B"><span class="nav-number">2.2.1.</span> <span class="nav-text">使用file命令查看</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8ldd%E5%91%BD%E4%BB%A4"><span class="nav-number">2.2.2.</span> <span class="nav-text">使用ldd命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8objdump"><span class="nav-number">2.2.3.</span> <span class="nav-text">使用objdump</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8readelf"><span class="nav-number">2.2.4.</span> <span class="nav-text">使用readelf</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E6%89%BE%E6%96%87%E4%BB%B6%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-number">2.3.</span> <span class="nav-text">查找文件的方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8find%E5%91%BD%E4%BB%A4"><span class="nav-number">2.3.1.</span> <span class="nav-text">使用find命令</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E5%8A%A8%E6%80%81%E9%93%BE%E6%8E%A5%E7%9B%AE%E5%BD%95%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-number">2.4.</span> <span class="nav-text">添加动态链接目录的方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%B4%E6%97%B6%E6%B7%BB%E5%8A%A0"><span class="nav-number">2.4.1.</span> <span class="nav-text">临时添加</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B0%B8%E4%B9%85%E6%B7%BB%E5%8A%A0"><span class="nav-number">2.4.2.</span> <span class="nav-text">永久添加</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%8D%E5%88%B6%E6%96%87%E4%BB%B6%E5%88%B0%E7%9B%B8%E5%BA%94%E8%B7%AF%E5%BE%84"><span class="nav-number">2.4.2.1.</span> <span class="nav-text">复制文件到相应路径</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E8%BD%AF%E9%93%BE%E6%8E%A5"><span class="nav-number">2.4.2.2.</span> <span class="nav-text">创建软链接</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E7%B3%BB%E7%BB%9F%E6%96%87%E4%BB%B6"><span class="nav-number">2.4.2.3.</span> <span class="nav-text">修改系统文件</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">arm64-linux中运行32位程序的方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD%E4%BE%9D%E8%B5%96%E5%8A%A8%E6%80%81%E5%BA%93"><span class="nav-number">1.1.</span> <span class="nav-text">下载依赖动态库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BB%BA%E7%AB%8B%E8%BD%AF%E9%93%BE%E6%8E%A5"><span class="nav-number">1.2.</span> <span class="nav-text">建立软链接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E5%85%B6%E4%BB%96%E5%BA%93"><span class="nav-number">1.3.</span> <span class="nav-text">添加其他库</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">总结</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#arm%E5%90%84%E6%9E%B6%E6%9E%84%E6%94%AF%E6%8C%81%E7%9A%84%E7%A8%8B%E5%BA%8F%E4%BD%8D%E6%95%B0"><span class="nav-number">2.1.</span> <span class="nav-text">arm各架构支持的程序位数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E7%A8%8B%E5%BA%8F%E4%BE%9D%E8%B5%96%E5%BA%93%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-number">2.2.</span> <span class="nav-text">查看程序依赖库的方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8file%E5%91%BD%E4%BB%A4%E6%9F%A5%E7%9C%8B"><span class="nav-number">2.2.1.</span> <span class="nav-text">使用file命令查看</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8ldd%E5%91%BD%E4%BB%A4"><span class="nav-number">2.2.2.</span> <span class="nav-text">使用ldd命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8objdump"><span class="nav-number">2.2.3.</span> <span class="nav-text">使用objdump</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8readelf"><span class="nav-number">2.2.4.</span> <span class="nav-text">使用readelf</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E6%89%BE%E6%96%87%E4%BB%B6%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-number">2.3.</span> <span class="nav-text">查找文件的方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8find%E5%91%BD%E4%BB%A4"><span class="nav-number">2.3.1.</span> <span class="nav-text">使用find命令</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E5%8A%A8%E6%80%81%E9%93%BE%E6%8E%A5%E7%9B%AE%E5%BD%95%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-number">2.4.</span> <span class="nav-text">添加动态链接目录的方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%B4%E6%97%B6%E6%B7%BB%E5%8A%A0"><span class="nav-number">2.4.1.</span> <span class="nav-text">临时添加</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B0%B8%E4%B9%85%E6%B7%BB%E5%8A%A0"><span class="nav-number">2.4.2.</span> <span class="nav-text">永久添加</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%8D%E5%88%B6%E6%96%87%E4%BB%B6%E5%88%B0%E7%9B%B8%E5%BA%94%E8%B7%AF%E5%BE%84"><span class="nav-number">2.4.2.1.</span> <span class="nav-text">复制文件到相应路径</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E8%BD%AF%E9%93%BE%E6%8E%A5"><span class="nav-number">2.4.2.2.</span> <span class="nav-text">创建软链接</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E7%B3%BB%E7%BB%9F%E6%96%87%E4%BB%B6"><span class="nav-number">2.4.2.3.</span> <span class="nav-text">修改系统文件</span></a></li></ol></li></ol></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -227,31 +229,35 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><h1 id="arm64-linux中运行32位程序的方法"><a href="#arm64-linux中运行32位程序的方法" class="headerlink" title="arm64-linux中运行32位程序的方法"></a>arm64-linux中运行32位程序的方法</h1><p>在部署32位程序到64位系统时，运行主程序出现如下症状：</p>
+    <div class="post-body" itemprop="articleBody"><h1>arm64-linux中运行32位程序的方法</h1>
+<p>在部署32位程序到64位系统时，运行主程序出现如下症状：</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-bash: ./voix: No such file or directory</span><br></pre></td></tr></table></figure>
 <p>但是在目录下存在这个文件，查阅属性：</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FILE voix</span><br></pre></td></tr></table></figure>
-<p>发现动态链接了ld-linux-armhf.so.3这个32位的库，而系统中没有，<br>再查看一下其他的依赖：</p>
+<p>发现动态链接了ld-linux-armhf.so.3这个32位的库，而系统中没有，再查看一下其他的依赖：</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">objdump -x voix | grep NEEDED</span><br></pre></td></tr></table></figure>
 <p>暂时没发现其他的问题</p>
-<h2 id="下载依赖动态库"><a href="#下载依赖动态库" class="headerlink" title="下载依赖动态库"></a>下载依赖动态库</h2><p>据之前的交叉编译经验，这种不同架构的运行时库，一般都集成在相应的交叉编译工具包中，故直接安装32位的交叉编译工具</p>
+<h2 id="下载依赖动态库">下载依赖动态库</h2>
+<p>据之前的交叉编译经验，这种不同架构的运行时库，一般都集成在相应的交叉编译工具包中，故直接安装32位的交叉编译工具</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt install crossbuild-essential-armhf</span><br></pre></td></tr></table></figure>
-<p>一般相应的库都安装在&#x2F;usr目录下，找到对应的目录，并进入，所需的库一般在&#x2F;usr&#x2F;arm-linux-gnueabihf&#x2F;lib目录下。</p>
-<h2 id="建立软链接"><a href="#建立软链接" class="headerlink" title="建立软链接"></a>建立软链接</h2><p>在根目录下建立lib32目录，将&#x2F;usr&#x2F;arm-linux-gnueabihf&#x2F;lib都复制进去（只复制ld-linux-armhf.so.3）也行，但是为了后面使用起来方便，这里就全复制进去了。</p>
+<p>一般相应的库都安装在/usr目录下，找到对应的目录，并进入，所需的库一般在/usr/arm-linux-gnueabihf/lib目录下。</p>
+<h2 id="建立软链接">建立软链接</h2>
+<p>在根目录下建立lib32目录，将/usr/arm-linux-gnueabihf/lib都复制进去（只复制ld-linux-armhf.so.3）也行，但是为了后面使用起来方便，这里就全复制进去了。</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> -r /usr/arm-linux-gnueabihf/lib/* /lib32/</span><br></pre></td></tr></table></figure>
-
-<p>进入&#x2F;lib目录，建立软链接：</p>
+<p>进入/lib目录，建立软链接：</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> <span class="built_in">ln</span> -s /lib32/ld-linux-armhf.so.3 /lib/ld-linux-armhf.so.3</span><br></pre></td></tr></table></figure>
 <p>ln -s命令的用法是</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ln</span> -s [<span class="built_in">source</span>] [dis]</span><br></pre></td></tr></table></figure>
 <p>含义是，dis文件软链接到source文件，即在dis目录创建一个文件，链接到source</p>
-<h2 id="添加其他库"><a href="#添加其他库" class="headerlink" title="添加其他库"></a>添加其他库</h2><p>再次运行，发现还是找不到一个库libdl.so，先在根目录下搜索一下刚才安装上了没有</p>
+<h2 id="添加其他库">添加其他库</h2>
+<p>再次运行，<a target="_blank" rel="noopener" href="http://xn--libdl-fg1h4c7k865ad9dx32b02j85l1t1cfj2f.so">发现还是找不到一个库libdl.so</a>，先在根目录下搜索一下刚才安装上了没有</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> find / -name libdl.so</span><br></pre></td></tr></table></figure>
-<p>搜索完后发现找到了，位于&#x2F;usr&#x2F;arm-linux-gnueabihf&#x2F;lib&#x2F;libdl.so，那直接添加即可，这次使用临时添加的方式</p>
+<p>搜索完后发现找到了，位于/usr/arm-linux-gnueabihf/lib/libdl.so，那直接添加即可，这次使用临时添加的方式</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> LD_LIBRARY_PATH=/usr/arm-linux-gnueabihf/lib</span><br></pre></td></tr></table></figure>
-
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>在遇到一个程序在当前系统下无法运行时，先判断当前硬件和系统是否支持此格式的程序运行，如果支持，再去查找相应的库，并完成安装和链接</p>
-<h2 id="arm各架构支持的程序位数"><a href="#arm各架构支持的程序位数" class="headerlink" title="arm各架构支持的程序位数"></a>arm各架构支持的程序位数</h2><table>
+<h1>总结</h1>
+<p>在遇到一个程序在当前系统下无法运行时，先判断当前硬件和系统是否支持此格式的程序运行，如果支持，再去查找相应的库，并完成安装和链接</p>
+<h2 id="arm各架构支持的程序位数">arm各架构支持的程序位数</h2>
+<table>
 <thead>
 <tr>
 <th>架构</th>
@@ -259,7 +265,8 @@
 <th>uname -a中的显示</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>armv8</td>
 <td>64位，32位</td>
 <td>aarch64</td>
@@ -269,24 +276,41 @@
 <td>32位</td>
 <td>armv7,armv7l，或armvX(X为架构数)</td>
 </tr>
-</tbody></table>
-<h2 id="查看程序依赖库的方法"><a href="#查看程序依赖库的方法" class="headerlink" title="查看程序依赖库的方法"></a>查看程序依赖库的方法</h2><h3 id="使用file命令查看"><a href="#使用file命令查看" class="headerlink" title="使用file命令查看"></a>使用file命令查看</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">file <span class="built_in">exec</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="使用ldd命令"><a href="#使用ldd命令" class="headerlink" title="使用ldd命令"></a>使用ldd命令</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ldd [<span class="built_in">exec</span>]</span><br></pre></td></tr></table></figure>
-<h3 id="使用objdump"><a href="#使用objdump" class="headerlink" title="使用objdump"></a>使用objdump</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">objdump -x [<span class="built_in">exec</span>] | grep NEEDED</span><br></pre></td></tr></table></figure>
-<h3 id="使用readelf"><a href="#使用readelf" class="headerlink" title="使用readelf"></a>使用readelf</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">readelf -d [<span class="built_in">exec</span>]</span><br></pre></td></tr></table></figure>
-<h2 id="查找文件的方法"><a href="#查找文件的方法" class="headerlink" title="查找文件的方法"></a>查找文件的方法</h2><h3 id="使用find命令"><a href="#使用find命令" class="headerlink" title="使用find命令"></a>使用find命令</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find [<span class="built_in">dir</span>] -name [filename]</span><br></pre></td></tr></table></figure>
+</tbody>
+</table>
+<h2 id="查看程序依赖库的方法">查看程序依赖库的方法</h2>
+<h3 id="使用file命令查看">使用file命令查看</h3>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">file <span class="built_in">exec</span></span><br></pre></td></tr></table></figure>
+<h3 id="使用ldd命令">使用ldd命令</h3>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ldd [<span class="built_in">exec</span>]</span><br></pre></td></tr></table></figure>
+<h3 id="使用objdump">使用objdump</h3>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">objdump -x [<span class="built_in">exec</span>] | grep NEEDED</span><br></pre></td></tr></table></figure>
+<h3 id="使用readelf">使用readelf</h3>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">readelf -d [<span class="built_in">exec</span>]</span><br></pre></td></tr></table></figure>
+<h2 id="查找文件的方法">查找文件的方法</h2>
+<h3 id="使用find命令">使用find命令</h3>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find [<span class="built_in">dir</span>] -name [filename]</span><br></pre></td></tr></table></figure>
 <p>含义为在dir目录下递归查找名字为filename的文件</p>
-<h2 id="添加动态链接目录的方法"><a href="#添加动态链接目录的方法" class="headerlink" title="添加动态链接目录的方法"></a>添加动态链接目录的方法</h2><h3 id="临时添加"><a href="#临时添加" class="headerlink" title="临时添加"></a>临时添加</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> LD_LIBRARY_PATH=/path/to/library1:/path/to/library2</span><br></pre></td></tr></table></figure>
+<h2 id="添加动态链接目录的方法">添加动态链接目录的方法</h2>
+<h3 id="临时添加">临时添加</h3>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> LD_LIBRARY_PATH=/path/to/library1:/path/to/library2</span><br></pre></td></tr></table></figure>
 <p>将目录添加到环境变量LD_LIBRARY_PATH中，多个路径用冒号分开，这个方式只对当前shell有效，并且有时候不好用</p>
-<h3 id="永久添加"><a href="#永久添加" class="headerlink" title="永久添加"></a>永久添加</h3><h4 id="复制文件到相应路径"><a href="#复制文件到相应路径" class="headerlink" title="复制文件到相应路径"></a>复制文件到相应路径</h4><p>一般将库文件放到系统默认路径&#x2F;lib或&#x2F;usr&#x2F;lib下，但是有时候会造成冲突</p>
-<h4 id="创建软链接"><a href="#创建软链接" class="headerlink" title="创建软链接"></a>创建软链接</h4><p>将库文件放到其他路径下，然后在&#x2F;lib路径下使用ln -s创建软链接</p>
-<h4 id="修改系统文件"><a href="#修改系统文件" class="headerlink" title="修改系统文件"></a>修改系统文件</h4><p>修改系统文件&#x2F;etc&#x2F;ld.so.conf</p>
-<p>在&#x2F;etc&#x2F;ld.so.conf文件中指定了默认的动态链接库查找路径，我的&#x2F;etc&#x2F;ld.so.conf文件内容是这样的include &#x2F;etc&#x2F;ld.so.conf.d&#x2F;*.conf。也就是说它间接的指定了定义路径的文件，我们只需要把需要的路径加到&#x2F;etc&#x2F;ld.so.conf.d目录下的任何一个文件中，再运行ldconfig就可以了，但为了容易理解，最好是找一个相关的文件，或者重新建立一个文件，把需要添加的路径写入然后运行ldconfig</p>
+<h3 id="永久添加">永久添加</h3>
+<h4 id="复制文件到相应路径">复制文件到相应路径</h4>
+<p>一般将库文件放到系统默认路径/lib或/usr/lib下，但是有时候会造成冲突</p>
+<h4 id="创建软链接">创建软链接</h4>
+<p>将库文件放到其他路径下，然后在/lib路径下使用ln -s创建软链接</p>
+<h4 id="修改系统文件">修改系统文件</h4>
+<p>修改系统文件/etc/ld.so.conf</p>
+<p>在/etc/ld.so.conf文件中指定了默认的动态链接库查找路径，我的/etc/ld.so.conf文件内容是这样的include /etc/ld.so.conf.d/*.conf。也就是说它间接的指定了定义路径的文件，我们只需要把需要的路径加到/etc/ld.so.conf.d目录下的任何一个文件中，再运行ldconfig就可以了，但为了容易理解，最好是找一个相关的文件，或者重新建立一个文件，把需要添加的路径写入然后运行ldconfig</p>
 <p>ldconfig几个需要注意的地方</p>
 <ol>
-<li>往&#x2F;lib和&#x2F;usr&#x2F;lib里面加东西，是不用修改&#x2F;etc&#x2F;ld.so.conf的，但是完了之后要调一下ldconfig，不然这个library会找不到</li>
-<li>想往上面两个目录以外加东西的时候，一定要修改&#x2F;etc&#x2F;ld.so.conf，然后再调用ldconfig，不然也会找不到</li>
+<li class="lvl-3">
+<p>往/lib和/usr/lib里面加东西，是不用修改/etc/ld.so.conf的，但是完了之后要调一下ldconfig，不然这个library会找不到</p>
+</li>
+<li class="lvl-3">
+<p>想往上面两个目录以外加东西的时候，一定要修改/etc/ld.so.conf，然后再调用ldconfig，不然也会找不到</p>
+</li>
 </ol>
 
     </div>

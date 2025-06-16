@@ -58,6 +58,8 @@
   </noscript>
 <!-- hexo injector head_end start -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
 <!-- hexo injector head_end end --></head>
 
 <body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
@@ -117,7 +119,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85adb"><span class="nav-number">1.</span> <span class="nav-text">安装adb</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95adb%E5%8A%9F%E8%83%BD"><span class="nav-number">2.</span> <span class="nav-text">测试adb功能</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E6%89%93%E5%8D%A1%E7%A8%8B%E5%BA%8F"><span class="nav-number">3.</span> <span class="nav-text">运行打卡程序</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%91%E8%8E%93%E6%B4%BE%EF%BC%88debian%E7%B3%BB%E7%BB%9F%EF%BC%89%E4%BF%AE%E6%94%B9%E6%97%B6%E5%8C%BA"><span class="nav-number">3.1.</span> <span class="nav-text">树莓派（debian系统）修改时区</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%91%E8%8E%93%E6%B4%BE%EF%BC%88debian%E7%B3%BB%E7%BB%9F%EF%BC%89%E4%BF%AE%E6%94%B9%E6%97%B6%E9%97%B4"><span class="nav-number">3.2.</span> <span class="nav-text">树莓派（debian系统）修改时间</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#adb-input%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4"><span class="nav-number">4.</span> <span class="nav-text">adb input常用指令</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">安装adb</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">测试adb功能</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">3.</span> <span class="nav-text">运行打卡程序</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%91%E8%8E%93%E6%B4%BE%EF%BC%88debian%E7%B3%BB%E7%BB%9F%EF%BC%89%E4%BF%AE%E6%94%B9%E6%97%B6%E5%8C%BA"><span class="nav-number">3.1.</span> <span class="nav-text">树莓派（debian系统）修改时区</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%91%E8%8E%93%E6%B4%BE%EF%BC%88debian%E7%B3%BB%E7%BB%9F%EF%BC%89%E4%BF%AE%E6%94%B9%E6%97%B6%E9%97%B4"><span class="nav-number">3.2.</span> <span class="nav-text">树莓派（debian系统）修改时间</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">4.</span> <span class="nav-text">adb input常用指令</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -226,34 +228,42 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><h1 id="安装adb"><a href="#安装adb" class="headerlink" title="安装adb"></a>安装adb</h1><p>首先需要一台能安装adb的设备，我这里使用的是树莓派4B，其他的Windows或Linux设备也可以。</p>
+    <div class="post-body" itemprop="articleBody"><h1>安装adb</h1>
+<p>首先需要一台能安装adb的设备，我这里使用的是树莓派4B，其他的Windows或Linux设备也可以。</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get update</span><br><span class="line"><span class="built_in">sudo</span> apt-get install -y android-tools-adb android-tools-fastboot</span><br></pre></td></tr></table></figure>
 <p>安装好后在命令行中输入adb，如果有非报错输出，说明安装成功</p>
-<h1 id="测试adb功能"><a href="#测试adb功能" class="headerlink" title="测试adb功能"></a>测试adb功能</h1><p>将安卓手机打开开发者模式，然后打开usb调试功能，用数据线连接到安装好adb的设备<br>输入以下命令</p>
+<h1>测试adb功能</h1>
+<p>将安卓手机打开开发者模式，然后打开usb调试功能，用数据线连接到安装好adb的设备输入以下命令</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb devices -l </span><br></pre></td></tr></table></figure>
 <p>如果不为空，并且能看到设备序列号，说明手机成功连接，并且能与adb通信</p>
 <p>再输入以下命令，尝试启动钉钉。</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb shell am start -n com.alibaba.android.rimet/com.alibaba.android.rimet.biz.LaunchHomeActivity</span><br></pre></td></tr></table></figure>
 <p>如果输入命令后手机上自动启动了钉钉，说明成功</p>
-<h1 id="运行打卡程序"><a href="#运行打卡程序" class="headerlink" title="运行打卡程序"></a>运行打卡程序</h1><p>下面需要进行最后的设置：</p>
+<h1>运行打卡程序</h1>
+<p>下面需要进行最后的设置：</p>
 <ol>
-<li>确保钉钉开启了自动打卡功能，即在打开钉钉程序后，能够自动完成打卡，因为我们的脚本只能实现定点调用钉钉程序的功能，并不能执行其他操作</li>
-<li>确保系统时间准确，树莓派可以用以下方法修改时间和时区：</li>
+<li class="lvl-3">
+<p>确保钉钉开启了自动打卡功能，即在打开钉钉程序后，能够自动完成打卡，因为我们的脚本只能实现定点调用钉钉程序的功能，并不能执行其他操作</p>
+</li>
+<li class="lvl-3">
+<p>确保系统时间准确，树莓派可以用以下方法修改时间和时区：</p>
+</li>
 </ol>
-<h2 id="树莓派（debian系统）修改时区"><a href="#树莓派（debian系统）修改时区" class="headerlink" title="树莓派（debian系统）修改时区"></a>树莓派（debian系统）修改时区</h2><p>输入命令</p>
+<h2 id="树莓派（debian系统）修改时区">树莓派（debian系统）修改时区</h2>
+<p>输入命令</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dpkg-reconfigure tzdata</span><br></pre></td></tr></table></figure>
 <p>然后在界面中选择对应的时区即可，中国一般选shanghai</p>
-<h2 id="树莓派（debian系统）修改时间"><a href="#树莓派（debian系统）修改时间" class="headerlink" title="树莓派（debian系统）修改时间"></a>树莓派（debian系统）修改时间</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get install ntpdate</span><br><span class="line"><span class="built_in">sudo</span> ntpdate -u cn.pool.ntp.org  </span><br></pre></td></tr></table></figure>
+<h2 id="树莓派（debian系统）修改时间">树莓派（debian系统）修改时间</h2>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get install ntpdate</span><br><span class="line"><span class="built_in">sudo</span> ntpdate -u cn.pool.ntp.org  </span><br></pre></td></tr></table></figure>
 <p>然后输入date命令查看系统时间即可</p>
 <p>完成上面的设置后，运行下面这个脚本即可，设备到指定的时间会自动调起钉钉进行打卡。</p>
 <p>注意钉钉有判断作弊机制，因此打卡前的几个操作之间的延时一定不能少。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"><span class="keyword">import</span> os,subprocess</span><br><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line">PATH = <span class="keyword">lambda</span> p: os.path.abspath(p)</span><br><span class="line"></span><br><span class="line">isScreenshoting = <span class="literal">False</span></span><br><span class="line"><span class="comment">#打卡</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">onWork</span>():</span><br><span class="line">    os.system(<span class="string">&#x27;adb shell input keyevent 26&#x27;</span>) <span class="comment"># 模拟按电源键亮屏</span></span><br><span class="line">    time.sleep(<span class="number">0.3</span>)</span><br><span class="line">    os.system(<span class="string">&#x27;adb shell input swipe 300 1000 300 500&#x27;</span>) <span class="comment"># 模拟滑动解锁</span></span><br><span class="line">    time.sleep(<span class="number">0.5</span>)</span><br><span class="line"></span><br><span class="line">    os.system(<span class="string">&#x27;adb shell am start -n com.alibaba.android.rimet/com.alibaba.android.rimet.biz.LaunchHomeActivity&#x27;</span>)</span><br><span class="line">    <span class="comment"># 等15秒后退出app并关闭屏幕</span></span><br><span class="line">    time.sleep(<span class="number">15</span>)</span><br><span class="line">    os.system(<span class="string">&#x27;adb shell input keyevent 3&#x27;</span>) <span class="comment"># 模拟按home键退出app</span></span><br><span class="line"></span><br><span class="line">    time.sleep(<span class="number">0.8</span>)</span><br><span class="line">    os.system(<span class="string">&#x27;adb shell input keyevent 26&#x27;</span>) <span class="comment"># 模拟按电源键关闭屏幕</span></span><br><span class="line">    <span class="comment"># 打卡完毕</span></span><br><span class="line">    tend = threading.Thread(target=enddk, args=())</span><br><span class="line">    tend.start()</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">enddk</span>():</span><br><span class="line">    <span class="comment"># 通知你想通知的地方</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;end&quot;</span>)</span><br><span class="line">    time.sleep(<span class="number">10</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    <span class="comment"># 设置多几个打卡时间</span></span><br><span class="line">    dakaTime = [<span class="string">&#x27;07:34:02&#x27;</span>, <span class="string">&#x27;07:35:12&#x27;</span>, <span class="string">&#x27;06:38:34&#x27;</span>]</span><br><span class="line">    nextDakaTime = <span class="literal">None</span></span><br><span class="line">    cnt = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            <span class="comment"># 看有没有设备连接</span></span><br><span class="line">            device = os.popen(<span class="string">&#x27;adb devices -l&#x27;</span>).read()</span><br><span class="line">            out = device.split(<span class="string">&#x27; &#x27;</span>)</span><br><span class="line">            currentTime = time.strftime(<span class="string">&quot;%H:%M:%S&quot;</span>, time.localtime())</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> nextDakaTime == <span class="literal">None</span>:</span><br><span class="line">                r = random.randint(<span class="number">0</span>, <span class="built_in">len</span>(dakaTime) - <span class="number">1</span>)</span><br><span class="line">                nextDakaTime = dakaTime[r]</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&#x27;&#123;&quot;action&quot;:&quot;device&quot;,&quot;data&quot;:&quot;%s,%s,%s&quot;&#125; CurrentTime: %s Next Daka time: %s&#x27;</span> % (out[<span class="number">11</span>], out[<span class="number">12</span>], out[<span class="number">13</span>], currentTime,nextDakaTime), end = <span class="string">&#x27;\r&#x27;</span>)</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> currentTime == nextDakaTime:</span><br><span class="line">                <span class="comment"># 开个线程打卡</span></span><br><span class="line">                t = threading.Thread(target=onWork, args=())</span><br><span class="line">                t.setDaemon(<span class="literal">True</span>)</span><br><span class="line">                t.start()</span><br><span class="line">        <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;something wrong:&quot;</span>, e)</span><br><span class="line">        time.sleep(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
-
-<h1 id="adb-input常用指令"><a href="#adb-input常用指令" class="headerlink" title="adb input常用指令"></a>adb input常用指令</h1><p>使用adb shell input加一些指令，可以模拟输入设备的操作，如点击，滑动，按键等，具体用法如下：</p>
+<h1>adb input常用指令</h1>
+<p>使用adb shell input加一些指令，可以模拟输入设备的操作，如点击，滑动，按键等，具体用法如下：</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">input [&lt;<span class="built_in">source</span>&gt;] &lt;<span class="built_in">command</span>&gt; [&lt;args&gt;]</span><br><span class="line">      text &lt;string&gt; (Default: touchscreen)</span><br><span class="line">      keyevent [--longpress] &lt;key code number or name&gt; ... (Default: keyboard)</span><br><span class="line">      tap &lt;x&gt; &lt;y&gt; (Default: touchscreen)</span><br><span class="line">      swipe &lt;x1&gt; &lt;y1&gt; &lt;x2&gt; &lt;y2&gt; [duration(ms)] (Default: touchscreen)</span><br><span class="line">      press (Default: trackball)</span><br><span class="line">      roll &lt;dx&gt; &lt;dy&gt; (Default: trackball)</span><br></pre></td></tr></table></figure>
 <p>如：</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">adb shell input tap 1000 1000 <span class="comment"># 点击坐标为1000 1000的点</span></span><br><span class="line">adb shell input swipe 1000 500 1000 1000 <span class="comment"># 从坐标1000 500滑动到1000 1000</span></span><br><span class="line">adb shell input keyevent 26 <span class="comment"># 按下电源键</span></span><br><span class="line">adb shell text input <span class="comment"># 在光标处输入文本text</span></span><br></pre></td></tr></table></figure>
-
 <p>在指令keyevent中，一些event的含义如下表：</p>
 <table>
 <thead>
@@ -262,7 +272,8 @@
 <th>含义</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>3</td>
 <td>HOME 键</td>
 </tr>
@@ -304,7 +315,7 @@
 </tr>
 <tr>
 <td>85</td>
-<td>播放&#x2F;暂停</td>
+<td>播放/暂停</td>
 </tr>
 <tr>
 <td>86</td>
@@ -386,7 +397,8 @@
 <td>276</td>
 <td>如果没有 wakelock 则让系统休眠</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 
     </div>
 

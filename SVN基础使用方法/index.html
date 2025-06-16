@@ -57,6 +57,8 @@
   </noscript>
 <!-- hexo injector head_end start -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
 <!-- hexo injector head_end end --></head>
 
 <body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
@@ -116,7 +118,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#svn%E7%9A%84%E5%AE%89%E8%A3%85"><span class="nav-number">1.</span> <span class="nav-text">svn的安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ubuntu"><span class="nav-number">1.1.</span> <span class="nav-text">ubuntu</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#windows"><span class="nav-number">1.2.</span> <span class="nav-text">windows</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E7%AB%AF%E9%85%8D%E7%BD%AE"><span class="nav-number">2.</span> <span class="nav-text">服务端配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E4%BB%93%E5%BA%93"><span class="nav-number">2.1.</span> <span class="nav-text">创建仓库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E7%94%A8%E6%88%B7%E5%B9%B6%E5%88%86%E9%85%8D%E6%9D%83%E9%99%90"><span class="nav-number">2.2.</span> <span class="nav-text">创建用户并分配权限</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%87%E5%AE%9A%E7%94%A8%E6%88%B7%E4%BB%A5%E5%8F%8A%E6%9D%83%E9%99%90%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">2.2.1.</span> <span class="nav-text">指定用户以及权限数据库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E7%94%A8%E6%88%B7"><span class="nav-number">2.2.2.</span> <span class="nav-text">创建用户</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E6%9D%83%E9%99%90%E4%BB%A5%E5%8F%8A%E7%94%A8%E6%88%B7%E7%BB%84"><span class="nav-number">2.2.3.</span> <span class="nav-text">设置权限以及用户组</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E6%9C%8D%E5%8A%A1"><span class="nav-number">2.3.</span> <span class="nav-text">启动服务</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">客户端使用方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%BC%E5%85%A5%E6%96%87%E4%BB%B6"><span class="nav-number">3.1.</span> <span class="nav-text">导入文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E5%BF%BD%E7%95%A5%E5%86%85%E5%AE%B9"><span class="nav-number">3.1.1.</span> <span class="nav-text">设置忽略内容</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Linux"><span class="nav-number">3.1.1.1.</span> <span class="nav-text">Linux</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Windows"><span class="nav-number">3.1.1.2.</span> <span class="nav-text">Windows</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8E%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%9B%B4%E6%96%B0%E6%96%87%E4%BB%B6"><span class="nav-number">3.2.</span> <span class="nav-text">从服务器更新文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8F%90%E4%BA%A4%E6%9B%B4%E6%94%B9%E5%88%B0%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">3.3.</span> <span class="nav-text">提交更改到服务器</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B3%E4%BA%8Egit"><span class="nav-number">4.</span> <span class="nav-text">关于git</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">svn的安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ubuntu"><span class="nav-number">1.1.</span> <span class="nav-text">ubuntu</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#windows"><span class="nav-number">1.2.</span> <span class="nav-text">windows</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">服务端配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E4%BB%93%E5%BA%93"><span class="nav-number">2.1.</span> <span class="nav-text">创建仓库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E7%94%A8%E6%88%B7%E5%B9%B6%E5%88%86%E9%85%8D%E6%9D%83%E9%99%90"><span class="nav-number">2.2.</span> <span class="nav-text">创建用户并分配权限</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%87%E5%AE%9A%E7%94%A8%E6%88%B7%E4%BB%A5%E5%8F%8A%E6%9D%83%E9%99%90%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">2.2.1.</span> <span class="nav-text">指定用户以及权限数据库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E7%94%A8%E6%88%B7"><span class="nav-number">2.2.2.</span> <span class="nav-text">创建用户</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E6%9D%83%E9%99%90%E4%BB%A5%E5%8F%8A%E7%94%A8%E6%88%B7%E7%BB%84"><span class="nav-number">2.2.3.</span> <span class="nav-text">设置权限以及用户组</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E6%9C%8D%E5%8A%A1"><span class="nav-number">2.3.</span> <span class="nav-text">启动服务</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">3.</span> <span class="nav-text">客户端使用方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%BC%E5%85%A5%E6%96%87%E4%BB%B6"><span class="nav-number">3.1.</span> <span class="nav-text">导入文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E5%BF%BD%E7%95%A5%E5%86%85%E5%AE%B9"><span class="nav-number">3.1.1.</span> <span class="nav-text">设置忽略内容</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Linux"><span class="nav-number">3.1.1.1.</span> <span class="nav-text">Linux</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Windows"><span class="nav-number">3.1.1.2.</span> <span class="nav-text">Windows</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8E%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%9B%B4%E6%96%B0%E6%96%87%E4%BB%B6"><span class="nav-number">3.2.</span> <span class="nav-text">从服务器更新文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8F%90%E4%BA%A4%E6%9B%B4%E6%94%B9%E5%88%B0%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">3.3.</span> <span class="nav-text">提交更改到服务器</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">4.</span> <span class="nav-text">关于git</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -225,62 +227,84 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><h1 id="svn的安装"><a href="#svn的安装" class="headerlink" title="svn的安装"></a>svn的安装</h1><h2 id="ubuntu"><a href="#ubuntu" class="headerlink" title="ubuntu"></a>ubuntu</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get install subversion</span><br></pre></td></tr></table></figure>
-
-<h2 id="windows"><a href="#windows" class="headerlink" title="windows"></a>windows</h2><p>windows上一般使用图形界面，比如TortoriseSVN，去<a target="_blank" rel="noopener" href="https://tortoisesvn.net/downloads.html">官网</a>下载之后安装即可。</p>
-<h1 id="服务端配置"><a href="#服务端配置" class="headerlink" title="服务端配置"></a>服务端配置</h1><p>一般使用linux作为服务端，windows的教程后续再补。</p>
-<h2 id="创建仓库"><a href="#创建仓库" class="headerlink" title="创建仓库"></a>创建仓库</h2><p>首先为仓库新建一个目录，负责存储仓库相关的文件（不直接存储项目文件，只存储配置和数据库相关的文件）</p>
+    <div class="post-body" itemprop="articleBody"><h1>svn的安装</h1>
+<h2 id="ubuntu">ubuntu</h2>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get install subversion</span><br></pre></td></tr></table></figure>
+<h2 id="windows">windows</h2>
+<p>windows上一般使用图形界面，比如TortoriseSVN，去<a target="_blank" rel="noopener" href="https://tortoisesvn.net/downloads.html">官网</a>下载之后安装即可。</p>
+<h1>服务端配置</h1>
+<p>一般使用linux作为服务端，windows的教程后续再补。</p>
+<h2 id="创建仓库">创建仓库</h2>
+<p>首先为仓库新建一个目录，负责存储仓库相关的文件（不直接存储项目文件，只存储配置和数据库相关的文件）</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> [<span class="built_in">dir</span>]</span><br></pre></td></tr></table></figure>
 <p>在之前创建的目录下新建一个svn仓库，其中dir替换成刚才创建的目录即可</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">svnadmin create [<span class="built_in">dir</span>]</span><br></pre></td></tr></table></figure>
-
 <p>进入svn目录，应该有如下结构：</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">project1/</span><br><span class="line">├── README.txt</span><br><span class="line">├── conf</span><br><span class="line">├── db</span><br><span class="line">├── format</span><br><span class="line">├── hooks</span><br><span class="line">└── locks</span><br></pre></td></tr></table></figure>
 <p>其中conf目录中含有设置该svn仓库的文件</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">project1/conf/</span><br><span class="line">├── authz</span><br><span class="line">├── hooks-env.tmpl</span><br><span class="line">├── passwd</span><br><span class="line">└── svnserve.conf</span><br></pre></td></tr></table></figure>
 <p>其中authz文件负责权限设置，passwd文件负责用户及用户组设置，svnserve.conf负责仓库本身的设置。</p>
-<h2 id="创建用户并分配权限"><a href="#创建用户并分配权限" class="headerlink" title="创建用户并分配权限"></a>创建用户并分配权限</h2><h3 id="指定用户以及权限数据库"><a href="#指定用户以及权限数据库" class="headerlink" title="指定用户以及权限数据库"></a>指定用户以及权限数据库</h3><p>首先打开svnserve.conf文件，该文件仅由一个 [general] 配置段组成，指定passwd文件和authz文件，并且配置匿名用户以及授权用户的权限，一般情况下将下面几项前面的”#”符号删除即可：</p>
+<h2 id="创建用户并分配权限">创建用户并分配权限</h2>
+<h3 id="指定用户以及权限数据库">指定用户以及权限数据库</h3>
+<p>首先打开svnserve.conf文件，该文件仅由一个 [general] 配置段组成，指定passwd文件和authz文件，并且配置匿名用户以及授权用户的权限，一般情况下将下面几项前面的&quot;#&quot;符号删除即可：</p>
 <figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">anon-access</span> <span class="operator">=</span> read</span><br><span class="line"><span class="attribute">auth-access</span> <span class="operator">=</span> write</span><br><span class="line"><span class="attribute">password-db</span> <span class="operator">=</span> passwd</span><br><span class="line"><span class="attribute">authz-db</span> <span class="operator">=</span> authz</span><br></pre></td></tr></table></figure>
-<ul>
-<li><p>anon-access: 控制非鉴权用户访问版本库的权限，取值范围为 “write”、”read” 和 “none”。 即 “write” 为可读可写，”read” 为只读，”none” 表示无访问权限，默认值：read。</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>anon-access: 控制非鉴权用户访问版本库的权限，取值范围为 “write”、“read” 和 “none”。 即 “write” 为可读可写，“read” 为只读，“none” 表示无访问权限，默认值：read。</p>
 </li>
-<li><p>auth-access: 控制鉴权用户访问版本库的权限。取值范围为 “write”、”read” 和 “none”。 即”write”为可读可写，”read”为只读，”none”表示无访问权限，默认值：write。</p>
+<li class="lvl-2">
+<p>auth-access: 控制鉴权用户访问版本库的权限。取值范围为 “write”、“read” 和 “none”。 即&quot;write&quot;为可读可写，&quot;read&quot;为只读，&quot;none&quot;表示无访问权限，默认值：write。</p>
 </li>
-<li><p>authz-db: 指定权限配置文件名，通过该文件可以实现以路径为基础的访问控制。 除非指定绝对路径，否则文件位置为相对conf目录的相对路径，默认值：authz。</p>
+<li class="lvl-2">
+<p>authz-db: 指定权限配置文件名，通过该文件可以实现以路径为基础的访问控制。 除非指定绝对路径，否则文件位置为相对conf目录的相对路径，默认值：authz。</p>
 </li>
-<li><p>passwd-db：指定用户数据配置文件名，通过该文件来管理用户和密码。除非指定绝对路径，否则文件位置为相对conf目录的相对路径，默认值：passwd。</p>
+<li class="lvl-2">
+<p>passwd-db：指定用户数据配置文件名，通过该文件来管理用户和密码。除非指定绝对路径，否则文件位置为相对conf目录的相对路径，默认值：passwd。</p>
 </li>
-<li><p>realm: 指定版本库的认证域，即在登录时提示的认证域名称。若两个版本库的认证域相同，建议使用相同的用户名口令数据文件。默认值：一个UUID(Universal Unique IDentifier，全局唯一标示)。</p>
+<li class="lvl-2">
+<p>realm: 指定版本库的认证域，即在登录时提示的认证域名称。若两个版本库的认证域相同，建议使用相同的用户名口令数据文件。默认值：一个UUID(Universal Unique IDentifier，全局唯一标示)。</p>
 </li>
 </ul>
-<h3 id="创建用户"><a href="#创建用户" class="headerlink" title="创建用户"></a>创建用户</h3><p>然后打开passwd文件，该文件仅由一个 [users] 配置段组成，格式为每一行一个用户，格式如下：</p>
+<h3 id="创建用户">创建用户</h3>
+<p>然后打开passwd文件，该文件仅由一个 [users] 配置段组成，格式为每一行一个用户，格式如下：</p>
 <figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">username</span> <span class="operator">=</span> passwd</span><br></pre></td></tr></table></figure>
-<p>注意添加的时候不要忘了删除”#”符号，否则添加的用户不会生效</p>
-<h3 id="设置权限以及用户组"><a href="#设置权限以及用户组" class="headerlink" title="设置权限以及用户组"></a>设置权限以及用户组</h3><p>打开authz文件，文件由一个 [groups] 配置段和若干个版本库路径权限段组成。<br>其中[groups]配置段负责指定用户组，格式如下：</p>
+<p>注意添加的时候不要忘了删除&quot;#&quot;符号，否则添加的用户不会生效</p>
+<h3 id="设置权限以及用户组">设置权限以及用户组</h3>
+<p>打开authz文件，文件由一个 [groups] 配置段和若干个版本库路径权限段组成。其中[groups]配置段负责指定用户组，格式如下：</p>
 <figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">group</span> <span class="title">= user1</span>, user2, user3 ...</span><br></pre></td></tr></table></figure>
-<p>其中group代表用户组名，后面的user为属于该用户组的用户。<br>版本库路径权限配置方法有两种：</p>
+<p>其中group代表用户组名，后面的user为属于该用户组的用户。版本库路径权限配置方法有两种：</p>
 <figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[版本库名:路径]</span></span><br><span class="line">user1 = rw</span><br><span class="line">group1 = r</span><br><span class="line">* = </span><br><span class="line">[路径]</span><br></pre></td></tr></table></figure>
 <p>如果使用版本库名:路径的方式进行配置，则该项下的配置对该版本库的相对路径生效，如果只使用路径，则该项下的所有配置对所有版本库的该路径都生效。</p>
-<p>每个配置项下面的配置格式为user&#x2F;group名称以及对应的权限，权限有rw（读写），r（只读）和不可读写（空白），如果使用正则符号*来代表全体用户，则除该配置项下指定的配置外，其他用户统一为此配置指定的权限，如上面配置中，除了user1和group1组中的用户，其他用户都看不见该路径。</p>
-<h2 id="启动服务"><a href="#启动服务" class="headerlink" title="启动服务"></a>启动服务</h2><p>使用如下命令启动</p>
+<p>每个配置项下面的配置格式为user/group名称以及对应的权限，权限有rw（读写），r（只读）和不可读写（空白），如果使用正则符号*来代表全体用户，则除该配置项下指定的配置外，其他用户统一为此配置指定的权限，如上面配置中，除了user1和group1组中的用户，其他用户都看不见该路径。</p>
+<h2 id="启动服务">启动服务</h2>
+<p>使用如下命令启动</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">svnserve -d -r [<span class="built_in">dir</span>]</span><br></pre></td></tr></table></figure>
 <p>其中-d代表后台执行，-r [dir]代表指定svn仓库路径为[dir]，如果dir下只有一个svn仓库，则该服务只运行一个仓库，即单仓库模式，如果dir下有多个仓库，则多个仓库都会启动，即为多仓库模式</p>
 <p>如果当前有正在运行的svn服务，需要先停止后再启动：</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">killall svnserve</span><br></pre></td></tr></table></figure>
-<h1 id="客户端使用方法"><a href="#客户端使用方法" class="headerlink" title="客户端使用方法"></a>客户端使用方法</h1><h2 id="导入文件"><a href="#导入文件" class="headerlink" title="导入文件"></a>导入文件</h2><p>使用import命令可以直接向仓库中导入文件</p>
+<h1>客户端使用方法</h1>
+<h2 id="导入文件">导入文件</h2>
+<p>使用import命令可以直接向仓库中导入文件</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">svn import [<span class="built_in">source</span>] [dest] --username <span class="built_in">uname</span> --password passwd -m <span class="string">&quot;New import&quot;</span></span><br><span class="line"></span><br><span class="line">svn import tree svn://ip/ --username <span class="built_in">uname</span> --password passwd -m <span class="string">&quot;New import&quot;</span></span><br></pre></td></tr></table></figure>
-<p>此命令含义为将source目录下的所有内容复制到svn仓库的dest目录下，–username和–password为用户名和密码，-m为本次提交的说明，方便团队其他成员查看更新了什么。<br>如示例命令就是将tree目录下的所有东西放到svn仓库根目录下，注意这样不会生成tree文件夹，如果想要保留tree文件夹，需要指定目录：</p>
+<p>此命令含义为将source目录下的所有内容复制到svn仓库的dest目录下，–username和–password为用户名和密码，-m为本次提交的说明，方便团队其他成员查看更新了什么。如示例命令就是将tree目录下的所有东西放到svn仓库根目录下，注意这样不会生成tree文件夹，如果想要保留tree文件夹，需要指定目录：</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">svn import tree svn://ip/tree --username <span class="built_in">uname</span> --password passwd -m <span class="string">&quot;New import&quot;</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="设置忽略内容"><a href="#设置忽略内容" class="headerlink" title="设置忽略内容"></a>设置忽略内容</h3><p>svn默认忽略.so,.a,.o等文件，如果想要用svn管理这些可执行文件，需要进行设置。</p>
-<h4 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h4><p>Linux下一般使用subversion命令行操作，直接修改配置文件即可</p>
+<h3 id="设置忽略内容">设置忽略内容</h3>
+<p><a target="_blank" rel="noopener" href="http://xn--svn-223fy85gi51agd2a.so">svn默认忽略.so</a>,.a,.o等文件，如果想要用svn管理这些可执行文件，需要进行设置。</p>
+<h4 id="Linux">Linux</h4>
+<p>Linux下一般使用subversion命令行操作，直接修改配置文件即可</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim ~/.subversion/config</span><br></pre></td></tr></table></figure>
 <p>打开配置文件后，将“global-ignores”配置项后不想忽略的内容删除即可。</p>
-<h4 id="Windows"><a href="#Windows" class="headerlink" title="Windows"></a>Windows</h4><p>参考<a target="_blank" rel="noopener" href="https://tortoisesvn.net/docs/release/TortoiseSVN_zh_CN/tsvn-dug-ignore.html">tortoisesvn文档</a>中第四章“忽略文件和目录”即可。</p>
-<h2 id="从服务器更新文件"><a href="#从服务器更新文件" class="headerlink" title="从服务器更新文件"></a>从服务器更新文件</h2><p>一般使用svn update命令来进行操作，参考<a target="_blank" rel="noopener" href="https://svnbook.red-bean.com/zh/1.8/svn.ref.svn.c.update.html">svn文档</a>相应章节即可</p>
-<h2 id="提交更改到服务器"><a href="#提交更改到服务器" class="headerlink" title="提交更改到服务器"></a>提交更改到服务器</h2><p>一般使用svn commit命令进行操作，参考<a target="_blank" rel="noopener" href="https://svnbook.red-bean.com/zh/1.8/svn.tour.cycle.html#svn.tour.cycle.commit">svn文档</a>相应章节即可。</p>
-<h1 id="关于git"><a href="#关于git" class="headerlink" title="关于git"></a>关于git</h1><p>如果想学习git，这有一个不错的<a target="_blank" rel="noopener" href="https://learngitbranching.js.org/?locale=zh_CN">网站</a></p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a target="_blank" rel="noopener" href="https://svnbook.red-bean.com/zh/1.8">Subversion官方文档</a><br><a target="_blank" rel="noopener" href="https://tortoisesvn.net/docs/release/TortoiseSVN_zh_CN/index.html">TortoiseSVN官方文档</a></p>
+<h4 id="Windows">Windows</h4>
+<p>参考<a target="_blank" rel="noopener" href="https://tortoisesvn.net/docs/release/TortoiseSVN_zh_CN/tsvn-dug-ignore.html">tortoisesvn文档</a>中第四章“忽略文件和目录”即可。</p>
+<h2 id="从服务器更新文件">从服务器更新文件</h2>
+<p>一般使用svn update命令来进行操作，参考<a target="_blank" rel="noopener" href="https://svnbook.red-bean.com/zh/1.8/svn.ref.svn.c.update.html">svn文档</a>相应章节即可</p>
+<h2 id="提交更改到服务器">提交更改到服务器</h2>
+<p>一般使用svn commit命令进行操作，参考<a target="_blank" rel="noopener" href="https://svnbook.red-bean.com/zh/1.8/svn.tour.cycle.html#svn.tour.cycle.commit">svn文档</a>相应章节即可。</p>
+<h1>关于git</h1>
+<p>如果想学习git，这有一个不错的<a target="_blank" rel="noopener" href="https://learngitbranching.js.org/?locale=zh_CN">网站</a></p>
+<h1>参考</h1>
+<p><a target="_blank" rel="noopener" href="https://svnbook.red-bean.com/zh/1.8">Subversion官方文档</a><br>
+<a target="_blank" rel="noopener" href="https://tortoisesvn.net/docs/release/TortoiseSVN_zh_CN/index.html">TortoiseSVN官方文档</a></p>
 
     </div>
 

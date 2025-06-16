@@ -66,6 +66,8 @@
   </noscript>
 <!-- hexo injector head_end start -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
 <!-- hexo injector head_end end --></head>
 
 <body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
@@ -234,59 +236,80 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><p>一个完整的Linux系统由内核，文件系统和应用程序组成，本文使用OpenEuler内核和BusyBox工具箱为例，构建了一个Linux-5.10内核的，具有ext4根文件系统和常用命令应用程序的armv7l架构的32位简易操作系统<br>如果需要其他版本的内核，可以参考本文，然后自行替换即可。<br>构建环境为Ubuntu20.04-x86_64</p>
+    <div class="post-body" itemprop="articleBody"><p>一个完整的Linux系统由内核，文件系统和应用程序组成，本文使用OpenEuler内核和BusyBox工具箱为例，构建了一个Linux-5.10内核的，具有ext4根文件系统和常用命令应用程序的armv7l架构的32位简易操作系统如果需要其他版本的内核，可以参考本文，然后自行替换即可。构建环境为Ubuntu20.04-x86_64</p>
 <p>目标机为树莓派4B</p>
-<h2 id="交叉编译内核"><a href="#交叉编译内核" class="headerlink" title="交叉编译内核"></a>交叉编译内核</h2><p>内核是操作系统的核心，负责和硬件直接交互，管理计算机运行所用的资源。</p>
-<h3 id="安装依赖"><a href="#安装依赖" class="headerlink" title="安装依赖"></a>安装依赖</h3><figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt <span class="keyword">install </span><span class="keyword">bc </span><span class="keyword">bison </span>flex libssl-dev make libc6-dev libncurses5-dev</span><br></pre></td></tr></table></figure>
+<h2 id="交叉编译内核">交叉编译内核</h2>
+<p>内核是操作系统的核心，负责和硬件直接交互，管理计算机运行所用的资源。</p>
+<h3 id="安装依赖">安装依赖</h3>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt <span class="keyword">install </span><span class="keyword">bc </span><span class="keyword">bison </span>flex libssl-dev make libc6-dev libncurses5-dev</span><br></pre></td></tr></table></figure>
 <p>如果需要构建32位系统：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt install crossbuild-essential-armhf</span><br></pre></td></tr></table></figure>
 <p>64位：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt install crossbuild-essential-arm64</span><br></pre></td></tr></table></figure>
-<h3 id="下载内核源码"><a href="#下载内核源码" class="headerlink" title="下载内核源码"></a>下载内核源码</h3><p>先新建一个工作目录euler</p>
+<h3 id="下载内核源码">下载内核源码</h3>
+<p>先新建一个工作目录euler</p>
 <figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> <span class="built_in">euler</span></span><br><span class="line">cd <span class="built_in">euler</span></span><br></pre></td></tr></table></figure>
 <p>此处选择openEuler 22.03 LTS SP1的树莓派kernel（就是个raspbian换壳）</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://gitee.com/openeuler/raspberrypi-kernel.git -b openEuler-22.03-LTS-SP1 &amp;&amp; <span class="built_in">cd</span> raspberrypi-kernel</span><br></pre></td></tr></table></figure>
-<p>或选择原版的euler kernel<br>如果选择这个，在设置配置文件的时候记得手动设置一下</p>
+<p>或选择原版的euler kernel<br>
+如果选择这个，在设置配置文件的时候记得手动设置一下</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://gitee.com/openeuler/kernel.git -b OLK-6.6 &amp;&amp; <span class="built_in">cd</span> kernel</span><br></pre></td></tr></table></figure>
 <p>如果需要其他版本，请参考<a target="_blank" rel="noopener" href="https://gitee.com/openeuler/raspberrypi/blob/master/documents/openEuler%E9%95%9C%E5%83%8F%E7%9A%84%E6%9E%84%E5%BB%BA.md#%E4%B8%8B%E8%BD%BD%E6%BA%90%E7%A0%81">官网</a>自行选择</p>
-<h3 id="设置环境变量"><a href="#设置环境变量" class="headerlink" title="设置环境变量"></a>设置环境变量</h3><p>这一步主要是根据需要设置架构和交叉编译工具链到环境变量中</p>
+<h3 id="设置环境变量">设置环境变量</h3>
+<p>这一步主要是根据需要设置架构和交叉编译工具链到环境变量中</p>
 <p>32位版本：</p>
 <figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> <span class="attribute">ARCH</span>=arm</span><br><span class="line"><span class="built_in">export</span> <span class="attribute">CROSS_COMPILE</span>=arm-linux-gnueabihf-</span><br></pre></td></tr></table></figure>
 <p>64位版本：</p>
 <figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> <span class="attribute">ARCH</span>=arm64</span><br><span class="line"><span class="built_in">export</span> <span class="attribute">CROSS_COMPILE</span>=aarch64-linux-gnu-</span><br></pre></td></tr></table></figure>
 <p>其中ARCH代表处理器架构，CROSS_COMPILE代表使用的交叉编译工具</p>
-<h3 id="设置内核参数"><a href="#设置内核参数" class="headerlink" title="设置内核参数"></a>设置内核参数</h3><h4 id="默认设置"><a href="#默认设置" class="headerlink" title="默认设置"></a>默认设置</h4><p>此处硬件为树莓派4B，故选择bcm2711</p>
+<h3 id="设置内核参数">设置内核参数</h3>
+<h4 id="默认设置">默认设置</h4>
+<p>此处硬件为树莓派4B，故选择bcm2711</p>
 <figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">make</span> bcm2711_defconfig</span><br></pre></td></tr></table></figure>
 <p>如果需要其他版本的硬件，则参考<a target="_blank" rel="noopener" href="https://www.raspberrypi.com/documentation/computers/linux_kernel.html#cross-compile-the-kernel">官网</a></p>
-<h4 id="手动设置"><a href="#手动设置" class="headerlink" title="手动设置"></a>手动设置</h4><p>如果需要手动设置内核参数，在运行完上面的命令后运行（如果你不知道是否需要手动设置，那跳过即可），如果你选择从原版euler代码构建，则需要进行这一步</p>
+<h4 id="手动设置">手动设置</h4>
+<p>如果需要手动设置内核参数，在运行完上面的命令后运行（如果你不知道是否需要手动设置，那跳过即可），如果你选择从原版euler代码构建，则需要进行这一步</p>
 <figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">make menuconfig</span></span><br></pre></td></tr></table></figure>
-
-<p>配置设置保存完之后会在源码根目录下生成一个.config文件<br>如果想使用现成的配置文件，把相应文件复制到源码根目录下然后改名为.config即可</p>
-<h3 id="编译内核，模块，设备树文件"><a href="#编译内核，模块，设备树文件" class="headerlink" title="编译内核，模块，设备树文件"></a>编译内核，模块，设备树文件</h3><p>32位：</p>
+<p>配置设置保存完之后会在源码根目录下生成一个.config文件如果想使用现成的配置文件，把相应文件复制到源码根目录下然后改名为.config即可</p>
+<h3 id="编译内核，模块，设备树文件">编译内核，模块，设备树文件</h3>
+<p>32位：</p>
 <figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">make</span> zImage modules dtbs -j10</span><br></pre></td></tr></table></figure>
 <p>64位：</p>
 <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make <span class="selector-tag">Image</span> modules dtbs -j10</span><br></pre></td></tr></table></figure>
-<p>Image代表构建内核镜像，modules代表编译内核模块，dtbs代表构建设备树文件。<br>如果这三个都需要编译的话，也可以直接选择默认方式编译</p>
+<p>Image代表构建内核镜像，modules代表编译内核模块，dtbs代表构建设备树文件。如果这三个都需要编译的话，也可以直接选择默认方式编译</p>
 <figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">make</span> -j10</span><br></pre></td></tr></table></figure>
 <p>j后面的参数为线程数，一般设置为cpu核心的1.5倍，cpu的核心数量可以用lscpu命令查看</p>
-<h3 id="收集编译结果"><a href="#收集编译结果" class="headerlink" title="收集编译结果"></a>收集编译结果</h3><p>如果编译成功，在根目录下会出现vmlinux文件，如果编译不成功则没有</p>
-<h4 id="内核模块"><a href="#内核模块" class="headerlink" title="内核模块"></a>内核模块</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> output</span><br><span class="line">make INSTALL_MOD_PATH=output/ modules_install</span><br></pre></td></tr></table></figure>
-<p>在 output&#x2F; 文件夹下会生成 lib 文件夹。</p>
-<h4 id="内核"><a href="#内核" class="headerlink" title="内核"></a>内核</h4><p>32位：</p>
+<h3 id="收集编译结果">收集编译结果</h3>
+<p>如果编译成功，在根目录下会出现vmlinux文件，如果编译不成功则没有</p>
+<h4 id="内核模块">内核模块</h4>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> output</span><br><span class="line">make INSTALL_MOD_PATH=output/ modules_install</span><br></pre></td></tr></table></figure>
+<p>在 output/ 文件夹下会生成 lib 文件夹。</p>
+<h4 id="内核">内核</h4>
+<p>32位：</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> <span class="built_in">arch</span>/arm/boot/zImage output/</span><br></pre></td></tr></table></figure>
 <p>64位:</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> <span class="built_in">arch</span>/arm64/boot/Image output/</span><br></pre></td></tr></table></figure>
-<h4 id="设备树文件和overlay文件"><a href="#设备树文件和overlay文件" class="headerlink" title="设备树文件和overlay文件"></a>设备树文件和overlay文件</h4><p>32位:</p>
+<h4 id="设备树文件和overlay文件">设备树文件和overlay文件</h4>
+<p>32位:</p>
 <ol>
-<li>6.4及以前版本的内核<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> <span class="built_in">arch</span>/arm/boot/dts/*.dtb output/</span><br><span class="line"><span class="built_in">mkdir</span> output/overlays</span><br><span class="line"><span class="built_in">cp</span> <span class="built_in">arch</span>/arm/boot/dts/overlays/*.dtb* output/overlays</span><br></pre></td></tr></table></figure></li>
-<li>6.5及以上版本的内核<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> <span class="built_in">arch</span>/arm/boot/dts/broadcom/*.dtb output/</span><br><span class="line"><span class="built_in">mkdir</span> output/overlays</span><br><span class="line"><span class="built_in">cp</span> <span class="built_in">arch</span>/arm/boot/dts/overlays/*.dtb* output/overlays</span><br></pre></td></tr></table></figure></li>
+<li class="lvl-3">
+<p>6.4及以前版本的内核</p>
+</li>
 </ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> <span class="built_in">arch</span>/arm/boot/dts/*.dtb output/</span><br><span class="line"><span class="built_in">mkdir</span> output/overlays</span><br><span class="line"><span class="built_in">cp</span> <span class="built_in">arch</span>/arm/boot/dts/overlays/*.dtb* output/overlays</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li class="lvl-3">
+<p>6.5及以上版本的内核</p>
+</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> <span class="built_in">arch</span>/arm/boot/dts/broadcom/*.dtb output/</span><br><span class="line"><span class="built_in">mkdir</span> output/overlays</span><br><span class="line"><span class="built_in">cp</span> <span class="built_in">arch</span>/arm/boot/dts/overlays/*.dtb* output/overlays</span><br></pre></td></tr></table></figure>
 <p>64位：</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> <span class="built_in">arch</span>/arm64/boot/dts/broadcom/*.dtb output/</span><br><span class="line"><span class="built_in">mkdir</span> <span class="variable">$&#123;WORKDIR&#125;</span>/output/overlays</span><br><span class="line"><span class="built_in">cp</span> <span class="built_in">arch</span>/arm64/boot/dts/overlays/*.dtb* output/overlays/</span><br></pre></td></tr></table></figure>
-<h4 id="把编译结果移动到上一级目录下"><a href="#把编译结果移动到上一级目录下" class="headerlink" title="把编译结果移动到上一级目录下"></a>把编译结果移动到上一级目录下</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ..</span><br><span class="line"><span class="built_in">mkdir</span> output</span><br><span class="line"><span class="built_in">mv</span> raspberrypi-kernel/output/* output/</span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">rm</span> -r raspberrypi-kernel/output</span><br></pre></td></tr></table></figure>
-
-<h2 id="测试新编译的内核"><a href="#测试新编译的内核" class="headerlink" title="测试新编译的内核"></a>测试新编译的内核</h2><p>使用一个之前刷好对应位数raspbian镜像或者其他系统的SD卡（只替换内核，啥系统都行，而且openeuler没有32位官方镜像，如果你编译的32位内核，装个32位的raspbian就行），直接插到Linux主机上，SD会默认挂载其 boot分区和根目录分区。</p>
-<p>运行lsblk命令，查看挂载情况，如果sdc代表你的启动媒体（也可能是sdb），如果不知道的话，把sd卡拔了运行一下lsblk，插上等一会儿再运行一遍lsblk，多出来的那个就是。<br>如果是respbian，应该是这样的结构</p>
+<h4 id="把编译结果移动到上一级目录下">把编译结果移动到上一级目录下</h4>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ..</span><br><span class="line"><span class="built_in">mkdir</span> output</span><br><span class="line"><span class="built_in">mv</span> raspberrypi-kernel/output/* output/</span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">rm</span> -r raspberrypi-kernel/output</span><br></pre></td></tr></table></figure>
+<h2 id="测试新编译的内核">测试新编译的内核</h2>
+<p>使用一个之前刷好对应位数raspbian镜像或者其他系统的SD卡（只替换内核，啥系统都行，而且openeuler没有32位官方镜像，如果你编译的32位内核，装个32位的raspbian就行），直接插到Linux主机上，SD会默认挂载其 boot分区和根目录分区。</p>
+<p>运行lsblk命令，查看挂载情况，如果sdc代表你的启动媒体（也可能是sdb），如果不知道的话，把sd卡拔了运行一下lsblk，插上等一会儿再运行一遍lsblk，多出来的那个就是。如果是respbian，应该是这样的结构</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sdc      </span><br><span class="line">├─sdc1  </span><br><span class="line">└─sdc2   </span><br></pre></td></tr></table></figure>
 <p>也有的可能是这样的结构（Euler或者centos）</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">├─sdc1  </span><br><span class="line">├─sdc2   </span><br><span class="line">└─sdc3   </span><br></pre></td></tr></table></figure>
@@ -297,180 +320,279 @@
 <blockquote>
 <p>在redhat系里面，有三个分区，一般sdc1是boot引导分区，sdc2是swap交换分区，sdc3是根文件系统root</p>
 </blockquote>
-<p>将这些分区挂载位mnt&#x2F;boot和&#x2F;mnt&#x2F;root，并调整字母和数字以匹配启动分区的位置</p>
+<p>将这些分区挂载位mnt/boot和/mnt/root，并调整字母和数字以匹配启动分区的位置</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> mnt</span><br><span class="line"><span class="built_in">mkdir</span> mnt/boot</span><br><span class="line"><span class="built_in">mkdir</span> mnt/root</span><br><span class="line"><span class="built_in">sudo</span> mount /dev/sdc1 mnt/boot</span><br><span class="line"><span class="built_in">sudo</span> mount /dev/sdc2 mnt/root</span><br></pre></td></tr></table></figure>
-
-<h3 id="将内核模块放到根分区里"><a href="#将内核模块放到根分区里" class="headerlink" title="将内核模块放到根分区里"></a>将内核模块放到根分区里</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> -r output/lib/modules mnt/root/lib/</span><br></pre></td></tr></table></figure>
-<h3 id="将内核放到boot启动分区"><a href="#将内核放到boot启动分区" class="headerlink" title="将内核放到boot启动分区"></a>将内核放到boot启动分区</h3><p>32位：</p>
+<h3 id="将内核模块放到根分区里">将内核模块放到根分区里</h3>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> -r output/lib/modules mnt/root/lib/</span><br></pre></td></tr></table></figure>
+<h3 id="将内核放到boot启动分区">将内核放到boot启动分区</h3>
+<p>32位：</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> output/zImage mnt/boot/kernel7l.img</span><br></pre></td></tr></table></figure>
 <p>64位：</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> output/Image mnt/boot/kernel8.img</span><br></pre></td></tr></table></figure>
-
-<h3 id="将设备树文件放到boot启动分区"><a href="#将设备树文件放到boot启动分区" class="headerlink" title="将设备树文件放到boot启动分区"></a>将设备树文件放到boot启动分区</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> output/*.dtb mnt/boot/</span><br><span class="line"><span class="built_in">cp</span> output/overlays/* mnt/boot/overlays</span><br></pre></td></tr></table></figure>
-
-<h3 id="设置config-txt"><a href="#设置config-txt" class="headerlink" title="设置config.txt"></a>设置config.txt</h3><p>如果是32位系统，则需要通过设置config.txt来保证cpu以32位指令集启动，如果是64位则可以跳过这一步。<br>打开树莓派的启动设置文件config.txt</p>
+<h3 id="将设备树文件放到boot启动分区">将设备树文件放到boot启动分区</h3>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> output/*.dtb mnt/boot/</span><br><span class="line"><span class="built_in">cp</span> output/overlays/* mnt/boot/overlays</span><br></pre></td></tr></table></figure>
+<h3 id="设置config-txt">设置config.txt</h3>
+<p>如果是32位系统，则需要通过设置config.txt来保证cpu以32位指令集启动，如果是64位则可以跳过这一步。打开树莓派的启动设置文件config.txt</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim mnt/boot/config.txt</span><br></pre></td></tr></table></figure>
 <p>默认配置如下：</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># For more options and information see</span></span><br><span class="line"><span class="comment"># http://rptl.io/configtxt</span></span><br><span class="line"><span class="comment"># Some settings may impact device functionality. See link above for details</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Uncomment some or all of these to enable the optional hardware interfaces</span></span><br><span class="line"><span class="comment">#dtparam=i2c_arm=on</span></span><br><span class="line"><span class="comment">#dtparam=i2s=on</span></span><br><span class="line"><span class="comment">#dtparam=spi=on</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Enable audio (loads snd_bcm2835)</span></span><br><span class="line">dtparam=audio=on</span><br><span class="line"></span><br><span class="line"><span class="comment"># Additional overlays and parameters are documented</span></span><br><span class="line"><span class="comment"># /boot/firmware/overlays/README</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Automatically load overlays for detected cameras</span></span><br><span class="line">camera_auto_detect=1</span><br><span class="line"></span><br><span class="line"><span class="comment"># Automatically load overlays for detected DSI displays</span></span><br><span class="line">display_auto_detect=1</span><br><span class="line"></span><br><span class="line"><span class="comment"># Automatically load initramfs files, if found</span></span><br><span class="line">auto_initramfs=1</span><br><span class="line"></span><br><span class="line"><span class="comment"># Enable DRM VC4 V3D driver</span></span><br><span class="line">dtoverlay=vc4-kms-v3d</span><br><span class="line">max_framebuffers=2</span><br><span class="line"></span><br><span class="line"><span class="comment"># Don&#x27;t have the firmware create an initial video= setting in cmdline.txt.</span></span><br><span class="line"><span class="comment"># Use the kernel&#x27;s default instead.</span></span><br><span class="line">disable_fw_kms_setup=1</span><br><span class="line"></span><br><span class="line"><span class="comment"># Run in 64-bit mode</span></span><br><span class="line">arm_64bit=1</span><br><span class="line"></span><br><span class="line"><span class="comment"># Disable compensation for displays with overscan</span></span><br><span class="line">disable_overscan=1</span><br><span class="line"></span><br><span class="line"><span class="comment"># Run as fast as firmware / board allows</span></span><br><span class="line">arm_boost=1</span><br><span class="line"></span><br><span class="line">[cm4]</span><br><span class="line"><span class="comment"># Enable host mode on the 2711 built-in XHCI USB controller.</span></span><br><span class="line"><span class="comment"># This line should be removed if the legacy DWC2 controller is required</span></span><br><span class="line"><span class="comment"># (e.g. for USB device mode) or if USB support is not required.</span></span><br><span class="line">otg_mode=1</span><br><span class="line"></span><br><span class="line">[cm5]</span><br><span class="line">dtoverlay=dwc2,dr_mode=host</span><br><span class="line"></span><br><span class="line">[all]</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <p>32位系统则在文件末尾加入</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">arm_64bit=0</span><br><span class="line">kernel=kernel7l.img</span><br></pre></td></tr></table></figure>
-
-<h3 id="卸载分区"><a href="#卸载分区" class="headerlink" title="卸载分区"></a>卸载分区</h3><p>输入以下命令，将分区卸载，然后将SD卡插入树莓派运行系统</p>
+<h3 id="卸载分区">卸载分区</h3>
+<p>输入以下命令，将分区卸载，然后将SD卡插入树莓派运行系统</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> umount mnt/boot</span><br><span class="line"><span class="built_in">sudo</span> umount mnt/root</span><br></pre></td></tr></table></figure>
-
-<h3 id="启动树莓派"><a href="#启动树莓派" class="headerlink" title="启动树莓派"></a>启动树莓派</h3><p>将SD卡拔下，插入树莓派然后启动，如果能正常启动，说明内核和引导部分编译成功。<br>如果No working init found，也说明内核成功启动，但未成功启动任何进程，所以停止。init进程是内核启动后第一个启动的进程，其他所有的进程都是init进程的子进程。init进程一般位于rootfs目录中，下面的章节将开始构建rootfs</p>
-<h2 id="构建rootfs"><a href="#构建rootfs" class="headerlink" title="构建rootfs"></a>构建rootfs</h2><p>rootfs为操作系统的根文件系统，根文件系统是一个抽象的概念，其更像一个目录，也可以称作根目录，根目录和其子目录中里面存放着Linux系统运行所必需的配置文件和程序，根文件系统和Linux内核是分开的，单独的Linux内核是无法工作的，必须要搭配根文件系统。这一部分主要利用busybox工具，完成了根目录的创建和其中文件的配置。</p>
-<h3 id="下载busybox工具"><a href="#下载busybox工具" class="headerlink" title="下载busybox工具"></a>下载busybox工具</h3><p>首先下载busybox源码包并解压<br>去<a target="_blank" rel="noopener" href="https://www.busybox.net/">官网</a>选择最新的版本下载<br>尽量选择1.30以后的版本，1.30修复了交叉编译的bug，并且更新了config设置界面<br>此处工作目录依然为euler</p>
+<h3 id="启动树莓派">启动树莓派</h3>
+<p>将SD卡拔下，插入树莓派然后启动，如果能正常启动，说明内核和引导部分编译成功。如果No working init found，也说明内核成功启动，但未成功启动任何进程，所以停止。init进程是内核启动后第一个启动的进程，其他所有的进程都是init进程的子进程。init进程一般位于rootfs目录中，下面的章节将开始构建rootfs</p>
+<h2 id="构建rootfs">构建rootfs</h2>
+<p>rootfs为操作系统的根文件系统，根文件系统是一个抽象的概念，其更像一个目录，也可以称作根目录，根目录和其子目录中里面存放着Linux系统运行所必需的配置文件和程序，根文件系统和Linux内核是分开的，单独的Linux内核是无法工作的，必须要搭配根文件系统。这一部分主要利用busybox工具，完成了根目录的创建和其中文件的配置。</p>
+<h3 id="下载busybox工具">下载busybox工具</h3>
+<p>首先下载busybox源码包并解压去<a target="_blank" rel="noopener" href="https://www.busybox.net/">官网</a>选择最新的版本下载尽量选择1.30以后的版本，1.30修复了交叉编译的bug，并且更新了config设置界面此处工作目录依然为euler</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget https://busybox.net/downloads/busybox-1.36.1.tar.bz2</span><br><span class="line">tar xvf busybox-1.36.1.tar.bz2</span><br></pre></td></tr></table></figure>
-<h3 id="设置支持中文"><a href="#设置支持中文" class="headerlink" title="设置支持中文"></a>设置支持中文</h3><p>如果使用busybox默认配置直接编译的话，使用ssh远程登录时，中文字符显示是不正常的，因为busybox中的shell命令对中文显示做了一些限制，所以在此处需要对busybox源码做出修改，取消busybox对中文现实的限制。（如果你不需要中文的话可以跳过这一步）<br>打开文件busybox-1.36.1&#x2F;libbb&#x2F;printable_string.c，找到函数 printable_string2<br>函数长下面这样，观察第20行和第21行，和34，35行处，所有大于0x7f的内容全都被替换成了?，因此需要改掉。（下面注释掉的是源码，添加或修改的是支持unicode的样子）</p>
+<h3 id="设置支持中文">设置支持中文</h3>
+<p>如果使用busybox默认配置直接编译的话，使用ssh远程登录时，中文字符显示是不正常的，因为busybox中的shell命令对中文显示做了一些限制，所以在此处需要对busybox源码做出修改，取消busybox对中文现实的限制。（如果你不需要中文的话可以跳过这一步）打开文件busybox-1.36.1/libbb/printable_string.c，找到函数 printable_string2<br>
+函数长下面这样，观察第20行和第21行，和34，35行处，所有大于0x7f的内容全都被替换成了?，因此需要改掉。（下面注释掉的是源码，添加或修改的是支持unicode的样子）</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">char</span>* FAST_FUNC <span class="title function_">printable_string2</span><span class="params">(<span class="type">uni_stat_t</span> *stats, <span class="type">const</span> <span class="type">char</span> *str)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">char</span> *dst;</span><br><span class="line">    <span class="type">const</span> <span class="type">char</span> *s;</span><br><span class="line"></span><br><span class="line">    s = str;</span><br><span class="line">    <span class="keyword">while</span> (<span class="number">1</span>) &#123;</span><br><span class="line">        <span class="type">unsigned</span> <span class="type">char</span> c = *s;</span><br><span class="line">        <span class="keyword">if</span> (c == <span class="string">&#x27;\0&#x27;</span>) &#123;</span><br><span class="line">            <span class="comment">/* 99+% of inputs do not need conversion */</span></span><br><span class="line">            <span class="keyword">if</span> (stats) &#123;</span><br><span class="line">                stats-&gt;byte_count = (s - str);</span><br><span class="line">                stats-&gt;unicode_count = (s - str);</span><br><span class="line">                stats-&gt;unicode_width = (s - str);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> str;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (c &lt; <span class="string">&#x27; &#x27;</span>)</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="comment">/*-----修改这里-----*/</span></span><br><span class="line">        <span class="comment">//if (c &gt;= 0x7f)</span></span><br><span class="line">        <span class="comment">//	break;</span></span><br><span class="line">        s++;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="meta">#<span class="keyword">if</span> ENABLE_UNICODE_SUPPORT</span></span><br><span class="line">    dst = unicode_conv_to_printable(stats, str);</span><br><span class="line"><span class="meta">#<span class="keyword">else</span></span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">char</span> *d = dst = xstrdup(str);</span><br><span class="line">        <span class="keyword">while</span> (<span class="number">1</span>) &#123;</span><br><span class="line">            <span class="type">unsigned</span> <span class="type">char</span> c = *d;</span><br><span class="line">            <span class="keyword">if</span> (c == <span class="string">&#x27;\0&#x27;</span>)</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="comment">/*-----修改这里-----*/</span></span><br><span class="line">            <span class="comment">//if (c &lt; &#x27; &#x27; || c &gt;= 0x7f)</span></span><br><span class="line">            <span class="comment">//	*d = &#x27;?&#x27;;</span></span><br><span class="line">            <span class="keyword">if</span>(c &lt; <span class="string">&#x27; &#x27;</span>)</span><br><span class="line">                *d = <span class="string">&#x27;?&#x27;</span>;</span><br><span class="line">            d++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (stats) &#123;</span><br><span class="line">            stats-&gt;byte_count = (d - dst);</span><br><span class="line">            stats-&gt;unicode_count = (d - dst);</span><br><span class="line">            stats-&gt;unicode_width = (d - dst);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">    <span class="keyword">return</span> auto_string(dst);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>以及&#x2F;libbb&#x2F;unicode.c文件中，找到static char* FAST_FUNC</p>
+<p>以及/libbb/unicode.c文件中，找到static char* FAST_FUNC</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (unicode_status != UNICODE_ON) &#123;</span><br><span class="line">        <span class="type">char</span> *d;</span><br><span class="line">        <span class="keyword">if</span> (flags &amp; UNI_FLAG_PAD) &#123;</span><br><span class="line">            d = dst = <span class="built_in">xmalloc</span>(width + <span class="number">1</span>);</span><br><span class="line">            <span class="keyword">while</span> ((<span class="type">int</span>)--width &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="type">unsigned</span> <span class="type">char</span> c = *src;</span><br><span class="line">                <span class="keyword">if</span> (c == <span class="string">&#x27;\0&#x27;</span>) &#123;</span><br><span class="line">                    <span class="keyword">do</span></span><br><span class="line">                        *d++ = <span class="string">&#x27; &#x27;</span>;</span><br><span class="line">                    <span class="keyword">while</span> ((<span class="type">int</span>)--width &gt;= <span class="number">0</span>);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">/*-----修改这里-----*/</span></span><br><span class="line">                *d++ = (c &gt;= <span class="string">&#x27; &#x27;</span>) ? c : <span class="string">&#x27;?&#x27;</span>;</span><br><span class="line">                src++;</span><br><span class="line">            &#125;</span><br><span class="line">            *d = <span class="string">&#x27;\0&#x27;</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            d = dst = <span class="built_in">xstrndup</span>(src, width);</span><br><span class="line">            <span class="keyword">while</span> (*d) &#123;</span><br><span class="line">                <span class="type">unsigned</span> <span class="type">char</span> c = *d;</span><br><span class="line">                <span class="comment">/*-----修改这里-----*/</span></span><br><span class="line">                <span class="keyword">if</span> (c &lt; <span class="string">&#x27; &#x27;</span>)</span><br><span class="line">                    *d = <span class="string">&#x27;?&#x27;</span>;</span><br><span class="line">                d++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (stats) &#123;</span><br><span class="line">            stats-&gt;byte_count = (d - dst);</span><br><span class="line">            stats-&gt;unicode_count = (d - dst);</span><br><span class="line">            stats-&gt;unicode_width = (d - dst);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dst;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p>将其中的&gt;&#x3D;0x7f都删掉即可</p>
-<h3 id="配置编译选项"><a href="#配置编译选项" class="headerlink" title="配置编译选项"></a>配置编译选项</h3><p>先进入busybox目录</p>
+<p>将其中的&gt;=0x7f都删掉即可</p>
+<h3 id="配置编译选项">配置编译选项</h3>
+<p>先进入busybox目录</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> busybox-1.36.1</span><br><span class="line">make defconfig</span><br><span class="line">make menuconfig</span><br></pre></td></tr></table></figure>
 <p>出现一个图形界面，可以进行设置</p>
 <ol>
-<li><p>注意很多教程中将</p>
+<li class="lvl-3">
+<p>注意很多教程中将</p>
+</li>
+</ol>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Location:</span><br><span class="line">    -&gt; Settings</span><br><span class="line">        -&gt; Build static binary (no shared libs)</span><br></pre></td></tr></table></figure>
 <p>这一处设置为yes，即编译为静态库，在那些配置中大多为嵌入式设备构建rootfs，即系统本身不包含动态库，这样的编译方式会使系统功能受限，此处我们打算构建一个较完整功能的镜像，因此选择为no，即</p>
 <figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[ ] <span class="keyword">Build </span>static <span class="keyword">binary </span>(no <span class="keyword">shared </span>libs)</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>设置模块</p>
+<ol start="2">
+<li class="lvl-3">
+<p>设置模块</p>
 </li>
 </ol>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Location:</span><br><span class="line">    -&gt; Linux Module Utilities</span><br><span class="line">        -&gt; Simplified modutils</span><br></pre></td></tr></table></figure>
-<p>将Simplified modutils取消勾选<br><img src="/img_folder/Raspberry/busybox_config1.png"></p>
+<p>将Simplified modutils取消勾选<br>
+<img src="/img_folder/Raspberry/busybox_config1.png" alt=""></p>
 <ol start="3">
-<li><p>设备支持<br>这一步设置确保系统能正确创建dev目录下的设备节点，mdev是busybox自带的一个简化版的udev，适合于嵌入式的应用场合。其具有使用简单的特点。它的作用，就是在系统启动和热插拔或动态加载驱动程序时，自动产生驱动程序所需的节点文件。</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Location:</span><br><span class="line">    -&gt; Linux System Utilities</span><br><span class="line">        -&gt; mdev (17 kb) //确保下面的全部选中，默认都是选中的</span><br></pre></td></tr></table></figure>
-<p><img src="/../img_folder/Raspberry/busybox_config2.png"></p>
+<li class="lvl-3">
+<p>设备支持这一步设置确保系统能正确创建dev目录下的设备节点，mdev是busybox自带的一个简化版的udev，适合于嵌入式的应用场合。其具有使用简单的特点。它的作用，就是在系统启动和热插拔或动态加载驱动程序时，自动产生驱动程序所需的节点文件。</p>
 </li>
-<li><p>支持Unicode</p>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Location:</span><br><span class="line">    -&gt; Linux System Utilities</span><br><span class="line">        -&gt; mdev (17 kb) //确保下面的全部选中，默认都是选中的</span><br></pre></td></tr></table></figure>
+<p><img src="../img_folder/Raspberry/busybox_config2.png" alt=""></p>
+<ol start="4">
+<li class="lvl-3">
+<p>支持Unicode</p>
 </li>
 </ol>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Location:</span><br><span class="line">    -&gt; Settings</span><br><span class="line">        -&gt; Support Unicode //选中</span><br><span class="line">            -&gt; Check <span class="variable">$LC_ALL</span>, <span class="variable">$LC_CTYPE</span> and <span class="variable">$LANG</span> environment variables //选中</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p><img src="/../img_folder/Raspberry/busybox_unicode.png"></p>
+<p><img src="../img_folder/Raspberry/busybox_unicode.png" alt=""></p>
 <p>以及挨着他的两个</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(65536)Character code to substitete unprintable characters with //将不可打印的字符替换成占位符</span><br><span class="line">(300000)Range of supported Unicode characters //支持到的Unicode字符范围</span><br></pre></td></tr></table></figure>
 <p>查阅资料知，汉字主要出现在Unicode字符的19968-40869中，而这里最大支持到767，肯定是不行的，因此需要修改成一个比较大的数，我修改成了195102，Unicode字符对应的字符可以参考<a target="_blank" rel="noopener" href="https://jrgraphix.net/research/unicode_blocks.php">这里</a></p>
 <p>最后还有编辑器选项，</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Location:</span><br><span class="line">    -&gt; Editors</span><br><span class="line">        -&gt; Allow to display 8-bit chars (otherwise shows dots)  //选中</span><br></pre></td></tr></table></figure>
-<p><img src="/../img_folder/Raspberry/busybox_unicode2.png"></p>
+<p><img src="../img_folder/Raspberry/busybox_unicode2.png" alt=""></p>
 <p>至此busybox的配置都完成了，下面开始编译busybox</p>
-<h3 id="编译busybox中的工具"><a href="#编译busybox中的工具" class="headerlink" title="编译busybox中的工具"></a>编译busybox中的工具</h3><p>先设置交叉编译工具和架构，此处的设置要与内核相同<br>32位：</p>
+<h3 id="编译busybox中的工具">编译busybox中的工具</h3>
+<p>先设置交叉编译工具和架构，此处的设置要与内核相同<br>
+32位：</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> ARCH=arm</span><br><span class="line"><span class="built_in">export</span> CROSS_COMPILE=arm-linux-gnueabihf-</span><br></pre></td></tr></table></figure>
 <p>64位：</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> ARCH=aarch64</span><br><span class="line"><span class="built_in">export</span> CROSS_COMPILE=aarch64-linux-gnu-</span><br></pre></td></tr></table></figure>
 <p>设置好之后开始编译并安装</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">make -j10</span><br><span class="line"><span class="built_in">mkdir</span> rootfs</span><br><span class="line">make install CONFIG_PREFIX=rootfs</span><br></pre></td></tr></table></figure>
-
 <p>将内容复制到工作目录下</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ..</span><br><span class="line"><span class="built_in">mv</span> busybox-1.36.1/rootfs/* rootfs/</span><br></pre></td></tr></table></figure>
-<p>完成后可以看到rootfs&#x2F;目录下有bin sbin  usr三个目录和一个文件linuxrc，Linux 内核 init 进程最后会查找用户空间的 init 程序，找到以后就会运行这个用户空间的 init 程序，从而切换到用户态。如果 bootargs 设置 init&#x3D;&#x2F;linuxrc，那么 linuxrc 就是可以作为用户空间的 init 程序，所以用户态空间的 init 程序是 busybox 来生成的。<br>至此busybox的工作已经完成，但根文件系统还需要完善后才能使用，还需要添加一些其他文件</p>
-<h2 id="完善rootfs"><a href="#完善rootfs" class="headerlink" title="完善rootfs"></a>完善rootfs</h2><h3 id="添加动态链接库"><a href="#添加动态链接库" class="headerlink" title="添加动态链接库"></a>添加动态链接库</h3><p>linux的可执行文件大都需要动态链接库，这些库通常都可以从交叉编译器中获取，找到交叉编译器的目录，我的是在&#x2F;usr目录下，交叉编译器为arm-linux-gnueabihf，库文件的存放位置为&#x2F;usr&#x2F;arm-linux-gnueabihf&#x2F;lib，将所有文件复制到rootfs中<br>当前工作目录为最开始提到的工作目录euler&#x2F;，下面应该有</p>
+<p>完成后可以看到rootfs/目录下有bin sbin  usr三个目录和一个文件linuxrc，Linux 内核 init 进程最后会查找用户空间的 init 程序，找到以后就会运行这个用户空间的 init 程序，从而切换到用户态。如果 bootargs 设置 init=/linuxrc，那么 linuxrc 就是可以作为用户空间的 init 程序，所以用户态空间的 init 程序是 busybox 来生成的。至此busybox的工作已经完成，但根文件系统还需要完善后才能使用，还需要添加一些其他文件</p>
+<h2 id="完善rootfs">完善rootfs</h2>
+<h3 id="添加动态链接库">添加动态链接库</h3>
+<p>linux的可执行文件大都需要动态链接库，这些库通常都可以从交叉编译器中获取，找到交叉编译器的目录，我的是在/usr目录下，交叉编译器为arm-linux-gnueabihf，库文件的存放位置为/usr/arm-linux-gnueabihf/lib，将所有文件复制到rootfs中当前工作目录为最开始提到的工作目录euler/，下面应该有</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">busybox-1.36.1  mnt  output  raspberrypi-kernel  rootfs</span><br></pre></td></tr></table></figure>
-<p>这样几个目录<br>下面开始复制库文件</p>
+<p>这样几个目录下面开始复制库文件</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> rootfs/lib</span><br><span class="line"><span class="built_in">cp</span> /usr/arm-linux-gnueabihf/lib/*so* rootfs/lib</span><br><span class="line"><span class="built_in">cp</span> /usr/arm-linux-gnueabihf/lib/*.a rootfs/lib</span><br><span class="line"><span class="built_in">mkdir</span> rootfs/usr/lib</span><br><span class="line"><span class="built_in">cp</span> /usr/arm-linux-gnueabihf/lib/*so* rootfs/usr/lib</span><br><span class="line"><span class="built_in">cp</span> /usr/arm-linux-gnueabihf/lib/*.a rootfs/usr/lib</span><br></pre></td></tr></table></figure>
-
-<h3 id="创建其他的所需文件夹"><a href="#创建其他的所需文件夹" class="headerlink" title="创建其他的所需文件夹"></a>创建其他的所需文件夹</h3><p>创建根文件系统中所需的其他文件夹，如</p>
+<h3 id="创建其他的所需文件夹">创建其他的所需文件夹</h3>
+<p>创建根文件系统中所需的其他文件夹，如</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> boot dev etc mnt home proc root sys tmp   </span><br></pre></td></tr></table></figure>
 <p>最终完成后rootfs目录下应该有这么几个目录</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin  dev  etc  lib linuxrc mnt home proc  root  sbin  sys  tmp  usr</span><br></pre></td></tr></table></figure>
-
-<p>至此根文件系统已经构建的差不多了，但还需要引导，才能完成内核和根文件系统的启动<br>这里只做一个初步的教程，只构建一个只具备基本应用程序和配置文件的rootfs，如果想继续添加如联网，远程连接，用户登录等功能和配置可以参考<a href="https://anakin0607.github.io/:%E5%AE%8C%E5%96%84rootfs/">这里</a></p>
-<h2 id="构建引导"><a href="#构建引导" class="headerlink" title="构建引导"></a>构建引导</h2><p>树莓派的启动流程为：引导程序-&gt;内核-&gt;rootfs中init进程，init进程为系统中所有进程的父进程，负责再运行其他程序。其中引导程序和硬件绑定，内核会自动选择rootfs中的程序，因此我们只需要让引导程序装入我们自己构建的内核，并正确执行，即可使树莓派正确运行。因此这一步选择用树莓派官方提供的引导程序，来构建整个引导目录boot&#x2F;</p>
-<h3 id="下载引导"><a href="#下载引导" class="headerlink" title="下载引导"></a>下载引导</h3><p>返回工作目录euler</p>
+<p>至此根文件系统已经构建的差不多了，但还需要引导，才能完成内核和根文件系统的启动这里只做一个初步的教程，只构建一个只具备基本应用程序和配置文件的rootfs，如果想继续添加如联网，远程连接，用户登录等功能和配置可以参考<a href="https://anakin0607.github.io/:%E5%AE%8C%E5%96%84rootfs/">这里</a></p>
+<h2 id="构建引导">构建引导</h2>
+<p>树莓派的启动流程为：引导程序-&gt;内核-&gt;rootfs中init进程，init进程为系统中所有进程的父进程，负责再运行其他程序。其中引导程序和硬件绑定，内核会自动选择rootfs中的程序，因此我们只需要让引导程序装入我们自己构建的内核，并正确执行，即可使树莓派正确运行。因此这一步选择用树莓派官方提供的引导程序，来构建整个引导目录boot/</p>
+<h3 id="下载引导">下载引导</h3>
+<p>返回工作目录euler</p>
 <figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="keyword">clone</span> <span class="title">--depth</span>=<span class="number">1</span> https://github.com/raspberrypi/firmware</span><br></pre></td></tr></table></figure>
 <p>这里下载的内容包含树莓派官方提供的GPU固件和引导加载程序，和基于raspbian系统构建的内核以及设备树文件，因此我们只需将kernel替换成自己构建的内核，将dtbs,overlays替换成上面基于euler内核构建的文件即可</p>
-<h3 id="替换文件"><a href="#替换文件" class="headerlink" title="替换文件"></a>替换文件</h3><p>先删除需要替换的文件</p>
+<h3 id="替换文件">替换文件</h3>
+<p>先删除需要替换的文件</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> firmware/boot</span><br><span class="line"><span class="built_in">rm</span> *.dtb kernel*.img</span><br></pre></td></tr></table></figure>
-<p>将内核放进引导<br>32位</p>
+<p>将内核放进引导<br>
+32位</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ../..</span><br><span class="line"><span class="built_in">cp</span> output/zImage firmware/boot/kernel7l.img</span><br></pre></td></tr></table></figure>
 <p>64位</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ../..</span><br><span class="line"><span class="built_in">cp</span> output/Image firmware/boot/kernel8.img</span><br></pre></td></tr></table></figure>
-
 <p>将设备树文件和overlays放进引导</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> output/*.dtb firmware/boot/</span><br><span class="line"><span class="built_in">cp</span> output/overlays/* firmware/boot/overlays</span><br></pre></td></tr></table></figure>
-
-<h3 id="将boot移动出来"><a href="#将boot移动出来" class="headerlink" title="将boot移动出来"></a>将boot移动出来</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> boot</span><br><span class="line"><span class="built_in">mv</span> firmware/boot/* boot/</span><br></pre></td></tr></table></figure>
-
-<h3 id="添加配置文件"><a href="#添加配置文件" class="headerlink" title="添加配置文件"></a>添加配置文件</h3><p>添加cmdline.txt</p>
+<h3 id="将boot移动出来">将boot移动出来</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> boot</span><br><span class="line"><span class="built_in">mv</span> firmware/boot/* boot/</span><br></pre></td></tr></table></figure>
+<h3 id="添加配置文件">添加配置文件</h3>
+<p>添加cmdline.txt</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">touch</span> cmdline.txt</span><br></pre></td></tr></table></figure>
 <p>复制进去下面的内容</p>
 <figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">console</span>=serial0,115200 <span class="attribute">console</span>=tty1 <span class="attribute">root</span>=/dev/mmcblk0p3 <span class="attribute">rootfstype</span>=ext4 rw <span class="attribute">elevator</span>=deadline rootwait</span><br></pre></td></tr></table></figure>
-<p>其含义分别为控制台串口和波特率；根文件系统位置；根文件系统类型；可读写（如果不加rw，整个系统为readonly）；I&#x2F;O调度算法为deadline，即对每个I&#x2F;O操作施加一个截止日期，以防止请求耗尽；等待根文件系统准备好后再启动终端</p>
+<p>其含义分别为控制台串口和波特率；根文件系统位置；根文件系统类型；可读写（如果不加rw，整个系统为readonly）；I/O调度算法为deadline，即对每个I/O操作施加一个截止日期，以防止请求耗尽；等待根文件系统准备好后再启动终端</p>
 <p>如果是32位镜像，则需要再添加config.txt</p>
 <figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">touch config.txt</span><br></pre></td></tr></table></figure>
 <p>加入下面的内容，以保证启动32位镜像</p>
 <figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[all]</span></span><br><span class="line"><span class="attr">arm_64bit</span>=<span class="number">0</span></span><br><span class="line"><span class="attr">kernel</span>=kernel7l.img</span><br></pre></td></tr></table></figure>
-
-<h2 id="构建镜像"><a href="#构建镜像" class="headerlink" title="构建镜像"></a>构建镜像</h2><h3 id="计算镜像大小"><a href="#计算镜像大小" class="headerlink" title="计算镜像大小"></a>计算镜像大小</h3><p>回到工作目录euler</p>
+<h2 id="构建镜像">构建镜像</h2>
+<h3 id="计算镜像大小">计算镜像大小</h3>
+<p>回到工作目录euler</p>
 <figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">du -sh --<span class="keyword">block</span>-<span class="built_in">size</span>=<span class="number">1</span>MiB rootfs/</span><br><span class="line">du -sh --<span class="keyword">block</span>-<span class="built_in">size</span>=<span class="number">1</span>MiB boot/</span><br></pre></td></tr></table></figure>
 <p>得到总大小后略加1100MiB即可，将其记为SIZE</p>
-<h3 id="创建空镜像"><a href="#创建空镜像" class="headerlink" title="创建空镜像"></a>创建空镜像</h3><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dd <span class="attribute">if</span>=/dev/zero <span class="attribute">of</span>=openEuler_raspi.img <span class="attribute">bs</span>=1M <span class="attribute">count</span>=1280 #将1280替换为SIZE</span><br></pre></td></tr></table></figure>
+<h3 id="创建空镜像">创建空镜像</h3>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dd <span class="attribute">if</span>=/dev/zero <span class="attribute">of</span>=openEuler_raspi.img <span class="attribute">bs</span>=1M <span class="attribute">count</span>=1280 #将1280替换为SIZE</span><br></pre></td></tr></table></figure>
 <p>我这里SIZE是1280，这里替换成你自己计算的SIZE即可，之后得到空的镜像文件openEuler_raspi.img</p>
-<h3 id="镜像分区"><a href="#镜像分区" class="headerlink" title="镜像分区"></a>镜像分区</h3><p>执行 fdisk openEuler_raspi.img 后，根据提示依次输入：</p>
+<h3 id="镜像分区">镜像分区</h3>
+<p>执行 fdisk openEuler_raspi.img 后，根据提示依次输入：</p>
 <ol>
-<li>输入 p，查看分区信息，可以看到当前无分区。</li>
-<li>输入 n，创建分区。</li>
-<li>输入 p 或直接按 Enter，创建 Primary 类型的分区。</li>
-<li>输入 1 或直接按 Enter，创建序号为 1 的分区。</li>
-<li>输入 8192，输入第一个分区的起始扇区号。</li>
-<li>输入 593919，输入第一个分区的末尾扇区号。</li>
-<li>输入 t，设置分区类型。因为当前只有一个分区，会默认设置第一个分区的分区类型。</li>
-<li>输入 c，设置第一个分区类型为 W95 FAT32 (LBA)。</li>
-<li>输入 a，设置引导分区。因为当前只有一个分区，会默认设置第一个分区为引导分区。至此第一个分区分区完成。</li>
-<li>输入 p，查看当前分区情况，可以看到当前有一个分区。</li>
-<li>输入 n，创建分区。</li>
-<li>输入 p 或直接按 Enter，创建 Primary 类型的分区。</li>
-<li>输入 2 或直接按 Enter，创建序号为 2 的分区。</li>
-<li>输入 593920，输入第二个分区的起始扇区号。</li>
-<li>输入 1593343，输入第二个分区的末尾扇区号。</li>
-<li>输入 t，设置分区类型。</li>
-<li>输入 2 或直接按 Enter，选择要设置的分区序号。</li>
-<li>输入 82，设置第二个分区类型为 Linux swap &#x2F; Solaris，至此第二个分区分区完成。</li>
-<li>输入 p，查看当前分区情况，可以看到当前有两个分区。</li>
-<li>输入 n，创建分区。</li>
-<li>输入 p 或直接按 Enter，创建 Primary 类型的分区。</li>
-<li>输入 3 或直接按 Enter，创建序号为 3 的分区。</li>
-<li>输入 1593344，输入第三个分区的起始扇区号。</li>
-<li>按 Enter，输入第三个分区的末尾扇区号，使用最后一个扇区号作为第三个分区的末尾扇区号。</li>
-<li>输入 t，设置分区类型。</li>
-<li>输入 3 或直接按 Enter，选择要设置的分区序号。</li>
-<li>输入 83，设置第三个分区类型为 Linux。至此第三个分区分区完成。</li>
-<li>输入 p，查看当前分区情况，可以看到当前有三个分区。</li>
-<li>输入 w，写入并退出。</li>
+<li class="lvl-3">
+<p>输入 p，查看分区信息，可以看到当前无分区。</p>
+</li>
+<li class="lvl-3">
+<p>输入 n，创建分区。</p>
+</li>
+<li class="lvl-3">
+<p>输入 p 或直接按 Enter，创建 Primary 类型的分区。</p>
+</li>
+<li class="lvl-3">
+<p>输入 1 或直接按 Enter，创建序号为 1 的分区。</p>
+</li>
+<li class="lvl-3">
+<p>输入 8192，输入第一个分区的起始扇区号。</p>
+</li>
+<li class="lvl-3">
+<p>输入 593919，输入第一个分区的末尾扇区号。</p>
+</li>
+<li class="lvl-3">
+<p>输入 t，设置分区类型。因为当前只有一个分区，会默认设置第一个分区的分区类型。</p>
+</li>
+<li class="lvl-3">
+<p>输入 c，设置第一个分区类型为 W95 FAT32 (LBA)。</p>
+</li>
+<li class="lvl-3">
+<p>输入 a，设置引导分区。因为当前只有一个分区，会默认设置第一个分区为引导分区。至此第一个分区分区完成。</p>
+</li>
+<li class="lvl-4">
+<p>输入 p，查看当前分区情况，可以看到当前有一个分区。</p>
+</li>
+<li class="lvl-4">
+<p>输入 n，创建分区。</p>
+</li>
+<li class="lvl-4">
+<p>输入 p 或直接按 Enter，创建 Primary 类型的分区。</p>
+</li>
+<li class="lvl-4">
+<p>输入 2 或直接按 Enter，创建序号为 2 的分区。</p>
+</li>
+<li class="lvl-4">
+<p>输入 593920，输入第二个分区的起始扇区号。</p>
+</li>
+<li class="lvl-4">
+<p>输入 1593343，输入第二个分区的末尾扇区号。</p>
+</li>
+<li class="lvl-4">
+<p>输入 t，设置分区类型。</p>
+</li>
+<li class="lvl-4">
+<p>输入 2 或直接按 Enter，选择要设置的分区序号。</p>
+</li>
+<li class="lvl-4">
+<p>输入 82，设置第二个分区类型为 Linux swap / Solaris，至此第二个分区分区完成。</p>
+</li>
+<li class="lvl-4">
+<p>输入 p，查看当前分区情况，可以看到当前有两个分区。</p>
+</li>
+<li class="lvl-4">
+<p>输入 n，创建分区。</p>
+</li>
+<li class="lvl-4">
+<p>输入 p 或直接按 Enter，创建 Primary 类型的分区。</p>
+</li>
+<li class="lvl-4">
+<p>输入 3 或直接按 Enter，创建序号为 3 的分区。</p>
+</li>
+<li class="lvl-4">
+<p>输入 1593344，输入第三个分区的起始扇区号。</p>
+</li>
+<li class="lvl-4">
+<p>按 Enter，输入第三个分区的末尾扇区号，使用最后一个扇区号作为第三个分区的末尾扇区号。</p>
+</li>
+<li class="lvl-4">
+<p>输入 t，设置分区类型。</p>
+</li>
+<li class="lvl-4">
+<p>输入 3 或直接按 Enter，选择要设置的分区序号。</p>
+</li>
+<li class="lvl-4">
+<p>输入 83，设置第三个分区类型为 Linux。至此第三个分区分区完成。</p>
+</li>
+<li class="lvl-4">
+<p>输入 p，查看当前分区情况，可以看到当前有三个分区。</p>
+</li>
+<li class="lvl-4">
+<p>输入 w，写入并退出。</p>
+</li>
 </ol>
-<h3 id="将磁盘镜像文件虚拟成块设备"><a href="#将磁盘镜像文件虚拟成块设备" class="headerlink" title="将磁盘镜像文件虚拟成块设备"></a>将磁盘镜像文件虚拟成块设备</h3><figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo losetup -f <span class="comment">--show openEuler_raspi.img</span></span><br></pre></td></tr></table></figure>
-<p>我这里显示的结果为&#x2F;dev&#x2F;loop12</p>
-<h3 id="创建分区表设备映射"><a href="#创建分区表设备映射" class="headerlink" title="创建分区表设备映射"></a>创建分区表设备映射</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> kpartx -va /dev/loop12</span><br></pre></td></tr></table></figure>
+<h3 id="将磁盘镜像文件虚拟成块设备">将磁盘镜像文件虚拟成块设备</h3>
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo losetup -f <span class="comment">--show openEuler_raspi.img</span></span><br></pre></td></tr></table></figure>
+<p>我这里显示的结果为/dev/loop12</p>
+<h3 id="创建分区表设备映射">创建分区表设备映射</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> kpartx -va /dev/loop12</span><br></pre></td></tr></table></figure>
 <p>这里loop12换成上一步显示的你自己对应的设备</p>
 <p>得到结果将三个分区挂载</p>
 <figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">add</span> map loop12p1 (<span class="number">253</span>:<span class="number">0</span>): <span class="number">0</span> <span class="number">585728</span> linear <span class="number">7</span>:<span class="number">12</span> <span class="number">8192</span></span><br><span class="line"><span class="attribute">add</span> map loop12p2 (<span class="number">253</span>:<span class="number">1</span>): <span class="number">0</span> <span class="number">999424</span> linear <span class="number">7</span>:<span class="number">12</span> <span class="number">593920</span></span><br><span class="line"><span class="attribute">add</span> map loop12p3 (<span class="number">253</span>:<span class="number">2</span>): <span class="number">0</span> <span class="number">1028096</span> linear <span class="number">7</span>:<span class="number">12</span> <span class="number">1593344</span></span><br></pre></td></tr></table></figure>
-<p>运行 ls &#x2F;dev&#x2F;mapper&#x2F;loop12p* 可以看到分区分别对应刚才为 openEuler_raspi.img 做的三个分区：</p>
+<p>运行 ls /dev/mapper/loop12p* 可以看到分区分别对应刚才为 openEuler_raspi.img 做的三个分区：</p>
 <figure class="highlight smali"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/dev/mapper/loop12p1  /dev/mapper/loop12p2  /dev/mapper/loop12p3</span><br></pre></td></tr></table></figure>
-
-<h3 id="格式化分区"><a href="#格式化分区" class="headerlink" title="格式化分区"></a>格式化分区</h3><ol>
-<li>格式化boot分区<figure class="highlight smali"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkfs.vfat -n boot /dev/mapper/loop12p1</span><br></pre></td></tr></table></figure></li>
-<li>格式化swap分区<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkswap <span class="string">/dev/mapper/loop12p2</span> <span class="params">--pagesize</span> 4096</span><br></pre></td></tr></table></figure></li>
-<li>格式化根目录分区<figure class="highlight smali"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkfs.ext4 /dev/mapper/loop12p3</span><br></pre></td></tr></table></figure></li>
+<h3 id="格式化分区">格式化分区</h3>
+<ol>
+<li class="lvl-3">
+<p>格式化boot分区</p>
+</li>
 </ol>
-<h3 id="挂载根目录分区和boot分区"><a href="#挂载根目录分区和boot分区" class="headerlink" title="挂载根目录分区和boot分区"></a>挂载根目录分区和boot分区</h3><p>利用先前验证使用的mnt&#x2F;目录来进行挂载，如果你的电脑上没有，则在euler工作目录下创建一个mnt&#x2F;目录用来挂载。</p>
+<figure class="highlight smali"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkfs.vfat -n boot /dev/mapper/loop12p1</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li class="lvl-3">
+<p>格式化swap分区</p>
+</li>
+</ol>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkswap <span class="string">/dev/mapper/loop12p2</span> <span class="params">--pagesize</span> 4096</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li class="lvl-3">
+<p>格式化根目录分区</p>
+</li>
+</ol>
+<figure class="highlight smali"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkfs.ext4 /dev/mapper/loop12p3</span><br></pre></td></tr></table></figure>
+<h3 id="挂载根目录分区和boot分区">挂载根目录分区和boot分区</h3>
+<p>利用先前验证使用的mnt/目录来进行挂载，如果你的电脑上没有，则在euler工作目录下创建一个mnt/目录用来挂载。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> mount -t vfat -o uid=root,gid=root,<span class="built_in">umask</span>=0000 /dev/mapper/loop12p1 mnt/boot/</span><br><span class="line"><span class="built_in">sudo</span> mount -t ext4 /dev/mapper/loop12p3 mnt/root/</span><br></pre></td></tr></table></figure>
-
-<h3 id="修改fstab使系统能正确挂载分区"><a href="#修改fstab使系统能正确挂载分区" class="headerlink" title="修改fstab使系统能正确挂载分区"></a>修改fstab使系统能正确挂载分区</h3><h4 id="获取blkid"><a href="#获取blkid" class="headerlink" title="获取blkid"></a>获取blkid</h4><p>运行命令</p>
+<h3 id="修改fstab使系统能正确挂载分区">修改fstab使系统能正确挂载分区</h3>
+<h4 id="获取blkid">获取blkid</h4>
+<p>运行命令</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> blkid</span><br></pre></td></tr></table></figure>
 <p>然后查看三个分区的UUID，我的是这样</p>
 <figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/dev/mapper/loop12p1: <span class="attribute">SEC_TYPE</span>=<span class="string">&quot;msdos&quot;</span> <span class="attribute">LABEL_FATBOOT</span>=<span class="string">&quot;boot&quot;</span> <span class="attribute">LABEL</span>=<span class="string">&quot;boot&quot;</span> <span class="attribute">UUID</span>=<span class="string">&quot;6B1C-CEEF&quot;</span> <span class="attribute">TYPE</span>=<span class="string">&quot;vfat&quot;</span> <span class="attribute">PARTUUID</span>=<span class="string">&quot;52dc83dc-01&quot;</span></span><br><span class="line">/dev/mapper/loop12p2: <span class="attribute">UUID</span>=<span class="string">&quot;2b20721a-1321-41f6-bf6d-a2c65fa7584d&quot;</span> <span class="attribute">TYPE</span>=<span class="string">&quot;swap&quot;</span> <span class="attribute">PARTUUID</span>=<span class="string">&quot;52dc83dc-02&quot;</span></span><br><span class="line">/dev/mapper/loop12p3: <span class="attribute">UUID</span>=<span class="string">&quot;dc983371-7543-481d-acd2-a936e59c177c&quot;</span> <span class="attribute">TYPE</span>=<span class="string">&quot;ext4&quot;</span> <span class="attribute">PARTUUID</span>=<span class="string">&quot;52dc83dc-03&quot;</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="修改fstab"><a href="#修改fstab" class="headerlink" title="修改fstab"></a>修改fstab</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> vim rootfs/etc/fstab</span><br></pre></td></tr></table></figure>
+<h4 id="修改fstab">修改fstab</h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> vim rootfs/etc/fstab</span><br></pre></td></tr></table></figure>
 <p>在里面添加内容</p>
 <figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">UUID</span>=dc983371-<span class="number">7543</span>-<span class="number">481</span>d-acd2-a936e59c177c  / ext4    defaults,noatime <span class="number">0</span> <span class="number">0</span></span><br><span class="line"><span class="attribute">UUID</span>=<span class="number">6</span>B1C-CEEF	/boot vfat    defaults,noatime <span class="number">0</span> <span class="number">0</span></span><br><span class="line"><span class="attribute">UUID</span>=<span class="number">2</span>b20721a-<span class="number">1321</span>-<span class="number">41</span>f6-bf6d-a2c65fa7584d  swap swap    defaults,noatime <span class="number">0</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
-<p>剩下三个分区为上面创建的boot，交换分区和根文件系统。<br>其中ext4的UUID对应p3，swap对应p2，boot对应p1</p>
-<h3 id="将rootfs和boot复制到镜像"><a href="#将rootfs和boot复制到镜像" class="headerlink" title="将rootfs和boot复制到镜像"></a>将rootfs和boot复制到镜像</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">rsync -avHAXq rootfs/* mnt/root</span><br><span class="line"><span class="built_in">cd</span> <span class="variable">$&#123;WORKDIR&#125;</span>/boot</span><br><span class="line">tar cf <span class="variable">$&#123;WORKDIR&#125;</span>/boot.tar ./</span><br><span class="line"><span class="built_in">cd</span> <span class="variable">$&#123;WORKDIR&#125;</span>/mnt/boot</span><br><span class="line">tar xf <span class="variable">$&#123;WORKDIR&#125;</span>/boot.tar -C .</span><br></pre></td></tr></table></figure>
-
-<h3 id="卸载镜像"><a href="#卸载镜像" class="headerlink" title="卸载镜像"></a>卸载镜像</h3><p>卸载目录</p>
+<p>剩下三个分区为上面创建的boot，交换分区和根文件系统。其中ext4的UUID对应p3，swap对应p2，boot对应p1</p>
+<h3 id="将rootfs和boot复制到镜像">将rootfs和boot复制到镜像</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">rsync -avHAXq rootfs/* mnt/root</span><br><span class="line"><span class="built_in">cd</span> <span class="variable">$&#123;WORKDIR&#125;</span>/boot</span><br><span class="line">tar cf <span class="variable">$&#123;WORKDIR&#125;</span>/boot.tar ./</span><br><span class="line"><span class="built_in">cd</span> <span class="variable">$&#123;WORKDIR&#125;</span>/mnt/boot</span><br><span class="line">tar xf <span class="variable">$&#123;WORKDIR&#125;</span>/boot.tar -C .</span><br></pre></td></tr></table></figure>
+<h3 id="卸载镜像">卸载镜像</h3>
+<p>卸载目录</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> umount mnt/boot</span><br><span class="line"><span class="built_in">sudo</span> umount mnt/root</span><br></pre></td></tr></table></figure>
 <p>卸载块设备</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> kpartx -d /dev/loop12</span><br><span class="line"><span class="built_in">sudo</span> losetup -d /dev/loop12</span><br></pre></td></tr></table></figure>

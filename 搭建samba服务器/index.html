@@ -60,6 +60,8 @@
   </noscript>
 <!-- hexo injector head_end start -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
 <!-- hexo injector head_end end --></head>
 
 <body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
@@ -119,7 +121,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Samba%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">Samba简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85samba"><span class="nav-number">2.</span> <span class="nav-text">安装samba</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E5%85%B1%E4%BA%AB%E7%9B%AE%E5%BD%95"><span class="nav-number">3.</span> <span class="nav-text">配置共享目录</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEsamba"><span class="nav-number">4.</span> <span class="nav-text">配置samba</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0samba%E7%94%A8%E6%88%B7"><span class="nav-number">5.</span> <span class="nav-text">添加samba用户</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AEvfs"><span class="nav-number">6.</span> <span class="nav-text">设置vfs</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Windows%E4%B8%8B%E8%AE%BF%E9%97%AE"><span class="nav-number">7.</span> <span class="nav-text">Windows下访问</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Linux%E4%B8%8B%E8%AE%BF%E9%97%AE"><span class="nav-number">8.</span> <span class="nav-text">Linux下访问</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#IOS%E4%B8%8B%E8%AE%BF%E9%97%AE"><span class="nav-number">9.</span> <span class="nav-text">IOS下访问</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">Samba简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">安装samba</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">3.</span> <span class="nav-text">配置共享目录</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">4.</span> <span class="nav-text">配置samba</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">5.</span> <span class="nav-text">添加samba用户</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">6.</span> <span class="nav-text">设置vfs</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">7.</span> <span class="nav-text">Windows下访问</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">8.</span> <span class="nav-text">Linux下访问</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">9.</span> <span class="nav-text">IOS下访问</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -230,52 +232,61 @@
     
     <div class="post-body" itemprop="articleBody"><p>搭建这个服务器是因为工作时两台电脑（Win和Linux）互传文件，并且有时候需要和局域网内的其他人共享一些文件，大家的电脑也有win有linux，起初有如下几种办法：</p>
 <ol>
-<li><p>python</p>
-<p> 使用python自带的http服务器，一行命令python -m http.server [port]就可以运行服务器程序，然后在目标机使用wget或浏览器下载即可，优点是速度快，不需要登录，分享给好多人文件比较方便，缺点是每次都得在两台机器上分别操作，先打开服务器再输wget或者下载，要是多路径传输还得打开好几个，传少量文件的话每次输命令还是有点麻烦</p>
+<li class="lvl-3">
+<p>python</p>
+<p>使用python自带的http服务器，一行命令python -m http.server [port]就可以运行服务器程序，然后在目标机使用wget或浏览器下载即可，优点是速度快，不需要登录，分享给好多人文件比较方便，缺点是每次都得在两台机器上分别操作，先打开服务器再输wget或者下载，要是多路径传输还得打开好几个，传少量文件的话每次输命令还是有点麻烦</p>
 </li>
-<li><p>sftp</p>
-<p> 使用sftp，只要装了ssh就可以用，优点是速度快，切换路径方便，但是每次都得登录，然后访问到目的机器的路径，传小文件也很麻烦，而且没法共享，有些人的windows上面也没有ssh server</p>
+<li class="lvl-3">
+<p>sftp</p>
+<p>使用sftp，只要装了ssh就可以用，优点是速度快，切换路径方便，但是每次都得登录，然后访问到目的机器的路径，传小文件也很麻烦，而且没法共享，有些人的windows上面也没有ssh server</p>
 </li>
-<li><p>rsync</p>
-<p> 这个其实是包装了sftp，优点是一行命令就能传，以及sftp其他所有的优点：</p>
+<li class="lvl-3">
+<p>rsync</p>
+<p>这个其实是包装了sftp，优点是一行命令就能传，以及sftp其他所有的优点：</p>
  <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rsync -ravz /path/to/source username@ip:/path/to/dist</span><br></pre></td></tr></table></figure>
-<p> 但是缺点也很明显，windows上没有rsync，只能linux之间传输</p>
+<p>但是缺点也很明显，windows上没有rsync，只能linux之间传输</p>
 </li>
 </ol>
 <p>最终想到了windows的共享文件夹，查阅资料后发现windows共享文件夹基于samba实现，其不仅能电脑之间相互访问，手机也可以访问，非常符合需求。</p>
-<h1 id="Samba简介"><a href="#Samba简介" class="headerlink" title="Samba简介"></a>Samba简介</h1><p>Samba是一个开源服务器免费应用程序，其使用SMB协议，提供了Windows客户机对Unix服务器访问以及Unix客户机对Windows服务器访问的功能，第三版不仅可访问及分享SMB的文件夹及打印机，本身还可以集成入Windows Server的网域，扮演为网域控制站（Domain Controller）以及加入Active Directory成员。简而言之，此软件在Windows与UNIX系列操作系统之间搭起一座桥梁，让两者的资源可互通有无。</p>
-<h1 id="安装samba"><a href="#安装samba" class="headerlink" title="安装samba"></a>安装samba</h1><p>直接apt安装即可</p>
+<h1>Samba简介</h1>
+<p>Samba是一个开源服务器免费应用程序，其使用SMB协议，提供了Windows客户机对Unix服务器访问以及Unix客户机对Windows服务器访问的功能，第三版不仅可访问及分享SMB的文件夹及打印机，本身还可以集成入Windows Server的网域，扮演为网域控制站（Domain Controller）以及加入Active Directory成员。简而言之，此软件在Windows与UNIX系列操作系统之间搭起一座桥梁，让两者的资源可互通有无。</p>
+<h1>安装samba</h1>
+<p>直接apt安装即可</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get install samba</span><br></pre></td></tr></table></figure>
-
-<h1 id="配置共享目录"><a href="#配置共享目录" class="headerlink" title="配置共享目录"></a>配置共享目录</h1><p>这里在创建好共享目录后，需要修改权限，否则可能某些平台上为只读文件，然后出现意想不到的bug</p>
+<h1>配置共享目录</h1>
+<p>这里在创建好共享目录后，需要修改权限，否则可能某些平台上为只读文件，然后出现意想不到的bug</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p /path/to/share</span><br><span class="line"><span class="built_in">chmod</span> 777 /path/to/share</span><br></pre></td></tr></table></figure>
-
-<h1 id="配置samba"><a href="#配置samba" class="headerlink" title="配置samba"></a>配置samba</h1><p>先备份samba配置文件，方便恢复初始设置</p>
+<h1>配置samba</h1>
+<p>先备份samba配置文件，方便恢复初始设置</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> <span class="built_in">cp</span> /etc/samba/smb.conf /etc/samba/smb.conf.bak</span><br></pre></td></tr></table></figure>
 <p>用文本编辑器打开配置文件</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> vim /etc/samba/smb.conf</span><br></pre></td></tr></table></figure>
-
 <p>在末尾添加以下内容</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[share] <span class="comment"># 共享文件夹的名字</span></span><br><span class="line">   comment = Samba Share <span class="comment"># 描述</span></span><br><span class="line">   path = /path/to/share <span class="comment"># 共享文件夹目录，和上面创建的文件夹保持一直</span></span><br><span class="line">   browsable = <span class="built_in">yes</span> <span class="comment"># 是否可见，若设置为no，只能通过绝对路径访问该文件夹</span></span><br><span class="line">   guest ok = no <span class="comment"># 允许不登陆访问</span></span><br><span class="line">   <span class="built_in">read</span> only = no <span class="comment"># 只读</span></span><br><span class="line">   create mask = 0755</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h1 id="添加samba用户"><a href="#添加samba用户" class="headerlink" title="添加samba用户"></a>添加samba用户</h1><p>若上面的guest ok &#x3D;no，则需要添加samba用户后才可访问共享文件夹</p>
+<h1>添加samba用户</h1>
+<p>若上面的guest ok =no，则需要添加samba用户后才可访问共享文件夹</p>
 <p>添加用户并为其设置samba密码</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> smbpasswd -a [username] <span class="comment"># username为你想创建的用户名</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="设置vfs"><a href="#设置vfs" class="headerlink" title="设置vfs"></a>设置vfs</h1><p>如果需要通过ios上传文件，则需要添加如下设置，否则会出现：<br><strong>“未能完成操作 文件名太长”</strong><br>的提示</p>
+<h1>设置vfs</h1>
+<p>如果需要通过ios上传文件，则需要添加如下设置，否则会出现：<br>
+<strong>“未能完成操作 文件名太长”</strong><br>
+的提示</p>
 <p>用文本编辑器打开配置文件</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> vim /etc/samba/smb.conf</span><br></pre></td></tr></table></figure>
 <p>然后：</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">在[global]中添加</span><br><span class="line">     vfs objects = catia fruit streams_xattr</span><br></pre></td></tr></table></figure>
 <p>即可</p>
-<h1 id="Windows下访问"><a href="#Windows下访问" class="headerlink" title="Windows下访问"></a>Windows下访问</h1><p>在资源管理器的路径框或运行框中输入 \\192.168.1.1（192.168.1.1）替换成你的服务器ip即可</p>
-<h1 id="Linux下访问"><a href="#Linux下访问" class="headerlink" title="Linux下访问"></a>Linux下访问</h1><p>先安装cifs-utils</p>
+<h1>Windows下访问</h1>
+<p>在资源管理器的路径框或运行框中输入 \\192.168.1.1（192.168.1.1）替换成你的服务器ip即可</p>
+<h1>Linux下访问</h1>
+<p>先安装cifs-utils</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get install cifs-utils</span><br></pre></td></tr></table></figure>
-
 <p>将共享文件夹挂在到相应目录</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> mount -t cifs -o username=username,password=<span class="string">&quot;passwd&quot;</span> //smb服务器ip/path/to/share /path/to/mnt</span><br></pre></td></tr></table></figure>
-<p><strong>注: 其中&#x2F;path&#x2F;to&#x2F;share路径为共享文件夹的名称，比如我上面设定的是[share]，那么在smb服务器中就写&#x2F;&#x2F;ip&#x2F;share，而不是共享文件夹在服务器本地的绝对路径</strong> </p>
-<h1 id="IOS下访问"><a href="#IOS下访问" class="headerlink" title="IOS下访问"></a>IOS下访问</h1><p>IOS的“文件”应用中，点击右上角三个点，选择“连接服务器”<br><img src="/img_folder/Samba-IOS1.jpg"></p>
+<p><strong>注: 其中/path/to/share路径为共享文件夹的名称，比如我上面设定的是[share]，那么在smb服务器中就写//ip/share，而不是共享文件夹在服务器本地的绝对路径</strong></p>
+<h1>IOS下访问</h1>
+<p>IOS的“文件”应用中，点击右上角三个点，选择“连接服务器”<br>
+<img src="/img_folder/Samba-IOS1.jpg" alt=""></p>
 <p>然后输入服务器ip，点击连接，然后选择“注册用户”，然后使用刚才的samba账户登录即可</p>
 
     </div>

@@ -57,6 +57,8 @@
   </noscript>
 <!-- hexo injector head_end start -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
 <!-- hexo injector head_end end --></head>
 
 <body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
@@ -116,7 +118,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9C%A8word%E4%B8%AD%E4%BD%BF%E7%94%A8bib%E6%8F%92%E5%85%A5%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-number">1.</span> <span class="nav-text">在word中使用bib插入参考文献</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9C%A8powershell%E4%B8%AD%E4%BD%BF%E7%94%A8linux%E5%91%BD%E4%BB%A4%E8%A1%8C"><span class="nav-number">2.</span> <span class="nav-text">在powershell中使用linux命令行</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#chocolaty"><span class="nav-number">2.1.</span> <span class="nav-text">chocolaty</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%90%E8%A1%8Clinux%E5%91%BD%E4%BB%A4"><span class="nav-number">2.2.</span> <span class="nav-text">运行linux命令</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%88%AA%E5%9B%BE%E5%B7%A5%E5%85%B7"><span class="nav-number">3.</span> <span class="nav-text">截图工具</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%A8%E7%9B%98%E6%90%9C%E7%B4%A2%E5%B7%A5%E5%85%B7"><span class="nav-number">4.</span> <span class="nav-text">全盘搜索工具</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#vscode%E6%8F%92%E4%BB%B6"><span class="nav-number">5.</span> <span class="nav-text">vscode插件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#tabnine"><span class="nav-number">5.1.</span> <span class="nav-text">tabnine</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Draw-io-Intergration"><span class="nav-number">5.2.</span> <span class="nav-text">Draw.io Intergration</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#barriers"><span class="nav-number">6.</span> <span class="nav-text">barriers</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">在word中使用bib插入参考文献</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">在powershell中使用linux命令行</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#chocolaty"><span class="nav-number">2.1.</span> <span class="nav-text">chocolaty</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%90%E8%A1%8Clinux%E5%91%BD%E4%BB%A4"><span class="nav-number">2.2.</span> <span class="nav-text">运行linux命令</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">3.</span> <span class="nav-text">截图工具</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">4.</span> <span class="nav-text">全盘搜索工具</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">5.</span> <span class="nav-text">vscode插件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#tabnine"><span class="nav-number">5.1.</span> <span class="nav-text">tabnine</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Draw-io-Intergration"><span class="nav-number">5.2.</span> <span class="nav-text">Draw.io Intergration</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">6.</span> <span class="nav-text">barriers</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -219,19 +221,29 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><h1 id="在word中使用bib插入参考文献"><a href="#在word中使用bib插入参考文献" class="headerlink" title="在word中使用bib插入参考文献"></a>在word中使用bib插入参考文献</h1><p><a target="_blank" rel="noopener" href="http://www.ee.ic.ac.uk/hp/staff/dmb/perl/index.html">bib4word</a></p>
+    <div class="post-body" itemprop="articleBody"><h1>在word中使用bib插入参考文献</h1>
+<p><a target="_blank" rel="noopener" href="http://www.ee.ic.ac.uk/hp/staff/dmb/perl/index.html">bib4word</a></p>
 <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_37412775/article/details/120854017">教程</a></p>
-<h1 id="在powershell中使用linux命令行"><a href="#在powershell中使用linux命令行" class="headerlink" title="在powershell中使用linux命令行"></a>在powershell中使用linux命令行</h1><h2 id="chocolaty"><a href="#chocolaty" class="headerlink" title="chocolaty"></a>chocolaty</h2><p>chocolaty是windows下的一款包管理软件<br><a target="_blank" rel="noopener" href="https://chocolatey.org/install">官网</a></p>
-<h2 id="运行linux命令"><a href="#运行linux命令" class="headerlink" title="运行linux命令"></a>运行linux命令</h2><p><a target="_blank" rel="noopener" href="https://github.com/farhanmustar/windows-config">一些常用的工具包</a></p>
+<h1>在powershell中使用linux命令行</h1>
+<h2 id="chocolaty">chocolaty</h2>
+<p>chocolaty是windows下的一款包管理软件<a target="_blank" rel="noopener" href="https://chocolatey.org/install">官网</a></p>
+<h2 id="运行linux命令">运行linux命令</h2>
+<p><a target="_blank" rel="noopener" href="https://github.com/farhanmustar/windows-config">一些常用的工具包</a></p>
 <figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">choco install `- [在word中使用bib插入参考文献](#在word中使用bib插入参考文献)</span><br><span class="line"></span><br><span class="line">postman `</span><br><span class="line">free-download-manager `</span><br><span class="line">psutils `</span><br><span class="line">wezterm `</span><br><span class="line">rclone `</span><br><span class="line">vcxsrv `</span><br><span class="line">filezilla dbeaver <span class="number">7</span>zip `</span><br><span class="line">advanced-ip-scanner wireshark `</span><br><span class="line">libreoffice notepadplusplus `</span><br><span class="line">paint.net inkscape `</span><br><span class="line">vlc `</span><br><span class="line">git `</span><br><span class="line">flameshot `</span><br><span class="line">powertoys `</span><br><span class="line">cpu-z hwmonitor wiztree `</span><br><span class="line">-y</span><br></pre></td></tr></table></figure>
-
-<p><a target="_blank" rel="noopener" href="https://community.chocolatey.org/packages?page=1&prerelease=False&moderatorQueue=False&tags=psutils">psutils</a><br>这个工具可以在powershell中使用一些linux命令，比如最常见的sudo，ls等</p>
-<h1 id="截图工具"><a href="#截图工具" class="headerlink" title="截图工具"></a>截图工具</h1><p>ShareX</p>
-<h1 id="全盘搜索工具"><a href="#全盘搜索工具" class="headerlink" title="全盘搜索工具"></a>全盘搜索工具</h1><p><a target="_blank" rel="noopener" href="https://www.listary.com/download">listary</a>（Windows）</p>
+<p><a target="_blank" rel="noopener" href="https://community.chocolatey.org/packages?page=1&amp;prerelease=False&amp;moderatorQueue=False&amp;tags=psutils">psutils</a><br>
+这个工具可以在powershell中使用一些linux命令，比如最常见的sudo，ls等</p>
+<h1>截图工具</h1>
+<p>ShareX</p>
+<h1>全盘搜索工具</h1>
+<p><a target="_blank" rel="noopener" href="https://www.listary.com/download">listary</a>（Windows）</p>
 <p><a target="_blank" rel="noopener" href="https://github.com/albertlauncher/albert">Albert</a>（Linux下的Listary）</p>
-<h1 id="vscode插件"><a href="#vscode插件" class="headerlink" title="vscode插件"></a>vscode插件</h1><h2 id="tabnine"><a href="#tabnine" class="headerlink" title="tabnine"></a>tabnine</h2><p>一款AI自动补全代码插件</p>
-<h2 id="Draw-io-Intergration"><a href="#Draw-io-Intergration" class="headerlink" title="Draw.io Intergration"></a>Draw.io Intergration</h2><p>在vscode里面画draw.io</p>
-<h1 id="barriers"><a href="#barriers" class="headerlink" title="barriers"></a>barriers</h1><p><a target="_blank" rel="noopener" href="https://github.com/debauchee/barrier">不同电脑共用一套键盘鼠标</a></p>
+<h1>vscode插件</h1>
+<h2 id="tabnine">tabnine</h2>
+<p>一款AI自动补全代码插件</p>
+<h2 id="Draw-io-Intergration"><a target="_blank" rel="noopener" href="http://Draw.io">Draw.io</a> Intergration</h2>
+<p><a target="_blank" rel="noopener" href="http://xn--vscodedraw-eh3rk100aivxd9lq.io">在vscode里面画draw.io</a></p>
+<h1>barriers</h1>
+<p><a target="_blank" rel="noopener" href="https://github.com/debauchee/barrier">不同电脑共用一套键盘鼠标</a></p>
 
     </div>
 

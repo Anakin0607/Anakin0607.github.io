@@ -59,6 +59,8 @@
   </noscript>
 <!-- hexo injector head_end start -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
 <!-- hexo injector head_end end --></head>
 
 <body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
@@ -118,7 +120,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#CMake%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">CMake简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E5%B7%A5%E7%A8%8B"><span class="nav-number">2.</span> <span class="nav-text">简单工程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E5%86%99CMakeLists-txt"><span class="nav-number">2.1.</span> <span class="nav-text">编写CMakeLists.txt</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%84%E5%BB%BA%E9%A1%B9%E7%9B%AE"><span class="nav-number">2.2.</span> <span class="nav-text">构建项目</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B5%8C%E5%A5%97%E5%B7%A5%E7%A8%8B"><span class="nav-number">3.</span> <span class="nav-text">嵌套工程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B7%A5%E7%A8%8B%E7%BB%93%E6%9E%84"><span class="nav-number">3.1.</span> <span class="nav-text">工程结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E5%AD%90%E7%9B%AE%E5%BD%95"><span class="nav-number">3.2.</span> <span class="nav-text">添加子目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E7%AC%AC%E4%B8%89%E6%96%B9%E6%A8%A1%E5%9D%97"><span class="nav-number">3.3.</span> <span class="nav-text">添加第三方模块</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91"><span class="nav-number">4.</span> <span class="nav-text">交叉编译</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%B4%E6%8E%A5%E7%BC%96%E8%AF%91"><span class="nav-number">4.1.</span> <span class="nav-text">直接编译</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8toolchain"><span class="nav-number">4.2.</span> <span class="nav-text">使用toolchain</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#arm%E5%A4%84%E7%90%86%E5%99%A8%E7%9A%84%E7%BC%96%E8%AF%91%E5%8F%82%E6%95%B0%E8%AE%BE%E7%BD%AE"><span class="nav-number">4.3.</span> <span class="nav-text">arm处理器的编译参数设置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BF%85%E8%A6%81%E5%8F%82%E6%95%B0"><span class="nav-number">4.3.1.</span> <span class="nav-text">必要参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E5%8F%82%E6%95%B0"><span class="nav-number">4.3.2.</span> <span class="nav-text">优化参数</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">5.</span> <span class="nav-text">安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8C%87%E5%AE%9A%E5%AE%89%E8%A3%85%E8%B7%AF%E5%BE%84"><span class="nav-number">5.1.</span> <span class="nav-text">指定安装路径</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E6%A0%87%E6%96%87%E4%BB%B6%E7%9A%84%E5%AE%89%E8%A3%85"><span class="nav-number">5.2.</span> <span class="nav-text">目标文件的安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E6%96%87%E4%BB%B6%E7%9A%84%E5%AE%89%E8%A3%85"><span class="nav-number">5.3.</span> <span class="nav-text">其他文件的安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B7%AF%E5%BE%84%E7%9A%84%E5%AE%89%E8%A3%85"><span class="nav-number">5.4.</span> <span class="nav-text">路径的安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E6%97%B6%E8%84%9A%E6%9C%AC%E7%9A%84%E8%BF%90%E8%A1%8C"><span class="nav-number">5.5.</span> <span class="nav-text">安装时脚本的运行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E6%97%B6rpath"><span class="nav-number">5.6.</span> <span class="nav-text">安装时rpath</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFrpath"><span class="nav-number">5.6.1.</span> <span class="nav-text">什么是rpath</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cmake%E4%B8%AD%E7%9A%84rpath"><span class="nav-number">5.6.2.</span> <span class="nav-text">cmake中的rpath</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E6%90%9C%E7%B4%A2%E6%8C%87%E4%BB%A4"><span class="nav-number">6.</span> <span class="nav-text">文件搜索指令</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%90%9C%E7%B4%A2%E6%BA%90%E6%96%87%E4%BB%B6"><span class="nav-number">6.1.</span> <span class="nav-text">搜索源文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%90%9C%E7%B4%A2%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6"><span class="nav-number">6.2.</span> <span class="nav-text">搜索任意文件</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4%E5%8F%82%E8%80%83"><span class="nav-number">7.</span> <span class="nav-text">常用指令参考</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#CMake%E6%8E%A7%E5%88%B6%E6%8C%87%E4%BB%A4"><span class="nav-number">7.1.</span> <span class="nav-text">CMake控制指令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CMake%E5%B8%B8%E7%94%A8%E5%8F%98%E9%87%8F"><span class="nav-number">7.2.</span> <span class="nav-text">CMake常用变量</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E5%8F%98%E9%87%8F"><span class="nav-number">7.2.1.</span> <span class="nav-text">常用变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E4%BF%A1%E6%81%AF"><span class="nav-number">7.2.2.</span> <span class="nav-text">系统信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cmake%E7%BC%96%E8%AF%91%E9%80%89%E9%A1%B9"><span class="nav-number">7.2.3.</span> <span class="nav-text">cmake编译选项</span></a></li></ol></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">CMake简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">简单工程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E5%86%99CMakeLists-txt"><span class="nav-number">2.1.</span> <span class="nav-text">编写CMakeLists.txt</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%84%E5%BB%BA%E9%A1%B9%E7%9B%AE"><span class="nav-number">2.2.</span> <span class="nav-text">构建项目</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">3.</span> <span class="nav-text">嵌套工程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B7%A5%E7%A8%8B%E7%BB%93%E6%9E%84"><span class="nav-number">3.1.</span> <span class="nav-text">工程结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E5%AD%90%E7%9B%AE%E5%BD%95"><span class="nav-number">3.2.</span> <span class="nav-text">添加子目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E7%AC%AC%E4%B8%89%E6%96%B9%E6%A8%A1%E5%9D%97"><span class="nav-number">3.3.</span> <span class="nav-text">添加第三方模块</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">4.</span> <span class="nav-text">交叉编译</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%B4%E6%8E%A5%E7%BC%96%E8%AF%91"><span class="nav-number">4.1.</span> <span class="nav-text">直接编译</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8toolchain"><span class="nav-number">4.2.</span> <span class="nav-text">使用toolchain</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#arm%E5%A4%84%E7%90%86%E5%99%A8%E7%9A%84%E7%BC%96%E8%AF%91%E5%8F%82%E6%95%B0%E8%AE%BE%E7%BD%AE"><span class="nav-number">4.3.</span> <span class="nav-text">arm处理器的编译参数设置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BF%85%E8%A6%81%E5%8F%82%E6%95%B0"><span class="nav-number">4.3.1.</span> <span class="nav-text">必要参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E5%8F%82%E6%95%B0"><span class="nav-number">4.3.2.</span> <span class="nav-text">优化参数</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">5.</span> <span class="nav-text">安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8C%87%E5%AE%9A%E5%AE%89%E8%A3%85%E8%B7%AF%E5%BE%84"><span class="nav-number">5.1.</span> <span class="nav-text">指定安装路径</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E6%A0%87%E6%96%87%E4%BB%B6%E7%9A%84%E5%AE%89%E8%A3%85"><span class="nav-number">5.2.</span> <span class="nav-text">目标文件的安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E6%96%87%E4%BB%B6%E7%9A%84%E5%AE%89%E8%A3%85"><span class="nav-number">5.3.</span> <span class="nav-text">其他文件的安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B7%AF%E5%BE%84%E7%9A%84%E5%AE%89%E8%A3%85"><span class="nav-number">5.4.</span> <span class="nav-text">路径的安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E6%97%B6%E8%84%9A%E6%9C%AC%E7%9A%84%E8%BF%90%E8%A1%8C"><span class="nav-number">5.5.</span> <span class="nav-text">安装时脚本的运行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E6%97%B6rpath"><span class="nav-number">5.6.</span> <span class="nav-text">安装时rpath</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFrpath"><span class="nav-number">5.6.1.</span> <span class="nav-text">什么是rpath</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cmake%E4%B8%AD%E7%9A%84rpath"><span class="nav-number">5.6.2.</span> <span class="nav-text">cmake中的rpath</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">6.</span> <span class="nav-text">文件搜索指令</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%90%9C%E7%B4%A2%E6%BA%90%E6%96%87%E4%BB%B6"><span class="nav-number">6.1.</span> <span class="nav-text">搜索源文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%90%9C%E7%B4%A2%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6"><span class="nav-number">6.2.</span> <span class="nav-text">搜索任意文件</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">7.</span> <span class="nav-text">常用指令参考</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#CMake%E6%8E%A7%E5%88%B6%E6%8C%87%E4%BB%A4"><span class="nav-number">7.1.</span> <span class="nav-text">CMake控制指令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CMake%E5%B8%B8%E7%94%A8%E5%8F%98%E9%87%8F"><span class="nav-number">7.2.</span> <span class="nav-text">CMake常用变量</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E5%8F%98%E9%87%8F"><span class="nav-number">7.2.1.</span> <span class="nav-text">常用变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E4%BF%A1%E6%81%AF"><span class="nav-number">7.2.2.</span> <span class="nav-text">系统信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cmake%E7%BC%96%E8%AF%91%E9%80%89%E9%A1%B9"><span class="nav-number">7.2.3.</span> <span class="nav-text">cmake编译选项</span></a></li></ol></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -227,92 +229,154 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><h1 id="CMake简介"><a href="#CMake简介" class="headerlink" title="CMake简介"></a>CMake简介</h1><p>CMake，make这些工具可以通过用户描述的构建目标以及依赖关系，从项目源代码自动化的构建可执行文件和库，CMake相比另外一种工具make，其描述方法更像一种脚本语言，使用command(argument)模式，相比makefile里的target:pre –command模式，能进行的操作更多，功能也更齐全，对于大型项目的管理也就更加方便，并且这种脚本语言与平台无关。</p>
-<h1 id="简单工程"><a href="#简单工程" class="headerlink" title="简单工程"></a>简单工程</h1><p>先以一个简单的项目为例介绍一下CMake使用的基本流程：一般工程的构建流程为<br>编写源码-&gt;编写CMakeLists.txt文件-&gt;执行cmake命令-&gt;生成makefile文件-&gt;执行make命令-&gt;编译链接程序</p>
-<p>在开始编写代码之前，最好先建立一个项目目录，用于分开存放不同类型的文件，方便项目的管理。<br>我个人习惯的基础项目结构如下：</p>
+    <div class="post-body" itemprop="articleBody"><h1>CMake简介</h1>
+<p>CMake，make这些工具可以通过用户描述的构建目标以及依赖关系，从项目源代码自动化的构建可执行文件和库，CMake相比另外一种工具make，其描述方法更像一种脚本语言，使用command(argument)模式，相比makefile里的target:pre --command模式，能进行的操作更多，功能也更齐全，对于大型项目的管理也就更加方便，并且这种脚本语言与平台无关。</p>
+<h1>简单工程</h1>
+<p>先以一个简单的项目为例介绍一下CMake使用的基本流程：一般工程的构建流程为编写源码-&gt;编写CMakeLists.txt文件-&gt;执行cmake命令-&gt;生成makefile文件-&gt;执行make命令-&gt;编译链接程序</p>
+<p>在开始编写代码之前，最好先建立一个项目目录，用于分开存放不同类型的文件，方便项目的管理。我个人习惯的基础项目结构如下：</p>
 <ol>
-<li>先建立一个工程目录</li>
-<li>在工程目录下建立一个build目录，用于存放cmake构建过程中产生的文件，以避免弄乱源码存放目录。</li>
-<li>建立include目录用于存放.h文件</li>
-<li>建立libs目录用于存放第三方库文件</li>
-<li>建立src目录存放源码</li>
-<li>CMakeLists.txt文件放置于工程根目录下<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">├── build</span><br><span class="line">├── CMakeLists<span class="selector-class">.txt</span></span><br><span class="line">├── include</span><br><span class="line">│   └── head<span class="selector-class">.h</span></span><br><span class="line">├── libs</span><br><span class="line">│   └── libshare<span class="selector-class">.so</span></span><br><span class="line">│   └── libstatic<span class="selector-class">.a</span></span><br><span class="line">└── <span class="attribute">src</span></span><br><span class="line">    ├── <span class="selector-tag">a</span><span class="selector-class">.cpp</span></span><br><span class="line">    ├── <span class="selector-tag">b</span><span class="selector-class">.cpp</span></span><br><span class="line">    ├── <span class="selector-tag">a</span><span class="selector-class">.h</span></span><br><span class="line">    └── <span class="selector-tag">main</span>.cpp</span><br></pre></td></tr></table></figure>
-将源码编写完毕并放置于相应的目录下后，开始编写CMakeLists.txt</li>
+<li class="lvl-3">
+<p>先建立一个工程目录</p>
+</li>
+<li class="lvl-3">
+<p>在工程目录下建立一个build目录，用于存放cmake构建过程中产生的文件，以避免弄乱源码存放目录。</p>
+</li>
+<li class="lvl-3">
+<p>建立include目录用于存放.h文件</p>
+</li>
+<li class="lvl-3">
+<p>建立libs目录用于存放第三方库文件</p>
+</li>
+<li class="lvl-3">
+<p>建立src目录存放源码</p>
+</li>
+<li class="lvl-3">
+<p>CMakeLists.txt文件放置于工程根目录下</p>
+</li>
 </ol>
-<h2 id="编写CMakeLists-txt"><a href="#编写CMakeLists-txt" class="headerlink" title="编写CMakeLists.txt"></a>编写CMakeLists.txt</h2><p>CMakeLists.txt就是cmake会执行的脚本，cmake会逐条执行CMakeLists.txt中的语句，下面先介绍几个常用的语句：</p>
-<ul>
-<li>指定CMake版本范围<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cmake_minimum_required</span>(VERSION <span class="number">3.4</span> [FATAL_ERROR])</span><br></pre></td></tr></table></figure>
-由于cmake一直在更新，故老版本的cmake可能不支持一些新的语法特性，无法完成一些用新版本语法编写的项目的构建，因此在开始构建之前，可以使用这个命令先检查构建平台的cmake版本，来避免一些不必要的问题出现。<br>其中FATAL_ERROR为可选项，若加入，则当版本低于要求的版本号时，cmake会直接退出，若不加，则cmake仅报告warning告知版本过低，仍继续下面的构建。</li>
-<li>设置项目名称</li>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">├── build</span><br><span class="line">├── CMakeLists<span class="selector-class">.txt</span></span><br><span class="line">├── include</span><br><span class="line">│   └── head<span class="selector-class">.h</span></span><br><span class="line">├── libs</span><br><span class="line">│   └── libshare<span class="selector-class">.so</span></span><br><span class="line">│   └── libstatic<span class="selector-class">.a</span></span><br><span class="line">└── <span class="attribute">src</span></span><br><span class="line">    ├── <span class="selector-tag">a</span><span class="selector-class">.cpp</span></span><br><span class="line">    ├── <span class="selector-tag">b</span><span class="selector-class">.cpp</span></span><br><span class="line">    ├── <span class="selector-tag">a</span><span class="selector-class">.h</span></span><br><span class="line">    └── <span class="selector-tag">main</span>.cpp</span><br></pre></td></tr></table></figure>
+<p>将源码编写完毕并放置于相应的目录下后，开始编写CMakeLists.txt</p>
+<h2 id="编写CMakeLists-txt">编写CMakeLists.txt</h2>
+<p>CMakeLists.txt就是cmake会执行的脚本，cmake会逐条执行CMakeLists.txt中的语句，下面先介绍几个常用的语句：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>指定CMake版本范围</p>
+</li>
+</ul>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cmake_minimum_required</span>(VERSION <span class="number">3.4</span> [FATAL_ERROR])</span><br></pre></td></tr></table></figure>
+<p>由于cmake一直在更新，故老版本的cmake可能不支持一些新的语法特性，无法完成一些用新版本语法编写的项目的构建，因此在开始构建之前，可以使用这个命令先检查构建平台的cmake版本，来避免一些不必要的问题出现。其中FATAL_ERROR为可选项，若加入，则当版本低于要求的版本号时，cmake会直接退出，若不加，则cmake仅报告warning告知版本过低，仍继续下面的构建。</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>设置项目名称</p>
+</li>
 </ul>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">project</span>(project_name)</span><br></pre></td></tr></table></figure>
 <p>它会引入两个变量project_name_BINARY_DIR和project_name_SOURCE_DIR，同时，cmake自动定义了两个等价的变量PROJECT_BINARY_DIR和PROJECT_SOURCE_DIR。</p>
-<ul>
-<li>编译目标文件</li>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>编译目标文件</p>
+</li>
 </ul>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">add_executable</span>(exe exec.cpp) <span class="comment"># 生成可执行文件</span></span><br><span class="line"><span class="keyword">add_library</span>(util1 STATIC util1-<span class="number">1</span>.cpp util1-<span class="number">2</span>.cpp) <span class="comment"># 生成静态库</span></span><br><span class="line"><span class="keyword">add_library</span>(util2 SHARED util2.cpp) <span class="comment"># 生成动态库或共享库</span></span><br></pre></td></tr></table></figure>
-<p>这两个命令是最常用的命令，一个语句负责一个目标文件的生成，括号中的第一个参数为目标文件名字，如上面的例子，可执行文件会直接生成exec，静态库会生成libutil1.a(linux)或util1.lib(windows)，动态库会生成libutil2.so(linux)或util2.dll(windows)；除了第一个参数外，后面可以跟多个参数，可以是文件名也可以是变量，表示生成该目标文件所需的源文件。</p>
-<ul>
-<li>链接目标文件</li>
+<p>这两个命令是最常用的命令，一个语句负责一个目标文件的生成，括号中的第一个参数为目标文件名字，如上面的例子，可执行文件会直接生成exec，静态库会生成libutil1.a(linux)或util1.lib(windows)，<a target="_blank" rel="noopener" href="http://xn--libutil2-i31mq70a587aqud2tiu18e.so">动态库会生成libutil2.so</a>(linux)或util2.dll(windows)；除了第一个参数外，后面可以跟多个参数，可以是文件名也可以是变量，表示生成该目标文件所需的源文件。</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>链接目标文件</p>
+</li>
 </ul>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">target_link_libraries</span>(exe util1 util2)</span><br></pre></td></tr></table></figure>
 <p>一个语句指明了一条链接规则，其中第一个参数为要链接的目标文件，后面可以跟一个或多个参数，表示要链接的库名。</p>
-<ul>
-<li>添加库文件和头文件的搜索目录</li>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>添加库文件和头文件的搜索目录</p>
+</li>
 </ul>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">include_directories</span>(<span class="keyword">include</span>/)</span><br><span class="line"><span class="keyword">link_directories</span>(lib/)</span><br></pre></td></tr></table></figure>
 <p>如果不添加相应的搜索目录，cmake只会到系统默认的目录下去搜索相应的库文件和头文件，这个指令的作用是将参数中的目录添加到搜索路径中，一条指令可以添加一个或多个目录，编译器和链接器会按照添加的先后顺序去搜索相应文件。</p>
-<ul>
-<li>设置变量<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span>(SRC_LIST src.cpp)</span><br><span class="line"><span class="keyword">add_executable</span>(src <span class="variable">$&#123;SRC_LIST&#125;</span>)</span><br></pre></td></tr></table></figure>
-cmake中也可以设置变量，类似shell中的SRC_LIST&#x3D;src.cpp语句，每个语句的第一个参数为变量名，后面可以跟一个或多个参数，如果后面只有一个参数，就代表将这个值赋给变量，如果跟多个值，就类似shell中的SRC_LIST&#x3D;src1.cpp:src2.cpp:src3.cpp，含义为将多个值分隔的值赋给变量。</li>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>设置变量</p>
+</li>
 </ul>
-<p>如果需要引用变量，将变量名用${}括起来即可。<br>CMakeLists.txt中的语句顺序即为整个项目构建操作的执行顺序，总体过程依然为编译-&gt;链接-&gt;安装，一般来说，构建过程大概由下面几个步骤构成：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span>(SRC_LIST src.cpp)</span><br><span class="line"><span class="keyword">add_executable</span>(src <span class="variable">$&#123;SRC_LIST&#125;</span>)</span><br></pre></td></tr></table></figure>
+<p>cmake中也可以设置变量，类似shell中的SRC_LIST=src.cpp语句，每个语句的第一个参数为变量名，后面可以跟一个或多个参数，如果后面只有一个参数，就代表将这个值赋给变量，如果跟多个值，就类似shell中的SRC_LIST=src1.cpp:src2.cpp:src3.cpp，含义为将多个值分隔的值赋给变量。</p>
+<p>如果需要引用变量，将变量名用${}括起来即可。<br>
+CMakeLists.txt中的语句顺序即为整个项目构建操作的执行顺序，总体过程依然为编译-&gt;链接-&gt;安装，一般来说，构建过程大概由下面几个步骤构成：</p>
 <ol>
-<li>检查构建环境，确定CMake版本是否符合要求</li>
-<li>设置项目名称</li>
-<li>设置构建过程中所需要的变量，如编译器的选择和设置，编译选项配置等编译器有关的设置都在这一步完成</li>
-<li>告诉编译器项目所需文件的路径，如头文件，库文件，源文件的路径</li>
-<li>告知编译器需要生成哪些目标文件</li>
-<li>告知链接器依赖关系，完成链接</li>
-<li>安装相关文件</li>
+<li class="lvl-3">
+<p>检查构建环境，确定CMake版本是否符合要求</p>
+</li>
+<li class="lvl-3">
+<p>设置项目名称</p>
+</li>
+<li class="lvl-3">
+<p>设置构建过程中所需要的变量，如编译器的选择和设置，编译选项配置等编译器有关的设置都在这一步完成</p>
+</li>
+<li class="lvl-3">
+<p>告诉编译器项目所需文件的路径，如头文件，库文件，源文件的路径</p>
+</li>
+<li class="lvl-3">
+<p>告知编译器需要生成哪些目标文件</p>
+</li>
+<li class="lvl-3">
+<p>告知链接器依赖关系，完成链接</p>
+</li>
+<li class="lvl-3">
+<p>安装相关文件</p>
+</li>
 </ol>
 <p>因此可以得到一个大致的编写模板如下，可根据需求增减内容：</p>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cmake_minimum_required</span>(VERSION <span class="number">3.22</span>) <span class="comment"># 指定最低支持的CMake版本</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">project</span>(ProjectExample) <span class="comment"># 项目名称</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#[[</span></span><br><span class="line"><span class="comment">    设置变量，可以在后面通过$&#123;VAR&#125;的方式引用，VAR为变量名称</span></span><br><span class="line"><span class="comment">变量名称一般都为全大写</span></span><br><span class="line"><span class="comment">    格式为set(变量名称 变量值)，其实就等于执行shell命令变量名称=变量值</span></span><br><span class="line"><span class="comment">]]</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">set</span>(CMAKE_CXX_STANDARD <span class="number">17</span>)</span><br><span class="line"><span class="keyword">set</span>(CMAKE_CXX_FLAGS <span class="string">&quot;$&#123;CMAKE_CXX_FLAGS&#125; -g&quot;</span>)</span><br><span class="line"><span class="keyword">set</span>(EXECUTABLE_OUTPUT_PATH <span class="string">&quot;$&#123;CMAKE_SOURCE_DIR&#125;&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#[[</span></span><br><span class="line"><span class="comment">    添加头文件目录，编译器会在头文件目录列表中所有的目录中查找需要的头文件。</span></span><br><span class="line"><span class="comment">    默认头文件目录列表中只有系统默认的路径，如/usr/include等，如果需要包含自定义路径中的头文件，就需要使用include_directories()语句添加相应目录。</span></span><br><span class="line"><span class="comment">    每一句include_directories()指令会将括号中的目录追加到检索目录列表的末尾。</span></span><br><span class="line"><span class="comment">    格式为include_directories(目录1 目录2 目录3...)</span></span><br><span class="line"><span class="comment">]]</span></span><br><span class="line"><span class="keyword">include_directories</span>(<span class="variable">$&#123;PROJECT_SOURCE_DIR&#125;</span>)</span><br><span class="line"><span class="keyword">include_directories</span>(<span class="variable">$&#123;PROJECT_SOURCE_RID&#125;</span>/<span class="keyword">include</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#[[</span></span><br><span class="line"><span class="comment">    添加库文件目录，链接器会在库文件目录列表中所有的目录中查找需要的库文件。</span></span><br><span class="line"><span class="comment">    默认头文件目录列表中只有系统默认的路径，如/usr/lib等，如果需要包含自定义路径中的头文件，就需要使用link_directories()语句添加相应目录。</span></span><br><span class="line"><span class="comment">    每一句link_directories()指令会将括号中的目录追加到检索目录列表的末尾。</span></span><br><span class="line"><span class="comment">    格式为link_directories(目录1 目录2 目录3...)，括号内可以是一个或多个目录</span></span><br><span class="line"><span class="comment">]]</span></span><br><span class="line"><span class="keyword">link_directories</span>(<span class="string">&quot;$&#123;PROJECT_SOURCE_DIR&#125;/lib&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#[[</span></span><br><span class="line"><span class="comment">    生成库文件，此语句会将一系列源文件和头文件编译成一个库文件，可以通过类型标识SHARED或STATIC关键字来指定生成静态库还是动态库</span></span><br><span class="line"><span class="comment">    如果不书写类型标识，则生成默认类型（如何设置默认类型在后面讲解）</span></span><br><span class="line"><span class="comment">    格式为add_library(库名称 类型标识 源（头）文件1 源（头）文件2 源（头）文件3...)</span></span><br><span class="line"><span class="comment">]]</span> </span><br><span class="line"><span class="keyword">add_library</span>(a SHARED a.h a.cpp)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成可执行文件，此语句会将一系列源文件和头文件编译成一个可执行文件</span></span><br><span class="line"><span class="keyword">add_executable</span>(main main.cpp a.h a.cpp b.cpp)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 添加依赖关系</span></span><br><span class="line"><span class="keyword">target_link_libraries</span>(a PRIVATE share static)</span><br><span class="line"><span class="keyword">target_link_libraries</span>(main PRIVATE a share static)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装文件</span></span><br><span class="line"><span class="keyword">install</span>(TARGETS main a</span><br><span class="line">  RUNTIME DESTINATION bin <span class="comment"># 可执行文件</span></span><br><span class="line">  LIBRARY DESTINATION lib <span class="comment"># 动态库</span></span><br><span class="line">  ARCHIVE DESTINATION lib <span class="comment"># 静态库</span></span><br><span class="line">)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="构建项目"><a href="#构建项目" class="headerlink" title="构建项目"></a>构建项目</h2><p>对于上面的项目，使用如下命令构建即可，所有构建相关的文件会被存放于build目录中</p>
+<h2 id="构建项目">构建项目</h2>
+<p>对于上面的项目，使用如下命令构建即可，所有构建相关的文件会被存放于build目录中</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> build</span><br><span class="line">cmake .. <span class="comment"># 使用cmake命令生成makefile，makefile位于build目录下</span></span><br><span class="line">make <span class="comment"># 根据生成的makefile进行编译，将生成的文件输出到指定的位置</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="嵌套工程"><a href="#嵌套工程" class="headerlink" title="嵌套工程"></a>嵌套工程</h1><p>如果项目很大，或者项目中有很多的源码目录，此时利用一个CMakeLists.txt来管理，此文件会比较复杂，这时为每个目录都编写一个CMakeLists.txt就可以使项目化繁为简。</p>
+<h1>嵌套工程</h1>
+<p>如果项目很大，或者项目中有很多的源码目录，此时利用一个CMakeLists.txt来管理，此文件会比较复杂，这时为每个目录都编写一个CMakeLists.txt就可以使项目化繁为简。</p>
 <p>以下面一个目录结构作为示例</p>
 <figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">├── build</span><br><span class="line">├── CMakeLists<span class="selector-class">.txt</span></span><br><span class="line">├── bin</span><br><span class="line">├── include</span><br><span class="line">│   └── head<span class="selector-class">.h</span></span><br><span class="line">├── libs</span><br><span class="line">│   └── libshare<span class="selector-class">.so</span></span><br><span class="line">│   └── libstatic<span class="selector-class">.a</span></span><br><span class="line">├── src1</span><br><span class="line">│   ├── CMakeLists<span class="selector-class">.txt</span></span><br><span class="line">│   ├── <span class="selector-tag">a</span><span class="selector-class">.cpp</span></span><br><span class="line">│   ├── <span class="selector-tag">b</span><span class="selector-class">.cpp</span></span><br><span class="line">│   ├── <span class="selector-tag">a</span><span class="selector-class">.h</span></span><br><span class="line">│   └── main1<span class="selector-class">.cpp</span></span><br><span class="line">└── src2</span><br><span class="line">    ├── CMakeLists<span class="selector-class">.txt</span></span><br><span class="line">    ├── c<span class="selector-class">.cpp</span></span><br><span class="line">    ├── d<span class="selector-class">.cpp</span></span><br><span class="line">    ├── c<span class="selector-class">.h</span></span><br><span class="line">    ├── main2<span class="selector-class">.cpp</span></span><br><span class="line">    └── subsrc1</span><br><span class="line">           ├── CMakeLists<span class="selector-class">.txt</span></span><br><span class="line">           ├── <span class="selector-tag">a</span><span class="selector-class">.cpp</span></span><br><span class="line">           ├── <span class="selector-tag">b</span><span class="selector-class">.cpp</span></span><br><span class="line">           ├── <span class="selector-tag">a</span><span class="selector-class">.h</span></span><br><span class="line">           └── main1<span class="selector-class">.cpp</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="工程结构"><a href="#工程结构" class="headerlink" title="工程结构"></a>工程结构</h2><p>嵌套的CMake工程是一个树状结构，根目录下的CMakeLists.txt是根节点，其余的按目录结构构成树的子节点，CMake中的变量作用域为当前节点和其对应子树的所有节点。</p>
+<h2 id="工程结构">工程结构</h2>
+<p>嵌套的CMake工程是一个树状结构，根目录下的CMakeLists.txt是根节点，其余的按目录结构构成树的子节点，CMake中的变量作用域为当前节点和其对应子树的所有节点。</p>
 <p>如:</p>
-<ul>
-<li>根目录下的CMakeLists.txt中的变量在全局中有效</li>
-<li>{PROJECT_SOURCE_DIR}&#x2F;src2&#x2F;CMakeLists.txt中的变量在自己和~&#x2F;src2&#x2F;subsrc1&#x2F;CMakeLists.txt中有效</li>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>根目录下的CMakeLists.txt中的变量在全局中有效</p>
+</li>
+<li class="lvl-2">
+<p>{PROJECT_SOURCE_DIR}/src2/CMakeLists.txt中的变量在自己和~/src2/subsrc1/CMakeLists.txt中有效</p>
+</li>
 </ul>
-<h2 id="添加子目录"><a href="#添加子目录" class="headerlink" title="添加子目录"></a>添加子目录</h2><p>使用add_subdirectory命令，将子目录加入构建目录列表，cmake会自动去寻找子目录中的CMakeLists.txt，然后按顺序执行其中的指令。一般子目录中的CMakeLists.txt完整的表达了该目录下的所有构建目标和依赖关系，主目录下的CMake只负责调用即可，不描述任何子目录中的构建规则。</p>
+<h2 id="添加子目录">添加子目录</h2>
+<p>使用add_subdirectory命令，将子目录加入构建目录列表，cmake会自动去寻找子目录中的CMakeLists.txt，然后按顺序执行其中的指令。一般子目录中的CMakeLists.txt完整的表达了该目录下的所有构建目标和依赖关系，主目录下的CMake只负责调用即可，不描述任何子目录中的构建规则。</p>
 <p>具体语法如下：</p>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">add_subdirectory</span>(source_dir [binary_dir] [EXCLUDE_FROM_ALL] [SYSTEM])</span><br></pre></td></tr></table></figure>
 <p>其中source_dir为必选参数。该参数指定一个子目录，子目录下应该包含CMakeLists.txt文件和代码文件。子目录可以是相对路径也可以是绝对路径，如果是相对路径，则是相对当前目录的一个相对路径。</p>
-<p>binary_dir为可选参数。该参数指定一个目录，用于存放输出文件。可以是相对路径也可以是绝对路径，如果是相对路径，则是相对当前输出目录的一个相对路径。如果该参数没有指定，则默认的输出目录使用source_dir。<br>EXCLUDE_FROM_ALL也是一个可选参数。当指定了该参数，则子目录下的目标不会被父目录下的目标文件包含进去，父目录的CMakeLists.txt不会构建子目录的目标文件，必须在子目录下显式去构建。例外情况：当父目录的目标依赖于子目录的目标，则子目录的目标仍然会被构建出来以满足依赖关系（例如使用了target_link_libraries）。</p>
-<h2 id="添加第三方模块"><a href="#添加第三方模块" class="headerlink" title="添加第三方模块"></a>添加第三方模块</h2><p>最简单的方法就是clone第三方模块的源码，然后放到一个third-party目录下，再使用add_subdirectory命令，将第三方模块添加入主工程中，但是如果第三方模块较多，这样操作起来未免有些麻烦，于是CMake中引入了FetchContent命令。<br><a target="_blank" rel="noopener" href="https://wx-chevalier.github.io/books/cpp-notes/01.%E8%AF%AD%E6%B3%95%E5%9F%BA%E7%A1%80/%E7%BC%96%E8%AF%91%E4%B8%8E%E8%BF%90%E8%A1%8C/make/cmake/99.%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/2021-c++-%E5%B7%A5%E7%A8%8B%E6%80%BB%E7%BB%93-cmake-%E6%B7%BB%E5%8A%A0%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93%E4%BE%9D%E8%B5%96%E6%96%B9%E5%BC%8F-git-submodule-find_libraryfetchcontentcpm-%E7%AD%89/">https://wx-chevalier.github.io/books/cpp-notes/01.%E8%AF%AD%E6%B3%95%E5%9F%BA%E7%A1%80/%E7%BC%96%E8%AF%91%E4%B8%8E%E8%BF%90%E8%A1%8C/make/cmake/99.%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/2021-c++-%E5%B7%A5%E7%A8%8B%E6%80%BB%E7%BB%93-cmake-%E6%B7%BB%E5%8A%A0%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93%E4%BE%9D%E8%B5%96%E6%96%B9%E5%BC%8F-git-submodule-find_libraryfetchcontentcpm-%E7%AD%89/</a></p>
-<h1 id="交叉编译"><a href="#交叉编译" class="headerlink" title="交叉编译"></a>交叉编译</h1><h2 id="直接编译"><a href="#直接编译" class="headerlink" title="直接编译"></a>直接编译</h2><p>交叉编译和普通编译的区别是需要指定相应的目标平台，并且使用对应目标平台的交叉编译器和链接器进行编译和链接，最简单的方式只需通过CMake中预留的变量来告诉cmake，使用相应的工具进行编译链接即可，一般情况下需要使用这四个变量：</p>
-<ul>
-<li><p>CMAKE_SYSTEM_NAME：告诉CMake目标机的操作系统，支持Linux、Windows、Darwin（Mac系统），Android、FreeBSD和Generic（没有操作系统，一般是裸机开发的情况）</p>
+<p>binary_dir为可选参数。该参数指定一个目录，用于存放输出文件。可以是相对路径也可以是绝对路径，如果是相对路径，则是相对当前输出目录的一个相对路径。如果该参数没有指定，则默认的输出目录使用source_dir。<br>
+EXCLUDE_FROM_ALL也是一个可选参数。当指定了该参数，则子目录下的目标不会被父目录下的目标文件包含进去，父目录的CMakeLists.txt不会构建子目录的目标文件，必须在子目录下显式去构建。例外情况：当父目录的目标依赖于子目录的目标，则子目录的目标仍然会被构建出来以满足依赖关系（例如使用了target_link_libraries）。</p>
+<h2 id="添加第三方模块">添加第三方模块</h2>
+<p>最简单的方法就是clone第三方模块的源码，然后放到一个third-party目录下，再使用add_subdirectory命令，将第三方模块添加入主工程中，但是如果第三方模块较多，这样操作起来未免有些麻烦，于是CMake中引入了FetchContent命令。<br>
+<a target="_blank" rel="noopener" href="https://wx-chevalier.github.io/books/cpp-notes/01.%E8%AF%AD%E6%B3%95%E5%9F%BA%E7%A1%80/%E7%BC%96%E8%AF%91%E4%B8%8E%E8%BF%90%E8%A1%8C/make/cmake/99.%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/2021-c++-%E5%B7%A5%E7%A8%8B%E6%80%BB%E7%BB%93-cmake-%E6%B7%BB%E5%8A%A0%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93%E4%BE%9D%E8%B5%96%E6%96%B9%E5%BC%8F-git-submodule-find_libraryfetchcontentcpm-%E7%AD%89/">https://wx-chevalier.github.io/books/cpp-notes/01.语法基础/编译与运行/make/cmake/99.参考资料/2021-c++-工程总结-cmake-添加第三方库依赖方式-git-submodule-find_libraryfetchcontentcpm-等/</a></p>
+<h1>交叉编译</h1>
+<h2 id="直接编译">直接编译</h2>
+<p>交叉编译和普通编译的区别是需要指定相应的目标平台，并且使用对应目标平台的交叉编译器和链接器进行编译和链接，最简单的方式只需通过CMake中预留的变量来告诉cmake，使用相应的工具进行编译链接即可，一般情况下需要使用这四个变量：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>CMAKE_SYSTEM_NAME：告诉CMake目标机的操作系统，支持Linux、Windows、Darwin（Mac系统），Android、FreeBSD和Generic（没有操作系统，一般是裸机开发的情况）</p>
 </li>
-<li><p>CMake_SYSTEM_PROCESSOR：告诉CMake目标机的处理器类型，一般取值为arm（arm32位），aarch64（arm64位），x86_64<br>如果上面两个变量不填，则cmake会把本机的操作系统和处理器参数传入，导致编译失败。</p>
+<li class="lvl-2">
+<p>CMake_SYSTEM_PROCESSOR：告诉CMake目标机的处理器类型，一般取值为arm（arm32位），aarch64（arm64位），x86_64<br>
+如果上面两个变量不填，则cmake会把本机的操作系统和处理器参数传入，导致编译失败。</p>
 </li>
-<li><p>CMAKE_C_COMPILER: 告诉CMake要使用的C语言交叉编译器</p>
+<li class="lvl-2">
+<p>CMAKE_C_COMPILER: 告诉CMake要使用的C语言交叉编译器</p>
 </li>
-<li><p>CMAKE_CXX_COMPILER：告诉CMake要使用的C++交叉编译器</p>
+<li class="lvl-2">
+<p>CMAKE_CXX_COMPILER：告诉CMake要使用的C++交叉编译器</p>
 </li>
 </ul>
 <p>根据<a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/v3.6/manual/cmake-toolchains.7.html#cross-compiling-for-linux">CMake官方文档</a>的例子，在CMakeLists.txt的设置部分加入以下内容即可：</p>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span>(CMAKE_SYSTEM_NAME Linux)</span><br><span class="line"><span class="keyword">set</span>(CMAKE_SYSTEM_PROCESSOR arm) <span class="comment"># 换成相应的目标处理器</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">set</span>(tools /home/devel/gcc-<span class="number">4.7</span>-linaro-rpi-gnueabihf) <span class="comment"># 换成你自己的交叉编译器路径</span></span><br><span class="line"><span class="keyword">set</span>(CMAKE_C_COMPILER <span class="variable">$&#123;tools&#125;</span>/bin/arm-linux-gnueabihf-gcc) <span class="comment"># 换成相应的gcc</span></span><br><span class="line"><span class="keyword">set</span>(CMAKE_CXX_COMPILER <span class="variable">$&#123;tools&#125;</span>/bin/arm-linux-gnueabihf-g++) <span class="comment"># 换成相应的g++</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="使用toolchain"><a href="#使用toolchain" class="headerlink" title="使用toolchain"></a>使用toolchain</h2><p>上述设置方法虽然很简单，但是如果一套代码需要在多种平台上运行，就需要针对不同平台分别修改CMakeLists.txt的内容，或是为每个平台专门编写一段设置命令，然后根据平台判断，使用相应指令进行编译，使得CMakeLists非常臃肿，此时可以使用CMake中的toolchain功能来改善，这个功能支持我们将每个平台的交叉编译参数编写在一个单独的文件中，再使用CMake的的预留的变量CMAKE_TOOLCHAIN_FILE来指定使用哪一套参数来进行编译。</p>
+<h2 id="使用toolchain">使用toolchain</h2>
+<p>上述设置方法虽然很简单，但是如果一套代码需要在多种平台上运行，就需要针对不同平台分别修改CMakeLists.txt的内容，或是为每个平台专门编写一段设置命令，然后根据平台判断，使用相应指令进行编译，使得CMakeLists非常臃肿，此时可以使用CMake中的toolchain功能来改善，这个功能支持我们将每个平台的交叉编译参数编写在一个单独的文件中，再使用CMake的的预留的变量CMAKE_TOOLCHAIN_FILE来指定使用哪一套参数来进行编译。</p>
 <p>下面是编译arm32的toolchain文件样例，通常toolchain文件以交叉编译器的前缀加.toolchain.cmake命名，如arm32位就叫arm-linux-gnueabihf.toolchain.cmake，arm64位就叫aarch-linux-gnu.toolchain.cmake</p>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># arm-linux-gnueabihf.toolchain.cmake</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">set</span>(CMAKE_SYSTEM_NAME Linux)</span><br><span class="line"><span class="keyword">set</span>(CMAKE_SYSTEM_PROCESSOR arm)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置目标机的sysroot，可供后面的安装和搜索命令使用，CMake将以该目录为root而不是本机根目录为root进行操作</span></span><br><span class="line"><span class="keyword">set</span>(CMAKE_SYSROOT /home/devel/rasp-pi-rootfs)</span><br><span class="line"><span class="keyword">set</span>(CMAKE_STAGING_PREFIX /home/devel/stage)</span><br><span class="line"></span><br><span class="line"><span class="keyword">set</span>(tools /home/devel/gcc-<span class="number">4.7</span>-linaro-rpi-gnueabihf)</span><br><span class="line"><span class="keyword">set</span>(CMAKE_C_COMPILER <span class="variable">$&#123;tools&#125;</span>/bin/arm-linux-gnueabihf-gcc)</span><br><span class="line"><span class="keyword">set</span>(CMAKE_CXX_COMPILER <span class="variable">$&#123;tools&#125;</span>/bin/arm-linux-gnueabihf-g++)</span><br><span class="line"></span><br><span class="line"><span class="keyword">set</span>(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)</span><br><span class="line"><span class="keyword">set</span>(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)</span><br><span class="line"><span class="keyword">set</span>(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)</span><br><span class="line"><span class="keyword">set</span>(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)</span><br></pre></td></tr></table></figure>
 <p>最后四个变量对FIND_*()命令起作用，如CMAKE_FIND_ROOT_PATH_PROGRAM对FIND_PROGRAM()命令起作用，有三种取值，NEVER,ONLY,BOTH,第一个表示不在你CMAKE_FIND_ROOT_PATH下进行查找，第二个表示只在这个路径下查找，不在全局路径中查找，第三个表示先查找这个路径，再查找全局路径。</p>
@@ -320,26 +384,36 @@ cmake中也可以设置变量，类似shell中的SRC_LIST&#x3D;src.cpp语句，�
 <p>完成toolchain文件的编写后，编译时向cmake传入参数：</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cmake -DCMAKE_TOOLCHAIN_FILE=./toolchains/arm-linux-gnueabihf.toolchain.cmake \ </span><br><span class="line">  ..</span><br></pre></td></tr></table></figure>
 <p>即可完成交叉编译</p>
-<h2 id="arm处理器的编译参数设置"><a href="#arm处理器的编译参数设置" class="headerlink" title="arm处理器的编译参数设置"></a>arm处理器的编译参数设置</h2><h3 id="必要参数"><a href="#必要参数" class="headerlink" title="必要参数"></a>必要参数</h3><p>对于arm处理器，除了设定基本的目标平台参数外，还需要在CMAKE_C_FLAGS和CMAKE_CXX_FLAGS中为编译器指定一些参数，保证程序的正常运行，最典型的是-march、-mtune、-mcpu三个参数。</p>
+<h2 id="arm处理器的编译参数设置">arm处理器的编译参数设置</h2>
+<h3 id="必要参数">必要参数</h3>
+<p>对于arm处理器，除了设定基本的目标平台参数外，还需要在CMAKE_C_FLAGS和CMAKE_CXX_FLAGS中为编译器指定一些参数，保证程序的正常运行，最典型的是-march、-mtune、-mcpu三个参数。</p>
 <p>gcc官方文档对于这三个参数给出的解释是：</p>
-<p>-march&#x3D;name</p>
+<p>-march=name</p>
 <figure class="highlight smali"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">This specifies the name of the target ARM architecture. GCC uses this nameto determine what kind of instructions it can emit when generating assemblycode. This option can be used in conjunction with<span class="built_in"> or </span>instead of the -mcpu=option.</span><br><span class="line">Permissible names are: armv2, armv2a, armv3, armv3m, armv4,armv4t, armv5, armv5t, armv5e, armv5te, armv6, armv6j, armv6t2, armv6z,armv6zk, armv6-m, armv7, armv7-a, armv7-r, armv7-m, armv7e-m, armv7ve,armv8-a, armv8-a+crc, iwmmxt, iwmmxt2, ep9312.</span><br></pre></td></tr></table></figure>
 <p>意思是编译器通过这个参数来生成相应的二进制码，一般情况下最好添加上，否则可能会出奇怪的错误（编译过但是程序会出现奇怪的结果），arm32位一般写armv7-a，64位一般写armv8-a</p>
-<p>-mtune&#x3D;name</p>
+<p>-mtune=name</p>
 <figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">This option specifies <span class="keyword">the</span> name <span class="keyword">of</span> <span class="keyword">the</span> target ARM processor <span class="keyword">for</span> which GCCshould tune <span class="keyword">the</span> performance <span class="keyword">of</span> <span class="keyword">the</span> code. For some ARM implementationsbetter performance can be obtained <span class="keyword">by</span> <span class="keyword">using</span> this option.</span><br><span class="line">Permissible namesare: arm2, arm250, arm3, arm6, arm60, arm600, arm610, arm620, arm7, arm7m,arm7d, arm7dm, arm7di, arm7dmi, arm70, arm700, arm700i, arm710, arm710c,arm7100, arm720, arm7500, arm7500fe, arm7tdmi, arm7tdmi-s, arm710t,arm720t, arm740t, strongarm, strongarm110, strongarm1100, strongarm1110,arm8, arm810, arm9, arm9e, arm920, arm920t, arm922t, arm946e-s, arm966e-s,arm968e-s, arm926ej-s, arm940t, arm9tdmi, arm10tdmi, arm1020t, arm1026ej-s,arm10e, arm1020e, arm1022e, arm1136j-s, arm1136jf-s, mpcore, mpcorenovfp,arm1156t2-s, arm1156t2f-s, arm1176jz-s, arm1176jzf-s, cortex-a5, cortex-a7,cortex-a8, cortex-a9, cortex-a12, cortex-a15, cortex-a53, cortex-a57,cortex-a72, cortex-r4, cortex-r4f, cortex-r5, cortex-r7, cortex-m7,cortex-m4, cortex-m3, cortex-m1, cortex-m0, cortex-m0plus,cortex-m1.small-<span class="built_in">multiply</span>, cortex-m0.small-<span class="built_in">multiply</span>,cortex-m0plus.small-<span class="built_in">multiply</span>, exynos-m1, marvell-pj4, xscale, iwmmxt,iwmmxt2, ep9312, fa526, fa626, fa606te, fa626te, fmp626, fa726te, xgene1.</span><br><span class="line">Additionally, this option can specify that GCC should tune <span class="keyword">the</span> performance</span><br><span class="line"><span class="keyword">of</span> <span class="keyword">the</span> code <span class="keyword">for</span> <span class="keyword">a</span> big.LITTLE <span class="keyword">system</span>. Permissible names are:</span><br><span class="line">cortex-a15.cortex-a7, cortex-a57.cortex-a53, cortex-a72.cortex-a53.</span><br></pre></td></tr></table></figure>
-<p>这个参数是用来根据具体的处理器优化，一般针对某个特定处理器编译的话可以添加。<br>-mcpu&#x3D;name</p>
+<p>这个参数是用来根据具体的处理器优化，一般针对某个特定处理器编译的话可以添加。<br>
+-mcpu=name</p>
 <figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">This specifies the <span class="type">name</span> <span class="keyword">of</span> the target ARM processor. GCC uses this <span class="type">name</span> <span class="keyword">to</span> derive the <span class="type">name</span> <span class="keyword">of</span> the target ARM architecture (<span class="keyword">as</span> <span class="keyword">if</span> specified <span class="keyword">by</span> -march)<span class="keyword">and</span> the ARM processor <span class="keyword">type</span> <span class="keyword">for</span> which <span class="keyword">to</span> tune <span class="keyword">for</span> performance (<span class="keyword">as</span> <span class="keyword">if</span> specified <span class="keyword">by</span> -mtune). <span class="keyword">Where</span> this <span class="keyword">option</span> <span class="keyword">is</span> used <span class="keyword">in</span> conjunction <span class="keyword">with</span> -marchor -mtune, those <span class="keyword">options</span> take precedence <span class="keyword">over</span> the appropriate part <span class="keyword">of</span> this <span class="keyword">option</span>.</span><br><span class="line">Permissible names <span class="keyword">for</span> this <span class="keyword">option</span> are the same <span class="keyword">as</span> those <span class="keyword">for</span> -mtune.</span><br></pre></td></tr></table></figure>
 <p>这个参数指定了目标arm处理器的名称，指定了-mcpu后，GCC编译器会自动推导出-march及-mtune，则不需要再指定这两个参数。</p>
 <p><strong>一般情况下，指定-march即可。</strong></p>
-<h3 id="优化参数"><a href="#优化参数" class="headerlink" title="优化参数"></a>优化参数</h3><p>针对不同的arm处理器，在CMAKE_C_FLAGS和CMAKE_CXX_FLAGS添加一些编译参数可以让编译器对于处理器的硬件特征进行一些abi优化。下面是一些arm cpu常用的编译优化选项</p>
+<h3 id="优化参数">优化参数</h3>
+<p>针对不同的arm处理器，在CMAKE_C_FLAGS和CMAKE_CXX_FLAGS添加一些编译参数可以让编译器对于处理器的硬件特征进行一些abi优化。下面是一些arm cpu常用的编译优化选项</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Cortex-A5:</span></span><br><span class="line"></span><br><span class="line">-mcpu=cortex-a5</span><br><span class="line">-mfpu=vfpv3-fp16</span><br><span class="line">-mfpu=vfpv3-d16-fp16</span><br><span class="line">-mfpu=neon-fp16</span><br><span class="line">-d16 <span class="comment"># 表明只有前 16个 浮点寄存器可用</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Cortex-A7：</span></span><br><span class="line"></span><br><span class="line">-mcpu=cortex-a7</span><br><span class="line">-mfpu=vfpv4</span><br><span class="line">-mfpu=vfpv4-d16</span><br><span class="line">-mfpu=neon-vfpv4</span><br><span class="line">-fp16 <span class="comment"># 表明支持 16bit 半精度浮点操作</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Cortex-A8：</span></span><br><span class="line"></span><br><span class="line">-mcpu=cortex-a8</span><br><span class="line">-mfpu=vfpv3</span><br><span class="line">-mfpu=neon</span><br><span class="line"></span><br><span class="line"><span class="comment"># Cortex-A9：</span></span><br><span class="line"></span><br><span class="line">-mcpu=cortex-a9</span><br><span class="line">-mfpu=vfpv3-fp16</span><br><span class="line">-mfpu=vfpv3-d16-fp16</span><br><span class="line">-mfpu=neon-fp16</span><br><span class="line"></span><br><span class="line"><span class="comment"># Cortex-A15：</span></span><br><span class="line"></span><br><span class="line">-mcpu=cortex-a15</span><br><span class="line">-mfpu=vfpv4</span><br><span class="line">-mfpu=neon-vfpv4</span><br><span class="line"></span><br><span class="line"><span class="comment"># 确认处理器是否支持 NEON</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">cat</span> /proc/cpuinfo</span><br></pre></td></tr></table></figure>
-
-<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p>在编译结束后，可以使用make install命令安装相应的文件，而安装哪些文件，安装到哪些路径，可以在cmake中配置</p>
-<h2 id="指定安装路径"><a href="#指定安装路径" class="headerlink" title="指定安装路径"></a>指定安装路径</h2><ol>
-<li>在cmake文件中加入set(CMAKE_INSTALL_PREFIX “&#x2F;path&#x2F;to&#x2F;install”)</li>
-<li>加入cmake命令参数 -DCMAKE_INSTALL_PREFIX&#x3D;”&#x2F;path&#x2F;to&#x2F;install”</li>
+<h1>安装</h1>
+<p>在编译结束后，可以使用make install命令安装相应的文件，而安装哪些文件，安装到哪些路径，可以在cmake中配置</p>
+<h2 id="指定安装路径">指定安装路径</h2>
+<ol>
+<li class="lvl-3">
+<p>在cmake文件中加入set(CMAKE_INSTALL_PREFIX “/path/to/install”)</p>
+</li>
+<li class="lvl-3">
+<p>加入cmake命令参数 -DCMAKE_INSTALL_PREFIX=“/path/to/install”</p>
+</li>
 </ol>
-<h2 id="目标文件的安装"><a href="#目标文件的安装" class="headerlink" title="目标文件的安装"></a>目标文件的安装</h2><p>下表显示了安装相关的目标类型以及内置的默认值：</p>
+<h2 id="目标文件的安装">目标文件的安装</h2>
+<p>下表显示了安装相关的目标类型以及内置的默认值：</p>
 <table>
 <thead>
 <tr>
@@ -348,7 +422,8 @@ cmake中也可以设置变量，类似shell中的SRC_LIST&#x3D;src.cpp语句，�
 <th>内置默认值</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>RUNTIME</td>
 <td>${CMAKE_INSTALL_BINDIR}</td>
 <td>bin</td>
@@ -373,193 +448,265 @@ cmake中也可以设置变量，类似shell中的SRC_LIST&#x3D;src.cpp语句，�
 <td>${CMAKE_INSTALL_INCLUDEDIR}</td>
 <td>include</td>
 </tr>
-</tbody></table>
-<p>参数中的TARGETS后面跟的就是我们通过ADD_EXECUTABLE 或者ADD_LIBRARY 定义的目标文件，可能是可执行二进制、动态库、静态库。<br>目标类型也就相对应的有三种，ARCHIVE特指静态库，LIBRARY特指动态库，RUNTIME特指可执行目标二进制。<br>DESTINATION定义了安装的路径，可以通过上文提到的CMAKE_INSTALL_PREFIX来定义安装路径，此时需要写成相对路径，即不要以&#x2F;开头，那么安装后的路径就是${CMAKE_INSTALL_PREFIX}&#x2F;&lt;DESTINATION定义的路径&gt;，如果路径以&#x2F;开头，则指的是绝对路径，这时候CMAKE_INSTALL_PREFIX就无效了。</p>
+</tbody>
+</table>
+<p>参数中的TARGETS后面跟的就是我们通过ADD_EXECUTABLE 或者ADD_LIBRARY 定义的目标文件，可能是可执行二进制、动态库、静态库。目标类型也就相对应的有三种，ARCHIVE特指静态库，LIBRARY特指动态库，RUNTIME特指可执行目标二进制。<br>
+DESTINATION定义了安装的路径，可以通过上文提到的CMAKE_INSTALL_PREFIX来定义安装路径，此时需要写成相对路径，即不要以/开头，那么安装后的路径就是${CMAKE_INSTALL_PREFIX}/&lt;DESTINATION定义的路径&gt;，如果路径以/开头，则指的是绝对路径，这时候CMAKE_INSTALL_PREFIX就无效了。</p>
 <p>如，下面的例子会将：</p>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">install</span>(TARGETS myrun mylib mystaticlib</span><br><span class="line">RUNTIME DESTINATION bin</span><br><span class="line">LIBRARY DESTINATION lib</span><br><span class="line">ARCHIVE DESTINATION libstatic</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-<p>可执行二进制myrun 安装到${CMAKE_INSTALL_PREFIX}&#x2F;bin 目录</p>
-<p>动态库libmylib安装到${CMAKE_INSTALL_PREFIX}&#x2F;lib目录</p>
-<p>静态库libmystaticlib 安装到${CMAKE_INSTALL_PREFIX}&#x2F;libstatic目录</p>
+<p>可执行二进制myrun 安装到${CMAKE_INSTALL_PREFIX}/bin 目录</p>
+<p>动态库libmylib安装到${CMAKE_INSTALL_PREFIX}/lib目录</p>
+<p>静态库libmystaticlib 安装到${CMAKE_INSTALL_PREFIX}/libstatic目录</p>
 <p>特别注意的是你不需要关心TARGETS具体生成的路径，只需要写上TARGETS名称就可以了</p>
-<h2 id="其他文件的安装"><a href="#其他文件的安装" class="headerlink" title="其他文件的安装"></a>其他文件的安装</h2><p>除了目标文件外，经常还会需要安装一些说明文档，配置文件，运行脚本以及供二次开发使用的头文件等文件到安装目录中，此时就需要使用到：</p>
+<h2 id="其他文件的安装">其他文件的安装</h2>
+<p>除了目标文件外，经常还会需要安装一些说明文档，配置文件，运行脚本以及供二次开发使用的头文件等文件到安装目录中，此时就需要使用到：</p>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">install</span>(&lt;FILES|PROGRAMS&gt; files...</span><br><span class="line">        TYPE &lt;type&gt; | DESTINATION &lt;dir&gt;</span><br><span class="line">        [PERMISSIONS permissions...]</span><br><span class="line">        [CONFIGURATIONS [Debug|Release|...]]</span><br><span class="line">        [COMPONENT &lt;component&gt;]</span><br><span class="line">        [RENAME &lt;name&gt;] [OPTIONAL] [EXCLUDE_FROM_ALL])</span><br></pre></td></tr></table></figure>
 <p>FILES|PROGRAMS若为相对路径给出的文件名，则相对于当前源目录进行解释，PROGRAMS指的是非目标文件的可执行程序(如脚本文件)。</p>
 <p>如果未提供PERMISSIONS参数，默认情况下，普通的文本文件将具有OWNER_WRITE，OWNER_READ，GROUP_READ和WORLD_READ权限，即644权限；而非目标文件的可执行程序将具有OWNER_EXECUTE, GROUP_EXECUTE,和WORLD_EXECUTE，即755权限。</p>
 <p>如下面的命令：</p>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">install</span>(PROGRAMS run.sh DESTINATION)</span><br><span class="line"><span class="keyword">install</span>(FILES head.h DESTINATION <span class="keyword">include</span>)</span><br></pre></td></tr></table></figure>
-<p>会将run.sh安装到${CMAKE_INSTALL_PREFIX}&#x2F;目录下，将head.h安装到${CMAKE_ISNTALL_PREFIX}&#x2F;include目录下</p>
-<h2 id="路径的安装"><a href="#路径的安装" class="headerlink" title="路径的安装"></a>路径的安装</h2><p>在安装文件时，有时可能需要将某一目录下的所有文件都安装到install目录下，此时可以使用：</p>
+<p>会将run.sh安装到<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>C</mi><mi>M</mi><mi>A</mi><mi>K</mi><msub><mi>E</mi><mi>I</mi></msub><mi>N</mi><mi>S</mi><mi>T</mi><mi>A</mi><mi>L</mi><msub><mi>L</mi><mi>P</mi></msub><mi>R</mi><mi>E</mi><mi>F</mi><mi>I</mi><mi>X</mi></mrow><mi mathvariant="normal">/</mi><mtext>目录下，将</mtext><mi>h</mi><mi>e</mi><mi>a</mi><mi>d</mi><mi mathvariant="normal">.</mi><mi>h</mi><mtext>安装到</mtext></mrow><annotation encoding="application/x-tex">{CMAKE_INSTALL_PREFIX}/目录下，将head.h安装到</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10903em;">CM</span><span class="mord mathnormal">A</span><span class="mord mathnormal" style="margin-right:0.07153em;">K</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.07847em;">I</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord mathnormal" style="margin-right:0.13889em;">NST</span><span class="mord mathnormal">A</span><span class="mord mathnormal">L</span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">P</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord mathnormal" style="margin-right:0.13889em;">REF</span><span class="mord mathnormal" style="margin-right:0.07847em;">I</span><span class="mord mathnormal" style="margin-right:0.07847em;">X</span></span><span class="mord">/</span><span class="mord cjk_fallback">目录下，将</span><span class="mord mathnormal">h</span><span class="mord mathnormal">e</span><span class="mord mathnormal">a</span><span class="mord mathnormal">d</span><span class="mord">.</span><span class="mord mathnormal">h</span><span class="mord cjk_fallback">安装到</span></span></span></span>{CMAKE_ISNTALL_PREFIX}/include目录下</p>
+<h2 id="路径的安装">路径的安装</h2>
+<p>在安装文件时，有时可能需要将某一目录下的所有文件都安装到install目录下，此时可以使用：</p>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">install</span>(DIRECTORY dirs...</span><br><span class="line">        TYPE &lt;type&gt; | DESTINATION &lt;dir&gt;</span><br><span class="line">        [FILE_PERMISSIONS permissions...]</span><br><span class="line">        [DIRECTORY_PERMISSIONS permissions...]</span><br><span class="line">        [USE_SOURCE_PERMISSIONS] [OPTIONAL] [MESSAGE_NEVER]</span><br><span class="line">        [CONFIGURATIONS [Debug|Release|...]]</span><br><span class="line">        [COMPONENT &lt;component&gt;] [EXCLUDE_FROM_ALL]</span><br><span class="line">        [FILES_MATCHING]</span><br><span class="line">        [[PATTERN &lt;pattern&gt; | REGEX &lt;regex&gt;]</span><br><span class="line">         [EXCLUDE] [PERMISSIONS permissions...]] [...])</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <p>将一个目录或者多个目录安装到给定的目的位置下。目录结构被逐个复制到目标位置。每个目录名称的最后一个组成部分都附加到目标目录中，但是可以使用后跟斜杠来避免这种情况，因为它将最后一个组成部分留空。</p>
-<p>比如，DIRECTORY后面如果是abc意味着abc这个目录会安装在目标路径下，abc&#x2F;意味着abc这个目录的内容会被安装在目标路径下，而abc目录本身却不会被安装。即，如果目录名不以&#x2F;结尾，那么这个目录将被安装为目标路径下的abc，如果目录名以&#x2F;结尾，代表将这个目录中的内容安装到目标路径，但不包括这个目录本身。</p>
+<p>比如，DIRECTORY后面如果是abc意味着abc这个目录会安装在目标路径下，abc/意味着abc这个目录的内容会被安装在目标路径下，而abc目录本身却不会被安装。即，如果目录名不以/结尾，那么这个目录将被安装为目标路径下的abc，如果目录名以/结尾，代表将这个目录中的内容安装到目标路径，但不包括这个目录本身。</p>
 <p>FILE_PERMISSIONS和DIRECTORY_PERMISSIONS选项指定对目标中文件和目录的权限。如果指定了USE_SOURCE_PERMISSIONS而未指定FILE_PERMISSIONS，则将从源目录结构中复制文件权限。如果未指定权限，则将为文件提供在命令的FILES形式中指定的默认权限(644权限)，而目录将被赋予在命令的PROGRAMS形式中指定的默认权限(755权限)。</p>
-<p>可以使用PATTERN或REGEX选项以精细的粒度控制目录的安装，可以指定一个通配模式或正则表达式以匹配输入目录中遇到的目录或文件。PATTERN仅匹配完整的文件名，而REGEX将匹配文件名的任何部分，但它可以使用&#x2F;和$模拟PATTERN行为。</p>
+<p>可以使用PATTERN或REGEX选项以精细的粒度控制目录的安装，可以指定一个通配模式或正则表达式以匹配输入目录中遇到的目录或文件。PATTERN仅匹配完整的文件名，而REGEX将匹配文件名的任何部分，但它可以使用/和$模拟PATTERN行为。</p>
 <p>某些跟随PATTERN或REGEX表达式后的参数，仅应用于满足表达式的文件或目录。如：EXCLUDE选项将跳过匹配的文件或目录。PERMISSIONS选项将覆盖匹配文件或目录的权限设置。</p>
 <p>如：</p>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">install</span>(DIRECTORY icons scripts/ DESTINATION share/myproj</span><br><span class="line">        PATTERN <span class="string">&quot;CVS&quot;</span> EXCLUDE</span><br><span class="line">        PATTERN <span class="string">&quot;scripts/*&quot;</span></span><br><span class="line">        PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ</span><br><span class="line">                    GROUP_EXECUTE GROUP_READ)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>这条命令的执行结果是：将icons目录安装到share&#x2F;myproj，将scripts&#x2F;中的内容安装到share&#x2F;myproj，两个目录均不包含目录名为CVS的子目录，对于scripts&#x2F;*的文件指定权限为OWNER_EXECUTE，OWNER_WRITE，OWNER_READ，GROUP_EXECUTE，GROUP_READ。</p>
-<h2 id="安装时脚本的运行"><a href="#安装时脚本的运行" class="headerlink" title="安装时脚本的运行"></a>安装时脚本的运行</h2><p>有时需要在安装时打印一下语句，或执行一些cmake命令：</p>
+<p>这条命令的执行结果是：将icons目录安装到share/myproj，将scripts/中的内容安装到share/myproj，两个目录均不包含目录名为CVS的子目录，对于scripts/*的文件指定权限为OWNER_EXECUTE，OWNER_WRITE，OWNER_READ，GROUP_EXECUTE，GROUP_READ。</p>
+<h2 id="安装时脚本的运行">安装时脚本的运行</h2>
+<p>有时需要在安装时打印一下语句，或执行一些cmake命令：</p>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">install</span>([[SCRIPT &lt;<span class="keyword">file</span>&gt;] [CODE &lt;code&gt;]]</span><br><span class="line">        [COMPONENT &lt;component&gt;] [EXCLUDE_FROM_ALL] [...])</span><br></pre></td></tr></table></figure>
 <p>SCRIPT参数将在安装过程中调用给定的CMake脚本文件(即.cmake脚本文件)，如果脚本文件名是相对路径，则将相对于当前源目录进行解释。CODE参数将在安装过程中调用给定的CMake代码。将代码指定为双引号字符串内的单个参数。</p>
 <p>如下面的命令：</p>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">install</span>(CODE <span class="string">&quot;MESSAGE(\&quot;Sample install message.\&quot;)&quot;</span>)</span><br></pre></td></tr></table></figure>
 <p>会在install过程中执行cmake代码，打印语句</p>
-<h2 id="安装时rpath"><a href="#安装时rpath" class="headerlink" title="安装时rpath"></a>安装时rpath</h2><h3 id="什么是rpath"><a href="#什么是rpath" class="headerlink" title="什么是rpath"></a>什么是rpath</h3><p>rpath全程为run-time search path。Linux下所有的elf文件都包含他，其规定了可执行文件在寻找.so文件时的第一优先位置。</p>
+<h2 id="安装时rpath">安装时rpath</h2>
+<h3 id="什么是rpath">什么是rpath</h3>
+<p>rpath全程为run-time search path。Linux下所有的elf文件都包含他，其规定了可执行文件在寻找.so文件时的第一优先位置。</p>
 <ol>
-<li>Any directories specified by -rpath-link options.</li>
-<li>Any directories specified by -rpath options.  The difference between -rpath and -rpath-link is that directories specified by -rpath options are included in the executable and used at runtime, whereas the -rpath-link option is only effective at link time. Searching -rpath in this way is only supported by native linkers and cross linkers which have been configured with the –with-sysroot option.</li>
-<li>On an ELF system, for native linkers, if the -rpath and -rpath-link options were not used, search the contents of the environment variable “LD_RUN_PATH”.</li>
-<li>On SunOS, if the -rpath option was not used, search any directories specified using -L options.</li>
-<li>For a native linker, the search the contents of the environment variable “LD_LIBRARY_PATH”.</li>
-<li>For a native ELF linker, the directories in “DT_RUNPATH” or “DT_RPATH” of a shared library are searched for shared libraries needed by it. The “DT_RPATH” entries are ignored if “DT_RUNPATH” entries exist.</li>
-<li>The default directories, normally &#x2F;lib and &#x2F;usr&#x2F;lib.</li>
-<li>For a native linker on an ELF system, if the file &#x2F;etc&#x2F;ld.so.conf exists, the list of directories found in that file.</li>
+<li class="lvl-4">
+<p>Any directories specified by -rpath-link options.</p>
+</li>
+<li class="lvl-4">
+<p>Any directories specified by -rpath options.  The difference between -rpath and -rpath-link is that directories specified by -rpath options are included in the executable and used at runtime, whereas the -rpath-link option is only effective at link time. Searching -rpath in this way is only supported by native linkers and cross linkers which have been configured with the --with-sysroot option.</p>
+</li>
+<li class="lvl-4">
+<p>On an ELF system, for native linkers, if the -rpath and -rpath-link options were not used, search the contents of the environment variable “LD_RUN_PATH”.</p>
+</li>
+<li class="lvl-4">
+<p>On SunOS, if the -rpath option was not used, search any directories specified using -L options.</p>
+</li>
+<li class="lvl-4">
+<p>For a native linker, the search the contents of the environment variable “LD_LIBRARY_PATH”.</p>
+</li>
+<li class="lvl-4">
+<p>For a native ELF linker, the directories in “DT_RUNPATH” or “DT_RPATH” of a shared library are searched for shared libraries needed by it. The “DT_RPATH” entries are ignored if “DT_RUNPATH” entries exist.</p>
+</li>
+<li class="lvl-4">
+<p>The default directories, normally /lib and /usr/lib.</p>
+</li>
+<li class="lvl-4">
+<p>For a native linker on an ELF system, if the file /etc/ld.so.conf exists, the list of directories found in that file.</p>
+</li>
 </ol>
 <p>If the required shared library is not found, the linker will issue a warning and continue with the link.</p>
 <p>在gcc中，使用-Wl命令向链接器传递选项来指定rpath，</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc test.c -o <span class="built_in">test</span> -Wl,rpath=<span class="string">&#x27;$$ORIGIN/..lib&#x27;</span></span><br></pre></td></tr></table></figure>
 <p>其中$ORIGIN变量在后文会进行解释</p>
 <p>elf文件在执行时，链接器查找动态库的优先顺序如下：</p>
-<ul>
-<li>RPATH： 写在elf文件中</li>
-<li>LD_LIBRARY_PATH： 环境变量</li>
-<li>RUNPATH： 写在elf文件中</li>
-<li>ldconfig的缓存： 配置&#x2F;etc&#x2F;ld.conf*可改变</li>
-<li>默认的&#x2F;lib, &#x2F;usr&#x2F;lib</li>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>RPATH： 写在elf文件中</p>
+</li>
+<li class="lvl-2">
+<p>LD_LIBRARY_PATH： 环境变量</p>
+</li>
+<li class="lvl-2">
+<p>RUNPATH： 写在elf文件中</p>
+</li>
+<li class="lvl-2">
+<p>ldconfig的缓存： 配置/etc/ld.conf*可改变</p>
+</li>
+<li class="lvl-2">
+<p>默认的/lib, /usr/lib</p>
+</li>
 </ul>
 <p>可以看到，RPATH与RUNPATH中间隔着LD_LIBRARY_PATH。为了让用户可以通过修改LD_LIBRARY_PATH来指定.so文件，大多数编译器都将输出的RPATH留空，并用RUNPATH代替RPATH。</p>
 <p>RPATH中有个特殊的标识符变量$ORIGIN。这个变量代表elf文件自身所在的目录。当希望使用相对位置寻找.so文件，就需要利用$ORIGIN设置RPATH。多个路径之间使用冒号:隔开。</p>
-<h3 id="cmake中的rpath"><a href="#cmake中的rpath" class="headerlink" title="cmake中的rpath"></a>cmake中的rpath</h3><p>跟 RPATH 相关的设置有如下几个（MacOS 相关的今天按下不表）：</p>
-<ul>
-<li>BUILD_RPATH (version&gt;&#x3D;3.8)：编译时的 RPATH，在你想要从编译目录中运行程序可能会需要；</li>
-<li>INSTALL_RPATH：安装时的 RPATH，在你想要从安装目录中运行程序可能会需要；</li>
-<li>SKIP_BUILD_RPATH：跳过编译时的 RPATH 配置；</li>
-<li>BUILD_WITH_INSTALL_RPATH：在编译时使用安装时的 RPATH 配置，安装目录与编译目录的依赖路径一致时使- 用；</li>
-<li>INSTALL_RPATH_USE_LINK_PATH：将链接时的 RPATH 配置用作安装时的 RPATH，安装目录与链接的依赖路径一致时使用；</li>
-<li>BUILD_RPATH_USE_ORIGIN (version&gt;&#x3D;3.14)：是否在编译时使用 $ORIGIN，相对路径；</li>
-<li>INSTALL_REMOVE_ENVIRONMENT_RPATH (version&gt;&#x3D;3.16)：安装时是否移除工具链相关的 RPATH；</li>
+<h3 id="cmake中的rpath">cmake中的rpath</h3>
+<p>跟 RPATH 相关的设置有如下几个（MacOS 相关的今天按下不表）：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>BUILD_RPATH (version&gt;=3.8)：编译时的 RPATH，在你想要从编译目录中运行程序可能会需要；</p>
+</li>
+<li class="lvl-2">
+<p>INSTALL_RPATH：安装时的 RPATH，在你想要从安装目录中运行程序可能会需要；</p>
+</li>
+<li class="lvl-2">
+<p>SKIP_BUILD_RPATH：跳过编译时的 RPATH 配置；</p>
+</li>
+<li class="lvl-2">
+<p>BUILD_WITH_INSTALL_RPATH：在编译时使用安装时的 RPATH 配置，安装目录与编译目录的依赖路径一致时使- 用；</p>
+</li>
+<li class="lvl-2">
+<p>INSTALL_RPATH_USE_LINK_PATH：将链接时的 RPATH 配置用作安装时的 RPATH，安装目录与链接的依赖路径一致时使用；</p>
+</li>
+<li class="lvl-2">
+<p>BUILD_RPATH_USE_ORIGIN (version&gt;=3.14)：是否在编译时使用 $ORIGIN，相对路径；</p>
+</li>
+<li class="lvl-2">
+<p>INSTALL_REMOVE_ENVIRONMENT_RPATH (version&gt;=3.16)：安装时是否移除工具链相关的 RPATH；</p>
+</li>
 </ul>
 <p>这些设置，可以使用 set_target_properties 单独设置在 target 上，也可以在加上 CMAKE_ 前缀后，设置成全局配置。至于如何使用，完全取决于你想要如何运行你的程序，比如从编译目录中或者安装目录中运行，可能就需要完全不同的配置。</p>
 <p>在默认情况下，CMake在install时会把rpath删掉，即安装执行文件不加入rpath，这种情况仅限于使用默认安装设置时程序能正常运行（目标库都安装到系统搜索路径中），但是大多数场景下，设置rpath最好使用相对路径，这样方便移植到不同的机器上，一般在cmake种设置方法如下：</p>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span>(CMAKE_SKIP_BUILD_RPATH <span class="keyword">FALSE</span>) <span class="comment"># 编译时加上rpath</span></span><br><span class="line"><span class="keyword">set</span>(CMAKE_BUILD_WITH_INSTALL_RPATH <span class="keyword">FALSE</span>) <span class="comment"># 编译时不使用安装的rpath</span></span><br><span class="line"><span class="keyword">set</span>(CMAKE_INSTALL_RPATH <span class="string">&quot;$ORIGIN/../lib&quot;</span>) <span class="comment"># 设置安装rpath</span></span><br><span class="line"><span class="keyword">set</span>(CMAKE_INSTALL_RPATH_USE_LINK_PATH <span class="keyword">TRUE</span>) <span class="comment"># 安装的执行文件加上安装rpath</span></span><br></pre></td></tr></table></figure>
-
-
-<h1 id="文件搜索指令"><a href="#文件搜索指令" class="headerlink" title="文件搜索指令"></a>文件搜索指令</h1><p>在使用编译目标文件或安装命令时，有时候需要一下指定很多源文件或目标文件，并且这些文件大部分都位于相同目录中或带有类似的特征，如：</p>
+<h1>文件搜索指令</h1>
+<p>在使用编译目标文件或安装命令时，有时候需要一下指定很多源文件或目标文件，并且这些文件大部分都位于相同目录中或带有类似的特征，如：</p>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">add_library</span>(calc add.cpp sub.cpp mul.cpp div.cpp)</span><br></pre></td></tr></table></figure>
 <p>这时候就可以使用文件搜索指令来简化操作，将所有符合指定规则的文件名放到一个变量中，然后在安装或配置目标文件编译指令时，直接用这个变量代指这些文件。</p>
-<h2 id="搜索源文件"><a href="#搜索源文件" class="headerlink" title="搜索源文件"></a>搜索源文件</h2><p>如果只需要搜索源文件，可以使用add_definitions指令，其作用是将某个目录下的所有源文件(.c，.cpp和.cc文件)添加到一个变量中<br>语法：</p>
+<h2 id="搜索源文件">搜索源文件</h2>
+<p>如果只需要搜索源文件，可以使用add_definitions指令，其作用是将某个目录下的所有源文件(.c，.cpp和.cc文件)添加到一个变量中语法：</p>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">aux_source_directory</span>(&lt;dir&gt; &lt;variable&gt;)</span><br></pre></td></tr></table></figure>
 <p>其中dir是要搜索的目录，variable是要存储文件的目录，如果对同一个变量执行多次该指令，新搜索到的文件名会被追加到变量后面，src目录里面有a.cpp, test目录里面有test.cpp，执行下面指令：</p>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">aux_source_directory</span>(src SRCS_LIST)</span><br><span class="line"><span class="comment"># 此时SRCS_LIST的值为/path/to/src/a.cpp</span></span><br><span class="line"><span class="keyword">aux_source_directory</span>(src SRCS_LIST)</span><br><span class="line"><span class="comment"># 此时SRCS_LIST的值为/path/to/src/a.cpp;/path/to/test/test.cpp</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="搜索任意文件"><a href="#搜索任意文件" class="headerlink" title="搜索任意文件"></a>搜索任意文件</h2><p>如果想要搜索除源文件外的其他文件，则需要使用file指令中的GLOB或GLOB_RECURSE功能。</p>
+<h2 id="搜索任意文件">搜索任意文件</h2>
+<p>如果想要搜索除源文件外的其他文件，则需要使用file指令中的GLOB或GLOB_RECURSE功能。</p>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">file</span>(GLOB/GLOB_RECURSE &lt;var&gt; &lt;dir/regex&gt;)</span><br></pre></td></tr></table></figure>
 <p>其中GLOB会将指定目录中所有匹配指定表达式的文件加入到变量var中，而GLOB_RECURSE会递归的查询所制定目录dir下的所有目录，将所有匹配指定表达式的文件的绝对路径加入变量var中。</p>
 <p>如前文所提到的<a href="#%E5%B5%8C%E5%A5%97%E5%B7%A5%E7%A8%8B">嵌套目录</a>，如果执行如下命令：</p>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">file</span>(GLOB SRC_LIST_1 src2/*.cpp)</span><br><span class="line"><span class="keyword">file</span>(GLOB_RESCURSE SRC_LIST_2 src2/*.cpp)</span><br></pre></td></tr></table></figure>
 <p>SRC_LIST_1的值为c.cpp;d.cpp;main2.cpp三个文件的绝对路径</p>
 <p>而SRC_LIST_2的值为c.cpp;d.cpp;main2.cpp;a.cpp;b.cpp;main1.cpp五个文件的绝对路径</p>
-<h1 id="常用指令参考"><a href="#常用指令参考" class="headerlink" title="常用指令参考"></a>常用指令参考</h1><ul>
-<li>add_definitions：向 C&#x2F;C++编译器添加 -D 定义. 如果你的代码中定义了#ifdef ENABLE_DEBUG #endif,这个代码块就会生效。</li>
+<h1>常用指令参考</h1>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>add_definitions：向 C/C++编译器添加 -D 定义. 如果你的代码中定义了#ifdef ENABLE_DEBUG #endif,这个代码块就会生效。</p>
+</li>
 </ul>
-<p>语法 : </p>
+<p>语法 :</p>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">add_definitions</span>(-DENABLE_DEBUG -DABC)</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>add_dependencies：定义 target 依赖的其他 target, 作用是检查依赖，确保在编译本 target 之前,其他的 target 已经被构建。</li>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>add_dependencies：定义 target 依赖的其他 target, 作用是检查依赖，确保在编译本 target 之前,其他的 target 已经被构建。</p>
+</li>
 </ul>
-<p>语法: </p>
+<p>语法:</p>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">add_dependencies</span>(<span class="keyword">target</span>-name depend-target1 depend-target2 ...)</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>aux_source_directory：作用是发现一个目录下所有的源代码文件并将列表存储在一个变量中,这个指令临时被用来自动构建源文件列表。因为目前 cmake 还不能自动发现新添加的源文件。</li>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>aux_source_directory：作用是发现一个目录下所有的源代码文件并将列表存储在一个变量中,这个指令临时被用来自动构建源文件列表。因为目前 cmake 还不能自动发现新添加的源文件。</p>
+</li>
 </ul>
-<p>语法 : </p>
+<p>语法 :</p>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">aux_source_directory</span>(dir VARIABLE)</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>add_subdirectory：添加一个文件夹进行编译，该文件夹下的 CMakeLists.txt 负责编译该文件夹下的源码. NAME是想对于调用add_subdirectory的CMakeListst.txt的相对路径．</li>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>add_subdirectory：添加一个文件夹进行编译，该文件夹下的 CMakeLists.txt 负责编译该文件夹下的源码. NAME是想对于调用add_subdirectory的CMakeListst.txt的相对路径．</p>
+</li>
 </ul>
-<p>语法 : </p>
+<p>语法 :</p>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">add_subdirectory</span>(NAME) </span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>find_package：查找并从外部项目加载设置。</li>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>find_package：查找并从外部项目加载设置。</p>
+</li>
 </ul>
 <p>语法 :</p>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">find_package</span>(&lt;PackageName&gt; [version] [EXACT] [QUIET] [MODULE] [REQUIRED] [[COMPONENTS] [components...]] [OPTIONAL_COMPONENTS components...] [NO_POLICY_SCOPE])</span><br></pre></td></tr></table></figure>
-
 <p>变量<PackageName>_FOUND 将设置为指示是否找到该软件包。 找到软件包后，将通过软件包本身记录的变量和“导入的目标”提供特定于软件包的信息。 该QUIET选项禁用信息性消息，包括那些如果未找到则表示无法找到软件包的消息REQUIRED。REQUIRED如果找不到软件包，该选项将停止处理并显示一条错误消息。</p>
 <p>COMPONENTS选件后（或REQUIRED选件后，如果有的话）可能会列出所需组件的特定于包装的列表 。后面可能会列出其他可选组件OPTIONAL_COMPONENTS。可用组件及其对是否认为找到包的影响由目标包定义。</p>
-<ul>
-<li>include_directories：将给定目录添加到编译器用来搜索包含文件的目录中。相对路径被解释为相对于当前源目录。</li>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>include_directories：将给定目录添加到编译器用来搜索包含文件的目录中。相对路径被解释为相对于当前源目录。</p>
+</li>
 </ul>
-<p>语法 : </p>
+<p>语法 :</p>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">include_directories</span>([AFTER|BEFORE] [SYSTEM] dir1 [dir2 ...])</span><br></pre></td></tr></table></figure>
-
 <p>包含目录添加到 INCLUDE_DIRECTORIES 当前CMakeLists文件的目录属性。它们也被添加到INCLUDE_DIRECTORIES当前CMakeLists文件中每个目标的target属性。目标属性值是生成器使用的属性值。</p>
-<ul>
-<li>link_libraries：将库链接到以后添加的所有目标，这是一个全局设置，会链接到后面定义的所有目标之上</li>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>link_libraries：将库链接到以后添加的所有目标，这是一个全局设置，会链接到后面定义的所有目标之上</p>
+</li>
 </ul>
-<p>语法 : </p>
+<p>语法 :</p>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">link_libraries</span>([item1 [item2 [...]]] [[debug|optimized|general] &lt;item&gt;] ...)</span><br></pre></td></tr></table></figure>
-
-
-
-<ul>
-<li>add_executable：利用源码文件生成目标可执行程序。</li>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>add_executable：利用源码文件生成目标可执行程序。</p>
+</li>
 </ul>
-<p>语法 : </p>
+<p>语法 :</p>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">add_executable</span>(&lt;name&gt; [source1] [source2 ...])</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>add_library：根据源码文件生成目标库。</li>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>add_library：根据源码文件生成目标库。</p>
+</li>
 </ul>
-<p>语法 : </p>
+<p>语法 :</p>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">add_library</span>(&lt;name&gt; [STATIC | SHARED | MODULE] [source1] [source2 ...])</span><br></pre></td></tr></table></figure>
-
 <p>STATIC,SHARED 或者 MODULE 可以指定要创建的库的类型。 STATIC库是链接其他目标时使用的目标文件的存档。 SHARED库是动态链接的，并在运行时加载</p>
-<ul>
-<li>target_link_libraries：用于指定一个目标（如可执行文件或库）在编译时需要链接哪些库。它支持指定库的名称、路径以及链接库的顺序。</li>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>target_link_libraries：用于指定一个目标（如可执行文件或库）在编译时需要链接哪些库。它支持指定库的名称、路径以及链接库的顺序。</p>
+</li>
 </ul>
-<p>语法 : </p>
+<p>语法 :</p>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">target_link_libraries</span>(target_name [item1 [item2 [...]]]</span><br><span class="line">                      [&lt;debug|optimized|general&gt; &lt;lib1&gt; [&lt;lib2&gt; [...]]])</span><br></pre></td></tr></table></figure>
-
 <p>其中item可以指定PRIVATE,PUBLIC,和INTERFACE，具体讲解可以参考这篇<a target="_blank" rel="noopener" href="https://juejin.cn/post/7293728293769347107">文章</a>，简单来说就是CMake内部维护了一个链接关系树，通过这三个配置项来指明关系树的构建方式，来简化链接关系的描述过程。</p>
-<ul>
-<li>CMAKE_MINIMUM_REQUIRED：CMAKE_MINIMUM_REQUIRED 定义 cmake 的最低兼容版本</li>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>CMAKE_MINIMUM_REQUIRED：CMAKE_MINIMUM_REQUIRED 定义 cmake 的最低兼容版本</p>
+</li>
 </ul>
-<p>语法 : </p>
+<p>语法 :</p>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CMAKE_MINIMUM_REQUIRED</span>(VERSION x.x)</span><br></pre></td></tr></table></figure>
 <p>比如 CMAKE_MINIMUM_REQUIRED(VERSION 2.5 FATAL_ERROR) 如果 cmake 版本小与 2.5,则出现严重错误,整个过程中止。</p>
-<ul>
-<li>EXEC_PROGRAM：用于在指定的目录运行某个程序，在 CMakeLists.txt 处理过程中执行命令,并不会在生成的 Makefile 中执行。<br>语法:<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">EXEC_PROGRAM</span>(Executable [directory in which to run]</span><br><span class="line">                [ARGS &lt;arguments to executable&gt;]</span><br><span class="line">                [OUTPUT_VARIABLE &lt;var&gt;]</span><br><span class="line">                [RETURN_VALUE &lt;var&gt;])</span><br></pre></td></tr></table></figure>
-通过 ARGS 添加参数,如果要获取输出和返回值,可通过OUTPUT_VARIABLE 和 RETURN_VALUE 分别定义两个变量.</li>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>EXEC_PROGRAM：用于在指定的目录运行某个程序，在 CMakeLists.txt 处理过程中执行命令,并不会在生成的 Makefile 中执行。语法:</p>
+</li>
 </ul>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">EXEC_PROGRAM</span>(Executable [directory in which to run]</span><br><span class="line">                [ARGS &lt;arguments to executable&gt;]</span><br><span class="line">                [OUTPUT_VARIABLE &lt;var&gt;]</span><br><span class="line">                [RETURN_VALUE &lt;var&gt;])</span><br></pre></td></tr></table></figure>
+<p>通过 ARGS 添加参数,如果要获取输出和返回值,可通过OUTPUT_VARIABLE 和 RETURN_VALUE 分别定义两个变量.</p>
 <p>这个指令可以帮助你在 CMakeLists.txt 处理过程中支持任何命令,比如根据系统情况去修改代码文件等等。</p>
-<ul>
-<li><p>option: 提供用户可以选择的选项<br>语法：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>option: 提供用户可以选择的选项语法：</p>
+</li>
+</ul>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">option</span>(&lt;option_variable&gt; <span class="string">&quot;help string describing option&quot;</span></span><br><span class="line">       [initial value])</span><br></pre></td></tr></table></figure>
 <p>为用户提供选择ON或OFF，如果没有设置初始值，则使用OFF。</p>
-</li>
-<li><p>FILE </p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>FILE</p>
 <p>文件操作指令</p>
 </li>
 </ul>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FILE</span>(WRITE filename <span class="string">&quot;message to write&quot;</span>... )</span><br><span class="line"><span class="keyword">FILE</span>(APPEND filename <span class="string">&quot;message to write&quot;</span>... )</span><br><span class="line"><span class="keyword">FILE</span>(READ filename variable)</span><br><span class="line"><span class="keyword">FILE</span>(GLOB variable [RELATIVE path] [globbing expression_r_rs]...)</span><br><span class="line"><span class="keyword">FILE</span>(GLOB_RECURSE variable [RELATIVE path] [globbing expression_r_rs]...)</span><br><span class="line"><span class="keyword">FILE</span>(<span class="keyword">REMOVE</span> [directory]...)</span><br><span class="line"><span class="keyword">FILE</span>(REMOVE_RECURSE [directory]...)</span><br><span class="line"><span class="keyword">FILE</span>(<span class="keyword">MAKE_DIRECTORY</span> [directory]...)</span><br><span class="line"><span class="keyword">FILE</span>(RELATIVE_PATH variable directory <span class="keyword">file</span>)</span><br><span class="line"><span class="keyword">FILE</span>(TO_CMAKE_PATH path result)</span><br><span class="line"><span class="keyword">FILE</span>(TO_NATIVE_PATH path result)</span><br></pre></td></tr></table></figure>
-
-<h2 id="CMake控制指令"><a href="#CMake控制指令" class="headerlink" title="CMake控制指令"></a>CMake控制指令</h2><ul>
-<li>IF指令<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(&lt;condition&gt;)</span><br><span class="line">  &lt;commands&gt;</span><br><span class="line"><span class="keyword">elseif</span>(&lt;condition&gt;) <span class="comment"># optional block, can be repeated</span></span><br><span class="line">  &lt;commands&gt;</span><br><span class="line"><span class="keyword">else</span>()              <span class="comment"># optional block</span></span><br><span class="line">  &lt;commands&gt;</span><br><span class="line"><span class="keyword">endif</span>()</span><br><span class="line"></span><br><span class="line"><span class="comment">#####</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">IF</span>(var),如果变量不是:空,<span class="number">0</span>,N, NO, <span class="keyword">OFF</span>, <span class="keyword">FALSE</span>, NOTFOUND 或&lt;var&gt;_NOTFOUND 时,表达式为真。</span><br><span class="line"><span class="keyword">IF</span>(<span class="keyword">NOT</span> var ),与上述条件相反。</span><br><span class="line"><span class="keyword">IF</span>(var1 <span class="keyword">AND</span> var2),当两个变量都为真是为真。</span><br><span class="line"><span class="keyword">IF</span>(var1 <span class="keyword">OR</span> var2),当两个变量其中一个为真时为真。</span><br><span class="line"><span class="keyword">IF</span>(<span class="keyword">COMMAND</span> cmd),当给定的 cmd 确实是命令并可以调用是为真。</span><br><span class="line"><span class="keyword">IF</span>(<span class="keyword">EXISTS</span> dir)或者 <span class="keyword">IF</span>(<span class="keyword">EXISTS</span> <span class="keyword">file</span>),当目录名或者文件名存在时为真。</span><br><span class="line"><span class="keyword">IF</span>(file1 <span class="keyword">IS_NEWER_THAN</span> file2),当 file1 比 file2 新,或者 file1/file2 其中有一个不存在时为真,文件名请使用完整路径。</span><br><span class="line"><span class="keyword">IF</span>(<span class="keyword">IS_DIRECTORY</span> dirname),当 dirname 是目录时,为真。</span><br><span class="line"><span class="keyword">IF</span>(variable <span class="keyword">MATCHES</span> regex)</span><br><span class="line"><span class="keyword">IF</span>(<span class="keyword">string</span> <span class="keyword">MATCHES</span> regex)</span><br></pre></td></tr></table></figure></li>
+<h2 id="CMake控制指令">CMake控制指令</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>IF指令</p>
+</li>
 </ul>
-<h2 id="CMake常用变量"><a href="#CMake常用变量" class="headerlink" title="CMake常用变量"></a>CMake常用变量</h2><p>CMake中有一些常用的变量，可以通过读取某些变量来获取当前构建环境的目录，操作系统等信息，也可以通过设置某些特定变量来设置编译选项、输出目录等信息</p>
-<h3 id="常用变量"><a href="#常用变量" class="headerlink" title="常用变量"></a>常用变量</h3><table>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(&lt;condition&gt;)</span><br><span class="line">  &lt;commands&gt;</span><br><span class="line"><span class="keyword">elseif</span>(&lt;condition&gt;) <span class="comment"># optional block, can be repeated</span></span><br><span class="line">  &lt;commands&gt;</span><br><span class="line"><span class="keyword">else</span>()              <span class="comment"># optional block</span></span><br><span class="line">  &lt;commands&gt;</span><br><span class="line"><span class="keyword">endif</span>()</span><br><span class="line"></span><br><span class="line"><span class="comment">#####</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">IF</span>(var),如果变量不是:空,<span class="number">0</span>,N, NO, <span class="keyword">OFF</span>, <span class="keyword">FALSE</span>, NOTFOUND 或&lt;var&gt;_NOTFOUND 时,表达式为真。</span><br><span class="line"><span class="keyword">IF</span>(<span class="keyword">NOT</span> var ),与上述条件相反。</span><br><span class="line"><span class="keyword">IF</span>(var1 <span class="keyword">AND</span> var2),当两个变量都为真是为真。</span><br><span class="line"><span class="keyword">IF</span>(var1 <span class="keyword">OR</span> var2),当两个变量其中一个为真时为真。</span><br><span class="line"><span class="keyword">IF</span>(<span class="keyword">COMMAND</span> cmd),当给定的 cmd 确实是命令并可以调用是为真。</span><br><span class="line"><span class="keyword">IF</span>(<span class="keyword">EXISTS</span> dir)或者 <span class="keyword">IF</span>(<span class="keyword">EXISTS</span> <span class="keyword">file</span>),当目录名或者文件名存在时为真。</span><br><span class="line"><span class="keyword">IF</span>(file1 <span class="keyword">IS_NEWER_THAN</span> file2),当 file1 比 file2 新,或者 file1/file2 其中有一个不存在时为真,文件名请使用完整路径。</span><br><span class="line"><span class="keyword">IF</span>(<span class="keyword">IS_DIRECTORY</span> dirname),当 dirname 是目录时,为真。</span><br><span class="line"><span class="keyword">IF</span>(variable <span class="keyword">MATCHES</span> regex)</span><br><span class="line"><span class="keyword">IF</span>(<span class="keyword">string</span> <span class="keyword">MATCHES</span> regex)</span><br></pre></td></tr></table></figure>
+<h2 id="CMake常用变量">CMake常用变量</h2>
+<p>CMake中有一些常用的变量，可以通过读取某些变量来获取当前构建环境的目录，操作系统等信息，也可以通过设置某些特定变量来设置编译选项、输出目录等信息</p>
+<h3 id="常用变量">常用变量</h3>
+<table>
 <thead>
 <tr>
 <th>环境变量名</th>
 <th>描述</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>CMAKE_BINARY_DIR, PROJECT_BINARY_DIR, <projectname>_BINARY_DIR</td>
 <td>如果是 in source 编译,指得就是工程顶层目录,如果是 out-of-source 编译,指的是工程编译发生的目录。假设在build目录进行构建，则此变量得到的就是build目录的路径，PROJECT_BINARY_DIR 跟其他指令稍有区别,现在,你可以理解为他们是一致的。</td>
 </tr>
@@ -583,15 +730,18 @@ cmake中也可以设置变量，类似shell中的SRC_LIST&#x3D;src.cpp语句，�
 <td>PROJECT_NAME</td>
 <td>通过 PROJECT 指令定义的项目名称。</td>
 </tr>
-</tbody></table>
-<h3 id="系统信息"><a href="#系统信息" class="headerlink" title="系统信息"></a>系统信息</h3><table>
+</tbody>
+</table>
+<h3 id="系统信息">系统信息</h3>
+<table>
 <thead>
 <tr>
 <th>环境变量名</th>
 <th>含义</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>CMAKE_MAJOR_VERSION	CMAKE</td>
 <td>主版本号,比如 2.4.6 中的 2</td>
 </tr>
@@ -631,15 +781,18 @@ cmake中也可以设置变量，类似shell中的SRC_LIST&#x3D;src.cpp语句，�
 <td>APPLE</td>
 <td>在Mac系统下为TRUE</td>
 </tr>
-</tbody></table>
-<h3 id="cmake编译选项"><a href="#cmake编译选项" class="headerlink" title="cmake编译选项"></a>cmake编译选项</h3><table>
+</tbody>
+</table>
+<h3 id="cmake编译选项">cmake编译选项</h3>
+<table>
 <thead>
 <tr>
 <th>编译控制开关名</th>
 <th>描述</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>BUILD_SHARED_LIBS</td>
 <td>使用 ADD_LIBRARY 时生成动态库</td>
 </tr>
@@ -659,7 +812,8 @@ cmake中也可以设置变量，类似shell中的SRC_LIST&#x3D;src.cpp语句，�
 <td>CMAKE_INSTALL_PREFIX</td>
 <td>用于指定make install时安装的目录</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 
     </div>
 

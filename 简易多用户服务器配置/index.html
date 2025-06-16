@@ -58,6 +58,8 @@
   </noscript>
 <!-- hexo injector head_end start -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
 <!-- hexo injector head_end end --></head>
 
 <body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
@@ -117,7 +119,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B1%E4%BA%AB%E5%B7%A5%E4%BD%9C%E7%AB%99%E8%BF%90%E7%BB%B4"><span class="nav-number">1.</span> <span class="nav-text">共享工作站运维</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E7%AE%A1%E7%90%86"><span class="nav-number">1.1.</span> <span class="nav-text">用户空间管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%A1%E7%90%86%E7%AD%96%E7%95%A5"><span class="nav-number">1.1.1.</span> <span class="nav-text">管理策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B7%E4%BD%93%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.1.2.</span> <span class="nav-text">具体实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E7%AE%A1%E7%90%86"><span class="nav-number">1.2.</span> <span class="nav-text">环境管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#conda%E5%AE%89%E8%A3%85"><span class="nav-number">1.2.1.</span> <span class="nav-text">conda安装</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E5%AE%98%E7%BD%91%E4%B8%8B%E8%BD%BDconda"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">1. 官网下载conda</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E5%85%88%E8%BF%9B%E5%85%A5root%E7%94%A8%E6%88%B7%EF%BC%8C%E7%84%B6%E5%90%8E%E8%BF%9B%E8%A1%8C%E5%AE%89%E8%A3%85"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">2. 先进入root用户，然后进行安装</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#conda%E9%85%8D%E7%BD%AE"><span class="nav-number">1.2.2.</span> <span class="nav-text">conda配置</span></a></li></ol></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">共享工作站运维</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E7%AE%A1%E7%90%86"><span class="nav-number">1.1.</span> <span class="nav-text">用户空间管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%A1%E7%90%86%E7%AD%96%E7%95%A5"><span class="nav-number">1.1.1.</span> <span class="nav-text">管理策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B7%E4%BD%93%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.1.2.</span> <span class="nav-text">具体实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E7%AE%A1%E7%90%86"><span class="nav-number">1.2.</span> <span class="nav-text">环境管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#conda%E5%AE%89%E8%A3%85"><span class="nav-number">1.2.1.</span> <span class="nav-text">conda安装</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E5%AE%98%E7%BD%91%E4%B8%8B%E8%BD%BDconda"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">1. 官网下载conda</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E5%85%88%E8%BF%9B%E5%85%A5root%E7%94%A8%E6%88%B7%EF%BC%8C%E7%84%B6%E5%90%8E%E8%BF%9B%E8%A1%8C%E5%AE%89%E8%A3%85"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">2. 先进入root用户，然后进行安装</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#conda%E9%85%8D%E7%BD%AE"><span class="nav-number">1.2.2.</span> <span class="nav-text">conda配置</span></a></li></ol></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -226,24 +228,31 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><h1 id="共享工作站运维"><a href="#共享工作站运维" class="headerlink" title="共享工作站运维"></a>共享工作站运维</h1><h2 id="用户空间管理"><a href="#用户空间管理" class="headerlink" title="用户空间管理"></a>用户空间管理</h2><h3 id="管理策略"><a href="#管理策略" class="headerlink" title="管理策略"></a>管理策略</h3><p>每个人有一个自己的账号，在&#x2F;home下有自己的文件夹（固态系统盘），然后不同用户之前看不到对方文件夹中的内容。同时&#x2F;home&#x2F;user下有两个文件夹，挂载上存放数据的仓库盘，仓库盘中也做用户隔离，同时设有一个共享区域。</p>
+    <div class="post-body" itemprop="articleBody"><h1>共享工作站运维</h1>
+<h2 id="用户空间管理">用户空间管理</h2>
+<h3 id="管理策略">管理策略</h3>
+<p>每个人有一个自己的账号，在/home下有自己的文件夹（固态系统盘），然后不同用户之前看不到对方文件夹中的内容。同时/home/user下有两个文件夹，挂载上存放数据的仓库盘，仓库盘中也做用户隔离，同时设有一个共享区域。</p>
 <p>大体目录结构如下：</p>
 <figure class="highlight xl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">/home</span><br><span class="line">├── user1</span><br><span class="line">│   ├── <span class="function"><span class="title">data</span> -&gt;</span> /mnt/<span class="keyword">data</span>/user1</span><br><span class="line">│   └── <span class="function"><span class="title">share</span> -&gt;</span> /mnt/<span class="keyword">data</span>/share</span><br><span class="line">├── user2</span><br><span class="line">│   ├── <span class="function"><span class="title">data</span> -&gt;</span> /mnt/<span class="keyword">data</span>/user2</span><br><span class="line">│   └── <span class="function"><span class="title">share</span> -&gt;</span> /mnt/<span class="keyword">data</span>/share</span><br><span class="line">├── user3</span><br><span class="line">│   ├── <span class="function"><span class="title">data</span> -&gt;</span> /mnt/<span class="keyword">data</span>/user3</span><br><span class="line">│   └── <span class="function"><span class="title">share</span> -&gt;</span> /mnt/<span class="keyword">data</span>/share</span><br><span class="line">└── user4</span><br><span class="line">    ├── <span class="function"><span class="title">data</span> -&gt;</span> /mnt/<span class="keyword">data</span>/user4</span><br><span class="line">    └── <span class="function"><span class="title">share</span> -&gt;</span> /mnt/<span class="keyword">data</span>/share</span><br></pre></td></tr></table></figure>
-
-<p>其中数据盘挂载到&#x2F;mnt&#x2F;data路径下，下面分分别有每个用户的文件夹和共享空间</p>
-<h3 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h3><p>所有用户的个人文件夹的所有权限为user:user，在创建时用户时默认，然后将访问权限改为700（其他用户不可访问）。下面所有命令将会加入执行用户备注。</p>
+<p>其中数据盘挂载到/mnt/data路径下，下面分分别有每个用户的文件夹和共享空间</p>
+<h3 id="具体实现">具体实现</h3>
+<p>所有用户的个人文件夹的所有权限为user:user，在创建时用户时默认，然后将访问权限改为700（其他用户不可访问）。下面所有命令将会加入执行用户备注。</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># (root)</span></span><br><span class="line">adduser user1</span><br><span class="line"><span class="built_in">chmod</span> 700 /home/user1</span><br></pre></td></tr></table></figure>
 <p>数据盘中每个人的文件夹所有权限为user:user，由root创建然后修改所有者设置，最后链接到用户目录下，方便访问</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># (root)</span></span><br><span class="line"><span class="built_in">mkdir</span> /mnt/data/user1</span><br><span class="line"><span class="built_in">chown</span> user1:user1 /mnt/data/user1</span><br><span class="line"><span class="built_in">chmod</span> 700 /mnt/data/user1</span><br><span class="line"><span class="built_in">ln</span> -s /mnt/data/user1 /home/user1/data</span><br></pre></td></tr></table></figure>
 <p>数据盘中的共享文件夹由root创建，所有权限为root:shareData，其中所有需要访问的用户都加入shareData组，且所有组用户可以访问share目录。</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># (root)</span></span><br><span class="line"><span class="built_in">mkdir</span> /mnt/share</span><br><span class="line"><span class="built_in">chown</span> root:shareData</span><br><span class="line"><span class="built_in">chmod</span> 770 /mnt/share</span><br></pre></td></tr></table></figure>
-
-<h2 id="环境管理"><a href="#环境管理" class="headerlink" title="环境管理"></a>环境管理</h2><p>所有人需要共享conda环境，既节省了配环境的时间，也可以避免存储空间浪费（conda默认为只为当前用户安装），因此需要在根目录的相应目录下安装conda</p>
-<h3 id="conda安装"><a href="#conda安装" class="headerlink" title="conda安装"></a>conda安装</h3><h4 id="1-官网下载conda"><a href="#1-官网下载conda" class="headerlink" title="1. 官网下载conda"></a>1. <a target="_blank" rel="noopener" href="https://docs.anaconda.com/miniconda/">官网</a>下载conda</h4><h4 id="2-先进入root用户，然后进行安装"><a href="#2-先进入root用户，然后进行安装" class="headerlink" title="2. 先进入root用户，然后进行安装"></a>2. 先进入root用户，然后进行安装</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">su root</span><br></pre></td></tr></table></figure>
+<h2 id="环境管理">环境管理</h2>
+<p>所有人需要共享conda环境，既节省了配环境的时间，也可以避免存储空间浪费（conda默认为只为当前用户安装），因此需要在根目录的相应目录下安装conda</p>
+<h3 id="conda安装">conda安装</h3>
+<h4 id="1-官网下载conda">1. <a target="_blank" rel="noopener" href="https://docs.anaconda.com/miniconda/">官网</a>下载conda</h4>
+<h4 id="2-先进入root用户，然后进行安装">2. 先进入root用户，然后进行安装</h4>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">su root</span><br></pre></td></tr></table></figure>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># (root)</span></span><br><span class="line">./Miniconda3-latest-Linux-x86_64.sh</span><br></pre></td></tr></table></figure>
-<p><strong>注意！！：在安装过程中，提示选择路径的时候一定要改成&#x2F;opt&#x2F;miniconda3或&#x2F;usr&#x2F;local&#x2F;miniconda3，一定不能放在&#x2F;home&#x2F;username&#x2F;miniconda3里面</strong></p>
+<p><strong>注意！！：在安装过程中，提示选择路径的时候一定要改成/opt/miniconda3或/usr/local/miniconda3，一定不能放在/home/username/miniconda3里面</strong></p>
 <p>其他的都选择yes就行</p>
-<h3 id="conda配置"><a href="#conda配置" class="headerlink" title="conda配置"></a>conda配置</h3><p>创建用户组</p>
+<h3 id="conda配置">conda配置</h3>
+<p>创建用户组</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># (root)</span></span><br><span class="line">groupadd conda </span><br></pre></td></tr></table></figure>
 <p>将相关用户添加到用户组，之后每创建一个用户都要进行这个操作</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># (root)</span></span><br><span class="line">usermod -aG conda user1</span><br></pre></td></tr></table></figure>
@@ -258,9 +267,9 @@
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># (root)</span></span><br><span class="line"><span class="built_in">chmod</span> -R g+s /usr/local/miniconda3</span><br></pre></td></tr></table></figure>
 <p>配置环境变量</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># (root)</span></span><br><span class="line">vim /etc/profile</span><br></pre></td></tr></table></figure>
-<p>在最后一行添加：export PATH&#x3D;&#x2F;usr&#x2F;local&#x2F;anaconda3&#x2F;bin:$PATH，然后激活文件</p>
+<p>在最后一行添加：export PATH=/usr/local/anaconda3/bin:$PATH，然后激活文件</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># (root)</span></span><br><span class="line"><span class="built_in">source</span> /etc/profile</span><br></pre></td></tr></table></figure>
-<p>至此root部分配置完成，当新用户要使用conda时，需要先运行一下conda init，然后重新打开shell或运行命令source ~&#x2F;.bashrc，即可正常使用conda</p>
+<p>至此root部分配置完成，当新用户要使用conda时，需要先运行一下conda init，然后重新打开shell或运行命令source ~/.bashrc，即可正常使用conda</p>
 
     </div>
 

@@ -58,6 +58,8 @@
   </noscript>
 <!-- hexo injector head_end start -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
 <!-- hexo injector head_end end --></head>
 
 <body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
@@ -117,7 +119,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%E5%8A%A0%E9%80%9F%E5%BA%93"><span class="nav-number">1.</span> <span class="nav-text">什么是线性代数加速库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E4%BB%A3%E7%A0%81%E5%8F%8A%E7%BB%93%E6%9E%9C"><span class="nav-number">2.</span> <span class="nav-text">测试代码及结果</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8BBLAS%E7%89%88%E6%9C%AC"><span class="nav-number">2.1.</span> <span class="nav-text">查看BLAS版本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E4%BB%A3%E7%A0%81"><span class="nav-number">2.2.</span> <span class="nav-text">测试代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E7%BB%93%E6%9E%9C"><span class="nav-number">2.3.</span> <span class="nav-text">测试结果</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E8%80%85%E6%9C%89%E4%BD%95%E5%8C%BA%E5%88%AB"><span class="nav-number">3.</span> <span class="nav-text">二者有何区别</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#MKL"><span class="nav-number">3.1.</span> <span class="nav-text">MKL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#OpenBLAS"><span class="nav-number">3.2.</span> <span class="nav-text">OpenBLAS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%9F%E5%BA%A6%E5%B7%AE%E5%88%AB%E7%9A%84%E5%8E%9F%E5%9B%A0"><span class="nav-number">3.3.</span> <span class="nav-text">速度差别的原因</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E6%97%B6%E5%BA%93%E7%89%88%E6%9C%AC%E7%9A%84%E9%80%89%E6%8B%A9"><span class="nav-number">4.</span> <span class="nav-text">安装时库版本的选择</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8EMKL"><span class="nav-number">4.1.</span> <span class="nav-text">基于MKL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8EOpenBLAS"><span class="nav-number">4.2.</span> <span class="nav-text">基于OpenBLAS</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">什么是线性代数加速库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">测试代码及结果</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8BBLAS%E7%89%88%E6%9C%AC"><span class="nav-number">2.1.</span> <span class="nav-text">查看BLAS版本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E4%BB%A3%E7%A0%81"><span class="nav-number">2.2.</span> <span class="nav-text">测试代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E7%BB%93%E6%9E%9C"><span class="nav-number">2.3.</span> <span class="nav-text">测试结果</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">3.</span> <span class="nav-text">二者有何区别</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#MKL"><span class="nav-number">3.1.</span> <span class="nav-text">MKL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#OpenBLAS"><span class="nav-number">3.2.</span> <span class="nav-text">OpenBLAS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%9F%E5%BA%A6%E5%B7%AE%E5%88%AB%E7%9A%84%E5%8E%9F%E5%9B%A0"><span class="nav-number">3.3.</span> <span class="nav-text">速度差别的原因</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">4.</span> <span class="nav-text">安装时库版本的选择</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8EMKL"><span class="nav-number">4.1.</span> <span class="nav-text">基于MKL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8EOpenBLAS"><span class="nav-number">4.2.</span> <span class="nav-text">基于OpenBLAS</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -220,19 +222,33 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><h1 id="什么是线性代数加速库"><a href="#什么是线性代数加速库" class="headerlink" title="什么是线性代数加速库"></a>什么是线性代数加速库</h1><p>BLAS(Basic Linear Algebra Subprograms)即基础线性代数子程序库,可以理解为用于线性代数运算库的API。OpenBLAS和MKL是基于BLAS库的两个不同的线性运算库，Python著名的Numpy、Scipy和Pytorch库底层就调用了MKL或者OpenBLAS，但是由于二者实现方式不同，因此在不同硬件平台上性能有所差别。</p>
-<h1 id="测试代码及结果"><a href="#测试代码及结果" class="headerlink" title="测试代码及结果"></a>测试代码及结果</h1><h2 id="查看BLAS版本"><a href="#查看BLAS版本" class="headerlink" title="查看BLAS版本"></a>查看BLAS版本</h2><p>可使用如下python命令来查看当前环境中的BLAS库是MKL还是OpenBLAS:</p>
+    <div class="post-body" itemprop="articleBody"><h1>什么是线性代数加速库</h1>
+<p>BLAS(Basic Linear Algebra Subprograms)即基础线性代数子程序库,可以理解为用于线性代数运算库的API。OpenBLAS和MKL是基于BLAS库的两个不同的线性运算库，Python著名的Numpy、Scipy和Pytorch库底层就调用了MKL或者OpenBLAS，但是由于二者实现方式不同，因此在不同硬件平台上性能有所差别。</p>
+<h1>测试代码及结果</h1>
+<h2 id="查看BLAS版本">查看BLAS版本</h2>
+<p>可使用如下python命令来查看当前环境中的BLAS库是MKL还是OpenBLAS:</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line">np.__config__.show()</span><br></pre></td></tr></table></figure>
 <p>来查看blas的版本，若显示中出现openblas字样，则为openblas，若出现mkl则为mkl。</p>
-<h2 id="测试代码"><a href="#测试代码" class="headerlink" title="测试代码"></a>测试代码</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> time <span class="keyword">import</span> time</span><br><span class="line"><span class="comment">#print(&#x27;Numpy config:&#x27;)</span></span><br><span class="line"><span class="comment">#np.show_config()</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成测试数据，控制变量，非随机</span></span><br><span class="line">np.random.seed(<span class="number">0</span>)</span><br><span class="line">size = <span class="number">4096</span></span><br><span class="line">A, B = np.random.random((size, size)), np.random.random((size, size))</span><br><span class="line">C, D = np.random.random((size * <span class="number">128</span>,)), np.random.random((size * <span class="number">128</span>,))</span><br><span class="line">E = np.random.random((size // <span class="number">2</span>, size // <span class="number">4</span>))</span><br><span class="line">F = G = np.random.random((size // <span class="number">2</span>, size // <span class="number">2</span>))</span><br><span class="line">F = np.dot(F, F.T)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 矩阵点乘</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">dot</span>(<span class="params">N=<span class="number">20</span></span>):</span><br><span class="line">    t = time()</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(N):</span><br><span class="line">        np.dot(A, B)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&#x27;点乘两个 <span class="subst">&#123;size&#125;</span>x<span class="subst">&#123;size&#125;</span> 矩阵 <span class="subst">&#123;N&#125;</span> 次，平均用时 <span class="subst">&#123;(time() - t) / N&#125;</span> 秒&#x27;</span>)</span><br><span class="line">    </span><br><span class="line"><span class="comment"># 向量乘法</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">v_dot</span>(<span class="params">N=<span class="number">5000</span></span>):</span><br><span class="line">    t = time()</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(N):</span><br><span class="line">        np.dot(C, D)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&#x27;点乘两个 <span class="subst">&#123;size * <span class="number">128</span>&#125;</span> 向量 <span class="subst">&#123;N&#125;</span> 次，平均用时 <span class="subst">&#123;(time() - t) / N * <span class="number">1000</span>&#125;</span> 毫秒&#x27;</span>)</span><br><span class="line">    </span><br><span class="line"><span class="comment"># 奇异值分解</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">svd</span>(<span class="params">N=<span class="number">3</span></span>):</span><br><span class="line">    t = time()</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(N):</span><br><span class="line">        np.linalg.svd(E, full_matrices=<span class="literal">False</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&#x27;分解一个 <span class="subst">&#123;size // <span class="number">2</span>&#125;</span>x<span class="subst">&#123;size // <span class="number">4</span>&#125;</span> 矩阵的奇异值 <span class="subst">&#123;N&#125;</span> 次，平均用时 <span class="subst">&#123;(time() - t) / N&#125;</span> 秒&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 科列斯基分解</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">cholesky</span>(<span class="params">N=<span class="number">3</span></span>):</span><br><span class="line">    t = time()</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(N):</span><br><span class="line">        np.linalg.cholesky(F)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&#x27;对一个 <span class="subst">&#123;size // <span class="number">2</span>&#125;</span>x<span class="subst">&#123;size // <span class="number">2</span>&#125;</span> 矩阵科列斯基分解 <span class="subst">&#123;N&#125;</span> 次，平均用时 <span class="subst">&#123;(time() - t) / N&#125;</span> 秒&#x27;</span>)</span><br><span class="line">    </span><br><span class="line"><span class="comment"># 特征分解</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">eig</span>(<span class="params">N=<span class="number">3</span></span>):</span><br><span class="line">    t = time()</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(N):</span><br><span class="line">        np.linalg.eig(G)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&#x27;对一个 <span class="subst">&#123;size // <span class="number">2</span>&#125;</span>x<span class="subst">&#123;size // <span class="number">2</span>&#125;</span> 矩阵分解特征值 <span class="subst">&#123;N&#125;</span> 次，平均用时 <span class="subst">&#123;(time() - t) / N&#125;</span> 秒&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    dot()</span><br><span class="line">    v_dot()</span><br><span class="line">    svd()</span><br><span class="line">    cholesky()</span><br><span class="line">    eig()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="测试结果"><a href="#测试结果" class="headerlink" title="测试结果"></a>测试结果</h2><p>测试分别在AMD EPYC-7763（下文用AMD代指）和Intel Core i7-6700K（下文用Intel代之）上进行，测试共有五个任务：</p>
+<h2 id="测试代码">测试代码</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> time <span class="keyword">import</span> time</span><br><span class="line"><span class="comment">#print(&#x27;Numpy config:&#x27;)</span></span><br><span class="line"><span class="comment">#np.show_config()</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成测试数据，控制变量，非随机</span></span><br><span class="line">np.random.seed(<span class="number">0</span>)</span><br><span class="line">size = <span class="number">4096</span></span><br><span class="line">A, B = np.random.random((size, size)), np.random.random((size, size))</span><br><span class="line">C, D = np.random.random((size * <span class="number">128</span>,)), np.random.random((size * <span class="number">128</span>,))</span><br><span class="line">E = np.random.random((size // <span class="number">2</span>, size // <span class="number">4</span>))</span><br><span class="line">F = G = np.random.random((size // <span class="number">2</span>, size // <span class="number">2</span>))</span><br><span class="line">F = np.dot(F, F.T)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 矩阵点乘</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">dot</span>(<span class="params">N=<span class="number">20</span></span>):</span><br><span class="line">    t = time()</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(N):</span><br><span class="line">        np.dot(A, B)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&#x27;点乘两个 <span class="subst">&#123;size&#125;</span>x<span class="subst">&#123;size&#125;</span> 矩阵 <span class="subst">&#123;N&#125;</span> 次，平均用时 <span class="subst">&#123;(time() - t) / N&#125;</span> 秒&#x27;</span>)</span><br><span class="line">    </span><br><span class="line"><span class="comment"># 向量乘法</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">v_dot</span>(<span class="params">N=<span class="number">5000</span></span>):</span><br><span class="line">    t = time()</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(N):</span><br><span class="line">        np.dot(C, D)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&#x27;点乘两个 <span class="subst">&#123;size * <span class="number">128</span>&#125;</span> 向量 <span class="subst">&#123;N&#125;</span> 次，平均用时 <span class="subst">&#123;(time() - t) / N * <span class="number">1000</span>&#125;</span> 毫秒&#x27;</span>)</span><br><span class="line">    </span><br><span class="line"><span class="comment"># 奇异值分解</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">svd</span>(<span class="params">N=<span class="number">3</span></span>):</span><br><span class="line">    t = time()</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(N):</span><br><span class="line">        np.linalg.svd(E, full_matrices=<span class="literal">False</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&#x27;分解一个 <span class="subst">&#123;size // <span class="number">2</span>&#125;</span>x<span class="subst">&#123;size // <span class="number">4</span>&#125;</span> 矩阵的奇异值 <span class="subst">&#123;N&#125;</span> 次，平均用时 <span class="subst">&#123;(time() - t) / N&#125;</span> 秒&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 科列斯基分解</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">cholesky</span>(<span class="params">N=<span class="number">3</span></span>):</span><br><span class="line">    t = time()</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(N):</span><br><span class="line">        np.linalg.cholesky(F)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&#x27;对一个 <span class="subst">&#123;size // <span class="number">2</span>&#125;</span>x<span class="subst">&#123;size // <span class="number">2</span>&#125;</span> 矩阵科列斯基分解 <span class="subst">&#123;N&#125;</span> 次，平均用时 <span class="subst">&#123;(time() - t) / N&#125;</span> 秒&#x27;</span>)</span><br><span class="line">    </span><br><span class="line"><span class="comment"># 特征分解</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">eig</span>(<span class="params">N=<span class="number">3</span></span>):</span><br><span class="line">    t = time()</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(N):</span><br><span class="line">        np.linalg.eig(G)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&#x27;对一个 <span class="subst">&#123;size // <span class="number">2</span>&#125;</span>x<span class="subst">&#123;size // <span class="number">2</span>&#125;</span> 矩阵分解特征值 <span class="subst">&#123;N&#125;</span> 次，平均用时 <span class="subst">&#123;(time() - t) / N&#125;</span> 秒&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    dot()</span><br><span class="line">    v_dot()</span><br><span class="line">    svd()</span><br><span class="line">    cholesky()</span><br><span class="line">    eig()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="测试结果">测试结果</h2>
+<p>测试分别在AMD EPYC-7763（下文用AMD代指）和Intel Core i7-6700K（下文用Intel代之）上进行，测试共有五个任务：</p>
 <ol>
-<li>点乘两个 4096x4096 矩阵 20 次</li>
-<li>点乘两个 524288 维向量 5000 次</li>
-<li>分解一个 2048x1024 矩阵的奇异值 3 次</li>
-<li>对一个 2048x2048 矩阵科列斯基分解 3 次</li>
-<li>对一个 2048x2048 矩阵分解特征值 3 次</li>
+<li class="lvl-3">
+<p>点乘两个 4096x4096 矩阵 20 次</p>
+</li>
+<li class="lvl-3">
+<p>点乘两个 524288 维向量 5000 次</p>
+</li>
+<li class="lvl-3">
+<p>分解一个 2048x1024 矩阵的奇异值 3 次</p>
+</li>
+<li class="lvl-3">
+<p>对一个 2048x2048 矩阵科列斯基分解 3 次</p>
+</li>
+<li class="lvl-3">
+<p>对一个 2048x2048 矩阵分解特征值 3 次</p>
+</li>
 </ol>
 <table>
 <thead>
@@ -245,7 +261,8 @@
 <th>Intel (OpenBLAS)</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>任务1</td>
 <td>点乘两个 4096x4096 矩阵 20 次</td>
 <td>0.45 秒</td>
@@ -285,40 +302,52 @@
 <td>6.46 秒</td>
 <td>43.65 秒</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>可以看出，在Intel CPU平台上，OpenBLAS版本明显慢于MKL版本，而在AMD平台上反之，但由于硬件性能较强，使用两个版本的差异不如Intel平台更明显。</p>
-<h1 id="二者有何区别"><a href="#二者有何区别" class="headerlink" title="二者有何区别"></a>二者有何区别</h1><p>维基百科对二者的介绍如下：</p>
-<h2 id="MKL"><a href="#MKL" class="headerlink" title="MKL"></a>MKL</h2><p>英特尔oneAPI数学核心函数库（Intel oneAPI Math Kernel Library），前身为英特尔数学核心函数库，是一个针对科学、工程和金融应用优化的数学例程库。核心数学函数包括BLAS、LAPACK、ScaLAPACK、稀疏求解器、快速傅里叶变换和矢量数学。</p>
+<h1>二者有何区别</h1>
+<p>维基百科对二者的介绍如下：</p>
+<h2 id="MKL">MKL</h2>
+<p>英特尔oneAPI数学核心函数库（Intel oneAPI Math Kernel Library），前身为英特尔数学核心函数库，是一个针对科学、工程和金融应用优化的数学例程库。核心数学函数包括BLAS、LAPACK、ScaLAPACK、稀疏求解器、快速傅里叶变换和矢量数学。</p>
 <p>该库支持 x86 CPU 和英特尔 GPU，适用于Windows和Linux 操作系统</p>
 <p>MKL 以及由英特尔 C++ 编译器 和英特尔 DPC++ 编译器生成的其他程序使用一种称为函数多版本控制的技术来提高性能：一个函数针对许多 x86指令集扩展进行编译或编写，在运行时，“主函数”使用CPUID指令选择最适合当前 CPU 的版本。但是，只要主函数检测到非英特尔 CPU，它几乎总是选择使用最基本（也是最慢）的函数，而不管 CPU 声称支持什么指令集。</p>
 <p>说白了就是只针对intel的cpu有正向优化效果，其他厂商的cpu都有负优化效果。</p>
-<h2 id="OpenBLAS"><a href="#OpenBLAS" class="headerlink" title="OpenBLAS"></a>OpenBLAS</h2><p>OpenBLAS是BLAS（基本线性代数子程序）和LAPACK API的开源实现，并针对特定处理器类型进行了许多手工优化。它由中科院软件研究所并行软件与计算科学实验室开发。</p>
+<h2 id="OpenBLAS">OpenBLAS</h2>
+<p>OpenBLAS是BLAS（基本线性代数子程序）和LAPACK API的开源实现，并针对特定处理器类型进行了许多手工优化。它由中科院软件研究所并行软件与计算科学实验室开发。</p>
 <p>OpenBLAS 为多种处理器架构添加了线性代数核的优化实现，包括英特尔Sandy Bridge和龙芯。它声称可以达到与英特尔 MKL相当的性能。在支持 AVX2 指令集的机器上，OpenBLAS 可以达到与 MKL 类似的性能，但目前在支持 AVX512 指令集的 CPU 上几乎没有与 MKL 相媲美的开源库。</p>
 <p>OpenBLAS 是GotoBLAS 2 的一个分支，由德克萨斯高级计算中心的Kazushige Goto创建。</p>
 <p>OpenBLAS是一个开源库，和商用库不同，就是基本实现了这些功能，但是没有针对某个硬件特殊优化。</p>
-<h2 id="速度差别的原因"><a href="#速度差别的原因" class="headerlink" title="速度差别的原因"></a>速度差别的原因</h2><p>二者在intel平台上差距巨大的原因可以归结为两点：</p>
+<h2 id="速度差别的原因">速度差别的原因</h2>
+<p>二者在intel平台上差距巨大的原因可以归结为两点：</p>
 <p>一是因为epyc 7763性能过强，前几项可并行测试中，硬件性能弥补了优化差距，显得两种版本的库差距不大。</p>
 <p>二是根据MKL和intel的一些其他文档推测，因为intel的cpu为了兼容先前的平台，其实引入了很多的bug以及很多不必要的指令集，mkl实现时可根据bug和指令集特性，直接选择最快的方式计算，而OpenBLAS等开源库却无法做到，故速度在Intel平台上会慢很多。同时mkl的文档中也直言不讳，对除intel平台外的cpu，一律使用最慢的实现方式。究其原因，可能是icc编译器中使用了一些比较激进的优化，在其他平台上会发生错误，因此只能使用较保守的方案进行计算。</p>
-<h1 id="安装时库版本的选择"><a href="#安装时库版本的选择" class="headerlink" title="安装时库版本的选择"></a>安装时库版本的选择</h1><p>根据numpy官网所述：</p>
-<ul>
-<li><p>PyPI 上的 NumPy wheel（pip 安装的内容）使用 OpenBLAS 构建。OpenBLAS 库包含在 wheel 中。这使得 wheel 更大，如果用户还安装了 (例如) SciPy，他们现在将有两个 OpenBLAS 副本在磁盘上。</p>
+<h1>安装时库版本的选择</h1>
+<p>根据numpy官网所述：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>PyPI 上的 NumPy wheel（pip 安装的内容）使用 OpenBLAS 构建。OpenBLAS 库包含在 wheel 中。这使得 wheel 更大，如果用户还安装了 (例如) SciPy，他们现在将有两个 OpenBLAS 副本在磁盘上。</p>
 </li>
-<li><p>在 conda defaults 通道中，NumPy 基于 Intel MKL 构建。当用户安装 NumPy 时，MKL 将作为单独的软件包安装在用户的环境中。</p>
+<li class="lvl-2">
+<p>在 conda defaults 通道中，NumPy 基于 Intel MKL 构建。当用户安装 NumPy 时，MKL 将作为单独的软件包安装在用户的环境中。</p>
 </li>
-<li><p>在 conda-forge 通道中，NumPy 基于虚拟“BLAS”包构建。当用户从 conda-forge 安装 NumPy 时，该 BLAS 包将与实际库一起安装 - 默认情况下为 OpenBLAS，但也可以是 MKL（来自 defaults 通道），甚至是 BLIS 或参考 BLAS。</p>
+<li class="lvl-2">
+<p>在 conda-forge 通道中，NumPy 基于虚拟“BLAS”包构建。当用户从 conda-forge 安装 NumPy 时，该 BLAS 包将与实际库一起安装 - 默认情况下为 OpenBLAS，但也可以是 MKL（来自 defaults 通道），甚至是 BLIS 或参考 BLAS。</p>
 </li>
-<li><p>MKL 软件包比 OpenBLAS 大得多，在磁盘上大约为 700 MB，而 OpenBLAS 约为 30 MB。</p>
+<li class="lvl-2">
+<p>MKL 软件包比 OpenBLAS 大得多，在磁盘上大约为 700 MB，而 OpenBLAS 约为 30 MB。</p>
 </li>
-<li><p>MKL 通常比 OpenBLAS 快一些且更健壮。</p>
+<li class="lvl-2">
+<p>MKL 通常比 OpenBLAS 快一些且更健壮。</p>
 </li>
 </ul>
 <p>根据前文分析，最后一条并不完全正确，在intel平台上的确如此，而在amd平台上却并不是这样。但前面几条却可以告知我们如何选择不同的库版本：</p>
-<h2 id="基于MKL"><a href="#基于MKL" class="headerlink" title="基于MKL"></a>基于MKL</h2><p>如果需要在Intel平台上使用numpy，使用MKL版本的numpy会有较快的速度，安装方法为从默认的conda源安装（国内一些源不是mkl，如清华源，如果需要mkl版本需要删除这些源再进行安装）：</p>
+<h2 id="基于MKL">基于MKL</h2>
+<p>如果需要在Intel平台上使用numpy，使用MKL版本的numpy会有较快的速度，安装方法为从默认的conda源安装（国内一些源不是mkl，如清华源，如果需要mkl版本需要删除这些源再进行安装）：</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda install numpy</span><br></pre></td></tr></table></figure>
 <p><strong>注意：</strong> 在完成环境创建后，一定要先安装numpy，因为在安装numpy后，再安装pytorch或scipy时，会自动检测环境中已有的BLAS版本（mkl或openBlas），来选择这些包的BLAS版本，如果没有的话，具体安装成哪个不好说。</p>
-<h2 id="基于OpenBLAS"><a href="#基于OpenBLAS" class="headerlink" title="基于OpenBLAS"></a>基于OpenBLAS</h2><p>如果需要在AMD平台或ARM平台上使用numpy，则使用OpenBLAS会有较快的速度，安装方法为使用pip安装</p>
+<h2 id="基于OpenBLAS">基于OpenBLAS</h2>
+<p>如果需要在AMD平台或ARM平台上使用numpy，则使用OpenBLAS会有较快的速度，安装方法为使用pip安装</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install numpy</span><br></pre></td></tr></table></figure>
-
 
     </div>
 

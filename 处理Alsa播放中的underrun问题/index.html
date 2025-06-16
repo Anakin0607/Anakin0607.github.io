@@ -31,7 +31,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://anakin0607.github.io/img_folder/alsa.png">
 <meta property="article:published_time" content="2025-06-09T06:29:37.000Z">
-<meta property="article:modified_time" content="2025-06-16T08:33:13.082Z">
+<meta property="article:modified_time" content="2025-06-16T08:53:16.968Z">
 <meta property="article:author" content="Anakin">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="Media">
@@ -61,6 +61,8 @@
   </noscript>
 <!-- hexo injector head_end start -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
 <!-- hexo injector head_end end --></head>
 
 <body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
@@ -120,7 +122,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFUnderrun"><span class="nav-number">1.</span> <span class="nav-text">什么是Underrun</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Underrun%E7%9A%84%E8%A7%A6%E5%8F%91"><span class="nav-number">2.</span> <span class="nav-text">Underrun的触发</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E8%83%8C%E6%99%AF%EF%BC%9A%E5%A3%B0%E5%8D%A1%E6%92%AD%E6%94%BE%E8%BF%87%E7%A8%8B"><span class="nav-number">2.1.</span> <span class="nav-text">1. 背景：声卡播放过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Underrun%E8%A7%A6%E5%8F%91%E6%97%B6%E9%97%B4"><span class="nav-number">2.2.</span> <span class="nav-text">2. Underrun触发时间</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B%E8%AE%A1%E7%AE%97%EF%BC%9A"><span class="nav-number">2.2.1.</span> <span class="nav-text">示例计算：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E7%A4%BA%E4%BE%8B%EF%BC%9A"><span class="nav-number">2.2.2.</span> <span class="nav-text">其他示例：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3Underrun"><span class="nav-number">3.</span> <span class="nav-text">解决Underrun</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ALSA-%E5%8F%82%E6%95%B0%E9%85%8D%E7%BD%AE"><span class="nav-number">3.1.</span> <span class="nav-text">ALSA 参数配置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E5%91%A8%E6%9C%9F%E5%A4%A7%E5%B0%8F%E5%92%8C%E7%BC%93%E5%86%B2%E5%8C%BA%E5%A4%A7%E5%B0%8F"><span class="nav-number">3.1.0.1.</span> <span class="nav-text">(1) 周期大小和缓冲区大小</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1"><span class="nav-number">3.2.</span> <span class="nav-text">应用程序设计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%80%9F%E5%8A%A9poll-%E5%AE%9E%E7%8E%B0%E9%9D%9E%E9%98%BB%E5%A1%9E%E5%86%99%E5%85%A5"><span class="nav-number">3.2.1.</span> <span class="nav-text">借助poll()实现非阻塞写入</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E4%BB%A5%E9%9D%9E%E9%98%BB%E5%A1%9E%E6%A8%A1%E5%BC%8F%E6%89%93%E5%BC%80-PCM-%E8%AE%BE%E5%A4%87"><span class="nav-number">3.2.1.1.</span> <span class="nav-text">1. 以非阻塞模式打开 PCM 设备</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E8%8E%B7%E5%8F%96%E4%B8%8E-ALSA-%E7%9B%B8%E5%85%B3%E7%9A%84-%E6%96%87%E4%BB%B6%E6%8F%8F%E8%BF%B0%E7%AC%A6-File-Descriptors"><span class="nav-number">3.2.1.2.</span> <span class="nav-text">2. 获取与 ALSA 相关的 文件描述符(File Descriptors)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E5%9C%A8%E5%86%99%E5%85%A5%E5%BE%AA%E7%8E%AF%E4%B8%AD%E4%BD%BF%E7%94%A8-poll"><span class="nav-number">3.2.1.3.</span> <span class="nav-text">3. 在写入循环中使用 poll()</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%80%9F%E5%8A%A9select-%E5%AE%9E%E7%8E%B0%E9%9D%9E%E9%98%BB%E5%A1%9E%E5%86%99%E5%85%A5"><span class="nav-number">3.2.2.</span> <span class="nav-text">借助select()实现非阻塞写入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#poll-%E4%B8%8E-select-%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="nav-number">3.2.3.</span> <span class="nav-text">poll() 与 select() 的对比</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">3.3.</span> <span class="nav-text">参考</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">什么是Underrun</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">Underrun的触发</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E8%83%8C%E6%99%AF%EF%BC%9A%E5%A3%B0%E5%8D%A1%E6%92%AD%E6%94%BE%E8%BF%87%E7%A8%8B"><span class="nav-number">2.1.</span> <span class="nav-text">1. 背景：声卡播放过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Underrun%E8%A7%A6%E5%8F%91%E6%97%B6%E9%97%B4"><span class="nav-number">2.2.</span> <span class="nav-text">2. Underrun触发时间</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B%E8%AE%A1%E7%AE%97%EF%BC%9A"><span class="nav-number">2.2.1.</span> <span class="nav-text">示例计算：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E7%A4%BA%E4%BE%8B%EF%BC%9A"><span class="nav-number">2.2.2.</span> <span class="nav-text">其他示例：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">3.</span> <span class="nav-text">解决Underrun</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ALSA-%E5%8F%82%E6%95%B0%E9%85%8D%E7%BD%AE"><span class="nav-number">3.1.</span> <span class="nav-text">ALSA 参数配置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E5%91%A8%E6%9C%9F%E5%A4%A7%E5%B0%8F%E5%92%8C%E7%BC%93%E5%86%B2%E5%8C%BA%E5%A4%A7%E5%B0%8F"><span class="nav-number">3.1.0.1.</span> <span class="nav-text">(1) 周期大小和缓冲区大小</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1"><span class="nav-number">3.2.</span> <span class="nav-text">应用程序设计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%80%9F%E5%8A%A9poll-%E5%AE%9E%E7%8E%B0%E9%9D%9E%E9%98%BB%E5%A1%9E%E5%86%99%E5%85%A5"><span class="nav-number">3.2.1.</span> <span class="nav-text">借助poll()实现非阻塞写入</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E4%BB%A5%E9%9D%9E%E9%98%BB%E5%A1%9E%E6%A8%A1%E5%BC%8F%E6%89%93%E5%BC%80-PCM-%E8%AE%BE%E5%A4%87"><span class="nav-number">3.2.1.1.</span> <span class="nav-text">1. 以非阻塞模式打开 PCM 设备</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E8%8E%B7%E5%8F%96%E4%B8%8E-ALSA-%E7%9B%B8%E5%85%B3%E7%9A%84-%E6%96%87%E4%BB%B6%E6%8F%8F%E8%BF%B0%E7%AC%A6-File-Descriptors"><span class="nav-number">3.2.1.2.</span> <span class="nav-text">2. 获取与 ALSA 相关的 文件描述符(File Descriptors)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E5%9C%A8%E5%86%99%E5%85%A5%E5%BE%AA%E7%8E%AF%E4%B8%AD%E4%BD%BF%E7%94%A8-poll"><span class="nav-number">3.2.1.3.</span> <span class="nav-text">3. 在写入循环中使用 poll()</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%80%9F%E5%8A%A9select-%E5%AE%9E%E7%8E%B0%E9%9D%9E%E9%98%BB%E5%A1%9E%E5%86%99%E5%85%A5"><span class="nav-number">3.2.2.</span> <span class="nav-text">借助select()实现非阻塞写入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#poll-%E4%B8%8E-select-%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="nav-number">3.2.3.</span> <span class="nav-text">poll() 与 select() 的对比</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">3.3.</span> <span class="nav-text">参考</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -207,7 +209,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-16 16:33:13" itemprop="dateModified" datetime="2025-06-16T16:33:13+08:00">2025-06-16</time>
+      <time title="修改时间：2025-06-16 16:53:16" itemprop="dateModified" datetime="2025-06-16T16:53:16+08:00">2025-06-16</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -229,194 +231,307 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><p>在 ALSA (Advanced Linux Sound Architecture) 中, underrun（缓冲区下溢）问题是音频编程中的一个常见状况。Underrun 发生在应用程序向声卡提供音频数据的速度跟不上声卡播放数据的速度时，导致声卡缓冲区变空。此时程序会<strong>抛出“UnderRun”异常</strong>，或在音频播放出现音频播放出现<strong>爆音 (clicks&#x2F;pops)、卡顿 (stuttering)、断断续续或短暂的静音</strong>。</p>
-<h1 id="什么是Underrun"><a href="#什么是Underrun" class="headerlink" title="什么是Underrun"></a>什么是Underrun</h1><p><strong>一个形象的比喻描述Underrun</strong></p>
+    <div class="post-body" itemprop="articleBody"><p>在 ALSA (Advanced Linux Sound Architecture) 中, underrun（缓冲区下溢）问题是音频编程中的一个常见状况。Underrun 发生在应用程序向声卡提供音频数据的速度跟不上声卡播放数据的速度时，导致声卡缓冲区变空。此时程序会<strong>抛出“UnderRun”异常</strong>，或在音频播放出现音频播放出现<strong>爆音 (clicks/pops)、卡顿 (stuttering)、断断续续或短暂的静音</strong>。</p>
+<h1>什么是Underrun</h1>
+<p><strong>一个形象的比喻描述Underrun</strong></p>
 <p>想象一下声卡的播放缓冲区是一条匀速前进的传送带，而你的应用程序负责往传送带上放产品（音频数据）。</p>
-<ul>
-<li><strong>正常情况</strong>：你总是能及时地在传送带到达末端前放上新的产品，传送带持续运转，声音连续播放。  </li>
-<li><strong>Underrun 发生时</strong>：你因为某些原因（比如正在忙别的事情，或者拿产品的速度太慢）没能及时放上新产品，传送带上出现了空缺。当这个空缺到达末端时，机器（声卡）无事可做，就会发出一声“咔嗒”（爆音），然后等待下一个产品的到来。</li>
-</ul>
-<h1 id="Underrun的触发"><a href="#Underrun的触发" class="headerlink" title="Underrun的触发"></a>Underrun的触发</h1><h2 id="1-背景：声卡播放过程"><a href="#1-背景：声卡播放过程" class="headerlink" title="1. 背景：声卡播放过程"></a>1. <strong>背景：声卡播放过程</strong></h2><ul>
-<li><strong>声卡开启</strong>：<ul>
-<li>在ALSA中，声卡通过<code>snd_pcm_open</code>打开，并通过<code>snd_pcm_hw_params</code>配置硬件参数（如采样率、周期大小、周期数等）。</li>
-<li>声卡开始播放通常由以下操作触发：<ul>
-<li>第一次调用<code>snd_pcm_writei</code>写入足够数据（达到启动阈值）。</li>
-<li>显式调用<code>snd_pcm_start</code>（手动启动播放）。</li>
-</ul>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><strong>正常情况</strong>：你总是能及时地在传送带到达末端前放上新的产品，传送带持续运转，声音连续播放。</p>
 </li>
-<li>一旦声卡启动，它会以固定速率（取决于采样率，音频格式和通道数）从缓冲区读取数据。</li>
-</ul>
-</li>
-<li><strong>欠载（Underrun）</strong>：<ul>
-<li>当声卡尝试读取数据但缓冲区为空时，发生Underrun。</li>
-<li>Underrun通常导致音频中断、静音或杂音，下一次调用<code>snd_pcm_writei</code>返回<code>-EPIPE</code>，需要调用<code>snd_pcm_prepare</code>或<code>snd_pcm_recover</code>恢复。</li>
-</ul>
-</li>
-<li><strong>不写入数据</strong>：<ul>
-<li>如果声卡启动后，应用程序完全不调用<code>snd_pcm_writei</code>或写入零数据，缓冲区会因声卡持续消耗而耗尽，导致Underrun。</li>
-</ul>
+<li class="lvl-2">
+<p><strong>Underrun 发生时</strong>：你因为某些原因（比如正在忙别的事情，或者拿产品的速度太慢）没能及时放上新产品，传送带上出现了空缺。当这个空缺到达末端时，机器（声卡）无事可做，就会发出一声“咔嗒”（爆音），然后等待下一个产品的到来。</p>
 </li>
 </ul>
-<h2 id="2-Underrun触发时间"><a href="#2-Underrun触发时间" class="headerlink" title="2. Underrun触发时间"></a>2. <strong>Underrun触发时间</strong></h2><p>在声卡开启后，Alsa驱动以周期（period）为单位，以恒定速率（取决于采样率）每次从缓冲区中取一个周期的数据，送入声卡。而周期的大小以帧（frame）为单位，每个帧包含所有声道的一个采样点（sample）。<br><strong>一个双声道，16bit位深音频的播放过程如下图所示：</strong></p>
-<p><img src="/../img_folder/alsa.png"></p>
+<h1>Underrun的触发</h1>
+<h2 id="1-背景：声卡播放过程">1. <strong>背景：声卡播放过程</strong></h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><strong>声卡开启</strong>：</p>
+<ul class="lvl-2">
+<li class="lvl-4">在ALSA中，声卡通过<code>snd_pcm_open</code>打开，并通过<code>snd_pcm_hw_params</code>配置硬件参数（如采样率、周期大小、周期数等）。</li>
+<li class="lvl-4">声卡开始播放通常由以下操作触发：
+<ul class="lvl-4">
+<li class="lvl-6">第一次调用<code>snd_pcm_writei</code>写入足够数据（达到启动阈值）。</li>
+<li class="lvl-6">显式调用<code>snd_pcm_start</code>（手动启动播放）。</li>
+</ul>
+</li>
+<li class="lvl-4">一旦声卡启动，它会以固定速率（取决于采样率，音频格式和通道数）从缓冲区读取数据。</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p><strong>欠载（Underrun）</strong>：</p>
+<ul class="lvl-2">
+<li class="lvl-4">当声卡尝试读取数据但缓冲区为空时，发生Underrun。</li>
+<li class="lvl-4">Underrun通常导致音频中断、静音或杂音，下一次调用<code>snd_pcm_writei</code>返回<code>-EPIPE</code>，需要调用<code>snd_pcm_prepare</code>或<code>snd_pcm_recover</code>恢复。</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p><strong>不写入数据</strong>：</p>
+<ul class="lvl-2">
+<li class="lvl-4">如果声卡启动后，应用程序完全不调用<code>snd_pcm_writei</code>或写入零数据，缓冲区会因声卡持续消耗而耗尽，导致Underrun。</li>
+</ul>
+</li>
+</ul>
+<h2 id="2-Underrun触发时间">2. <strong>Underrun触发时间</strong></h2>
+<p>在声卡开启后，Alsa驱动以周期（period）为单位，以恒定速率（取决于采样率）每次从缓冲区中取一个周期的数据，送入声卡。而周期的大小以帧（frame）为单位，每个帧包含所有声道的一个采样点（sample）。<br>
+<strong>一个双声道，16bit位深音频的播放过程如下图所示：</strong></p>
+<p><img src="../img_folder/alsa.png" alt=""></p>
 <p>因此当缓冲区中的数据被取尽，但在声卡下一次取数据前缓冲区没有新数据进入，Underrun会被触发。故可以通过以下公式计算出，如果程序处理一帧数据的时间大于：</p>
-<p>$$\text{欠载时间（秒）} &#x3D; \frac{\text{缓冲区大小（帧）}}{\text{采样率（Hz）}}$$</p>
-<p>则Underrun迟早会被触发。或如果声卡开启后，这一段时间没有数据送入，则会触发Underrun。<br>故Underrun的触发时间涉及到如下参数：</p>
-<ul>
-<li><strong>缓冲区大小</strong>：<ul>
-<li>缓冲区大小 &#x3D; 周期大小（period size） × 周期数（periods），以帧为单位。</li>
-<li>周期大小通过<code>snd_pcm_hw_params_set_period_size</code>设置，例如1024帧。</li>
-<li>周期数通过<code>snd_pcm_hw_params_set_periods</code>设置，通常为2或3。</li>
-<li>例如，周期大小1024帧，周期数2，缓冲区大小 &#x3D; 1024 × 2 &#x3D; 2048帧。</li>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>欠载时间（秒）</mtext><mo>=</mo><mfrac><mtext>缓冲区大小（帧）</mtext><mtext>采样率（Hz）</mtext></mfrac></mrow><annotation encoding="application/x-tex">\text{欠载时间（秒）} = \frac{\text{缓冲区大小（帧）}}{\text{采样率（Hz）}}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord text"><span class="mord cjk_fallback">欠载时间（秒）</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.0463em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3603em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord text"><span class="mord cjk_fallback">采样率（</span><span class="mord">Hz</span><span class="mord cjk_fallback">）</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord text"><span class="mord cjk_fallback">缓冲区大小（帧）</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></p>
+<p>则Underrun迟早会被触发。或如果声卡开启后，这一段时间没有数据送入，则会触发Underrun。故Underrun的触发时间涉及到如下参数：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><strong>缓冲区大小</strong>：</p>
+<ul class="lvl-2">
+<li class="lvl-4">缓冲区大小 = 周期大小（period size） × 周期数（periods），以帧为单位。</li>
+<li class="lvl-4">周期大小通过<code>snd_pcm_hw_params_set_period_size</code>设置，例如1024帧。</li>
+<li class="lvl-4">周期数通过<code>snd_pcm_hw_params_set_periods</code>设置，通常为2或3。</li>
+<li class="lvl-4">例如，周期大小1024帧，周期数2，缓冲区大小 = 1024 × 2 = 2048帧。</li>
 </ul>
 </li>
-<li><strong>采样率</strong>：<ul>
-<li>通过<code>snd_pcm_hw_params_set_rate</code>设置，例如44100Hz（44.1kHz）。</li>
+<li class="lvl-2">
+<p><strong>采样率</strong>：</p>
+<ul class="lvl-2">
+<li class="lvl-4">通过<code>snd_pcm_hw_params_set_rate</code>设置，例如44100Hz（44.1kHz）。</li>
 </ul>
 </li>
-<li><strong>帧</strong>：<ul>
-<li>1帧包含所有通道的样本（例如，16位立体声，帧大小 &#x3D; 2通道 × 2字节 &#x3D; 4字节），但时间计算只关心帧数。</li>
+<li class="lvl-2">
+<p><strong>帧</strong>：</p>
+<ul class="lvl-2">
+<li class="lvl-4">1帧包含所有通道的样本（例如，16位立体声，帧大小 = 2通道 × 2字节 = 4字节），但时间计算只关心帧数。</li>
 </ul>
 </li>
 </ul>
-<h3 id="示例计算："><a href="#示例计算：" class="headerlink" title="示例计算："></a>示例计算：</h3><ul>
-<li>假设：<ul>
-<li>周期大小 &#x3D; 1024帧</li>
-<li>周期数 &#x3D; 2</li>
-<li>采样率 &#x3D; 44100Hz</li>
+<h3 id="示例计算：">示例计算：</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>假设：</p>
+<ul class="lvl-2">
+<li class="lvl-4">周期大小 = 1024帧</li>
+<li class="lvl-4">周期数 = 2</li>
+<li class="lvl-4">采样率 = 44100Hz</li>
 </ul>
 </li>
-<li>缓冲区大小 &#x3D; 1024 × 2 &#x3D; 2048帧</li>
-<li>Underrun时间：<br>$$\text{Underrun时间} &#x3D; \frac{2048}{44100} \approx 0.04644 , \text{秒} \approx 46.44 , \text{毫秒}$$ </li>
-<li><strong>结论</strong>：声卡启动后，如果完全不写入数据，<strong>约46.44毫秒</strong>后会触发Underrun。</li>
+<li class="lvl-2">
+<p>缓冲区大小 = 1024 × 2 = 2048帧</p>
+</li>
+<li class="lvl-2">
+<p>Underrun时间：</p>
+</li>
 </ul>
-<h3 id="其他示例："><a href="#其他示例：" class="headerlink" title="其他示例："></a>其他示例：</h3><ul>
-<li><strong>高采样率</strong>（192kHz，1024帧 × 2周期）：</li>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>Underrun时间</mtext><mo>=</mo><mfrac><mn>2048</mn><mn>44100</mn></mfrac><mo>≈</mo><mn>0.04644</mn><mtext> </mtext><mtext>秒</mtext><mo>≈</mo><mn>46.44</mn><mtext> </mtext><mtext>毫秒</mtext></mrow><annotation encoding="application/x-tex">\text{Underrun时间} = \frac{2048}{44100} \approx 0.04644 \, \text{秒} \approx 46.44 \, \text{毫秒}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord text"><span class="mord">Underrun</span><span class="mord cjk_fallback">时间</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.0074em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">44100</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">2048</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord">0.04644</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord text"><span class="mord cjk_fallback">秒</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord">46.44</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord text"><span class="mord cjk_fallback">毫秒</span></span></span></span></span></span></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><strong>结论</strong>：声卡启动后，如果完全不写入数据，<strong>约46.44毫秒</strong>后会触发Underrun。</p>
+</li>
 </ul>
-<p>$$\text{欠载时间} &#x3D; \frac{2048}{192000} \approx 0.01067 , \text{秒} \approx 10.67 , \text{毫秒}$$</p>
-<ul>
-<li><strong>低采样率</strong>（8000Hz，1024帧 × 2周期，VoIP场景）：</li>
+<h3 id="其他示例：">其他示例：</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><strong>高采样率</strong>（192kHz，1024帧 × 2周期）：</p>
+</li>
 </ul>
-<p>$$\text{欠载时间} &#x3D; \frac{2048}{8000} \approx 0.256 , \text{秒} \approx 256 , \text{毫秒}$$</p>
-<ul>
-<li><strong>更大缓冲区</strong>（2048帧 × 3周期，44100Hz）：</li>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>欠载时间</mtext><mo>=</mo><mfrac><mn>2048</mn><mn>192000</mn></mfrac><mo>≈</mo><mn>0.01067</mn><mtext> </mtext><mtext>秒</mtext><mo>≈</mo><mn>10.67</mn><mtext> </mtext><mtext>毫秒</mtext></mrow><annotation encoding="application/x-tex">\text{欠载时间} = \frac{2048}{192000} \approx 0.01067 \, \text{秒} \approx 10.67 \, \text{毫秒}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord text"><span class="mord cjk_fallback">欠载时间</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.0074em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">192000</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">2048</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord">0.01067</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord text"><span class="mord cjk_fallback">秒</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord">10.67</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord text"><span class="mord cjk_fallback">毫秒</span></span></span></span></span></span></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><strong>低采样率</strong>（8000Hz，1024帧 × 2周期，VoIP场景）：</p>
+</li>
 </ul>
-<p>$$\text{欠载时间} &#x3D; \frac{2048 \times 3}{44100} \approx 0.13932 , \text{秒} \approx 139.32 , \text{毫秒}$$</p>
-<h1 id="解决Underrun"><a href="#解决Underrun" class="headerlink" title="解决Underrun"></a>解决Underrun</h1><h2 id="ALSA-参数配置"><a href="#ALSA-参数配置" class="headerlink" title="ALSA 参数配置"></a>ALSA 参数配置</h2><p>通过调整缓冲区（buffer）和周期（period）的大小，可以为应用程序争取更多的时间来准备数据，从而减少 Underrun 的风险。</p>
-<h4 id="1-周期大小和缓冲区大小"><a href="#1-周期大小和缓冲区大小" class="headerlink" title="(1) 周期大小和缓冲区大小"></a>(1) <strong>周期大小和缓冲区大小</strong></h4><p>alsa中通常有两种设定方法：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>欠载时间</mtext><mo>=</mo><mfrac><mn>2048</mn><mn>8000</mn></mfrac><mo>≈</mo><mn>0.256</mn><mtext> </mtext><mtext>秒</mtext><mo>≈</mo><mn>256</mn><mtext> </mtext><mtext>毫秒</mtext></mrow><annotation encoding="application/x-tex">\text{欠载时间} = \frac{2048}{8000} \approx 0.256 \, \text{秒} \approx 256 \, \text{毫秒}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord text"><span class="mord cjk_fallback">欠载时间</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.0074em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">8000</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">2048</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord">0.256</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord text"><span class="mord cjk_fallback">秒</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord">256</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord text"><span class="mord cjk_fallback">毫秒</span></span></span></span></span></span></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><strong>更大缓冲区</strong>（2048帧 × 3周期，44100Hz）：</p>
+</li>
+</ul>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>欠载时间</mtext><mo>=</mo><mfrac><mrow><mn>2048</mn><mo>×</mo><mn>3</mn></mrow><mn>44100</mn></mfrac><mo>≈</mo><mn>0.13932</mn><mtext> </mtext><mtext>秒</mtext><mo>≈</mo><mn>139.32</mn><mtext> </mtext><mtext>毫秒</mtext></mrow><annotation encoding="application/x-tex">\text{欠载时间} = \frac{2048 \times 3}{44100} \approx 0.13932 \, \text{秒} \approx 139.32 \, \text{毫秒}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord text"><span class="mord cjk_fallback">欠载时间</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.0074em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">44100</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">2048</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">3</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord">0.13932</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord text"><span class="mord cjk_fallback">秒</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord">139.32</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord text"><span class="mord cjk_fallback">毫秒</span></span></span></span></span></span></p>
+<h1>解决Underrun</h1>
+<h2 id="ALSA-参数配置">ALSA 参数配置</h2>
+<p>通过调整缓冲区（buffer）和周期（period）的大小，可以为应用程序争取更多的时间来准备数据，从而减少 Underrun 的风险。</p>
+<h4 id="1-周期大小和缓冲区大小">(1) <strong>周期大小和缓冲区大小</strong></h4>
+<p>alsa中通常有两种设定方法：</p>
 <ol>
-<li>先设定buffer_size，然后再设置periods，即缓冲区中包含多少个周期，在完成这两个参数设置后，period_size会被自动确定（buffer_size &#x2F; periods）</li>
-<li>先设定period_size，然后再设置periods，在完成这两个参数后，buffer_size会被自动确定（period_size * periods）</li>
+<li class="lvl-3">
+<p>先设定buffer_size，然后再设置periods，即缓冲区中包含多少个周期，在完成这两个参数设置后，period_size会被自动确定（buffer_size / periods）</p>
+</li>
+<li class="lvl-3">
+<p>先设定period_size，然后再设置periods，在完成这两个参数后，buffer_size会被自动确定（period_size * periods）</p>
+</li>
 </ol>
 <p>下面是设定这些参数以及读取缓冲区大小的方法：</p>
-<ul>
-<li><strong>周期大小（Period Size）</strong>：<ul>
-<li>较大的周期大小（如2048帧）可以增加缓冲区容量，延长Underrun时间。</li>
-<li>设置方法：<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">snd_pcm_uframes_t</span> period_size = <span class="number">2048</span>;</span><br><span class="line">snd_pcm_hw_params_set_period_size_near(pcm_handle, params, &amp;period_size, &amp;dir);</span><br></pre></td></tr></table></figure></li>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><strong>周期大小（Period Size）</strong>：</p>
+<ul class="lvl-2">
+<li class="lvl-4">较大的周期大小（如2048帧）可以增加缓冲区容量，延长Underrun时间。</li>
+<li class="lvl-4">设置方法：<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">snd_pcm_uframes_t</span> period_size = <span class="number">2048</span>;</span><br><span class="line">snd_pcm_hw_params_set_period_size_near(pcm_handle, params, &amp;period_size, &amp;dir);</span><br></pre></td></tr></table></figure>
+</li>
 </ul>
 </li>
-<li><strong>周期数（Periods）</strong>：<ul>
-<li>更多的周期数（如3或4）增加缓冲区，延迟欠载。</li>
-<li>设置方法：<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">unsigned</span> <span class="type">int</span> periods = <span class="number">3</span>;</span><br><span class="line">snd_pcm_hw_params_set_periods_near(pcm_handle, params, &amp;periods, &amp;dir);</span><br></pre></td></tr></table></figure></li>
+<li class="lvl-2">
+<p><strong>周期数（Periods）</strong>：</p>
+<ul class="lvl-2">
+<li class="lvl-4">更多的周期数（如3或4）增加缓冲区，延迟欠载。</li>
+<li class="lvl-4">设置方法：<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">unsigned</span> <span class="type">int</span> periods = <span class="number">3</span>;</span><br><span class="line">snd_pcm_hw_params_set_periods_near(pcm_handle, params, &amp;periods, &amp;dir);</span><br></pre></td></tr></table></figure>
+</li>
 </ul>
 </li>
-<li><strong>缓冲区大小（Buffer Size）</strong>：<ul>
-<li>较大的周期大小（如2048帧）增加缓冲区容量，延长欠载时间。</li>
-<li>设置方法：<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">snd_pcm_uframes_t</span> buffer_size = <span class="number">2048</span>;</span><br><span class="line">snd_pcm_hw_params_set_period_size_near(pcm_handle, params, &amp;buffer_size);</span><br></pre></td></tr></table></figure></li>
+<li class="lvl-2">
+<p><strong>缓冲区大小（Buffer Size）</strong>：</p>
+<ul class="lvl-2">
+<li class="lvl-4">较大的周期大小（如2048帧）增加缓冲区容量，延长欠载时间。</li>
+<li class="lvl-4">设置方法：<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">snd_pcm_uframes_t</span> buffer_size = <span class="number">2048</span>;</span><br><span class="line">snd_pcm_hw_params_set_period_size_near(pcm_handle, params, &amp;buffer_size);</span><br></pre></td></tr></table></figure>
+</li>
 </ul>
 </li>
-<li><strong>查询缓冲区大小</strong>：  <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">snd_pcm_uframes_t</span> buffer_size;</span><br><span class="line">snd_pcm_hw_params_get_buffer_size(params, &amp;buffer_size);</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;Buffer size: %zd frames, Underrun time: %.2f ms\n&quot;</span>,</span><br><span class="line">       buffer_size, (<span class="type">double</span>)buffer_size / rate * <span class="number">1000</span>);</span><br></pre></td></tr></table></figure></li>
+<li class="lvl-2">
+<p><strong>查询缓冲区大小</strong>：</p>
+  <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">snd_pcm_uframes_t</span> buffer_size;</span><br><span class="line">snd_pcm_hw_params_get_buffer_size(params, &amp;buffer_size);</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;Buffer size: %zd frames, Underrun time: %.2f ms\n&quot;</span>,</span><br><span class="line">       buffer_size, (<span class="type">double</span>)buffer_size / rate * <span class="number">1000</span>);</span><br></pre></td></tr></table></figure>
+</li>
 </ul>
-<h2 id="应用程序设计"><a href="#应用程序设计" class="headerlink" title="应用程序设计"></a>应用程序设计</h2><p>通过修改声卡参数只能延缓Underrun出现的时间，而从应用程序设计角度修改音频处理逻辑才是从根本上解决问题的关键。</p>
+<h2 id="应用程序设计">应用程序设计</h2>
+<p>通过修改声卡参数只能延缓Underrun出现的时间，而从应用程序设计角度修改音频处理逻辑才是从根本上解决问题的关键。</p>
 <ol>
-<li>使用独立的音频线程：<br>  将所有与音频处理（生成、写入数据）相关的代码放到一个独立的、高优先级的线程中。这个线程不应该被 UI 更新、文件 I&#x2F;O、网络请求等耗时操作阻塞。  </li>
-<li>避免在音频线程中做“重活”：<br>  音频线程的循环应该是轻量级的。避免在其中进行：</li>
+<li class="lvl-3">
+<p>使用独立的音频线程：<br>
+将所有与音频处理（生成、写入数据）相关的代码放到一个独立的、高优先级的线程中。这个线程不应该被 UI 更新、文件 I/O、网络请求等耗时操作阻塞。</p>
+</li>
+<li class="lvl-3">
+<p>避免在音频线程中做“重活”：<br>
+音频线程的循环应该是轻量级的。避免在其中进行：</p>
+</li>
 </ol>
-<ul>
-<li>内存分配 (malloc, new) 或释放 (free, delete)。  </li>
-<li>文件读写。  </li>
-<li>复杂的计算或算法。  </li>
-<li>任何可能导致阻塞的操作。  </li>
-<li><strong>策略</strong>：使用另一个“工作线程”来准备数据，并通过一个锁无关（lock-free）的环形缓冲区（ring buffer）或队列将数据传递给音频线程。</li>
+<ul class="lvl-0">
+<li class="lvl-4">
+<p>内存分配 (malloc, new) 或释放 (free, delete)。</p>
+</li>
+<li class="lvl-4">
+<p>文件读写。</p>
+</li>
+<li class="lvl-4">
+<p>复杂的计算或算法。</p>
+</li>
+<li class="lvl-4">
+<p>任何可能导致阻塞的操作。</p>
+</li>
+<li class="lvl-4">
+<p><strong>策略</strong>：使用另一个“工作线程”来准备数据，并通过一个锁无关（lock-free）的环形缓冲区（ring buffer）或队列将数据传递给音频线程。</p>
+</li>
 </ul>
 <ol start="3">
-<li>使用 poll() &#x2F; select() 进行非阻塞写入：<br>  不要让 <code>snd_pcm_writei()</code> 长时间阻塞。使用 <code>poll()</code> 或 <code>select()</code> 来等待 PCM 设备变为可写状态，这样你的音频线程可以在等待时做其他事情或让出 CPU。</li>
+<li class="lvl-3">
+<p>使用 poll() / select() 进行非阻塞写入：<br>
+不要让 <code>snd_pcm_writei()</code> 长时间阻塞。使用 <code>poll()</code> 或 <code>select()</code> 来等待 PCM 设备变为可写状态，这样你的音频线程可以在等待时做其他事情或让出 CPU。</p>
+</li>
 </ol>
-<h3 id="借助poll-实现非阻塞写入"><a href="#借助poll-实现非阻塞写入" class="headerlink" title="借助poll()实现非阻塞写入"></a>借助<code>poll()</code>实现非阻塞写入</h3><h4 id="1-以非阻塞模式打开-PCM-设备"><a href="#1-以非阻塞模式打开-PCM-设备" class="headerlink" title="1. 以非阻塞模式打开 PCM 设备"></a><strong>1. 以非阻塞模式打开 PCM 设备</strong></h4><p>这是最关键的前提。在调用 snd_pcm_open() 时，必须包含 SND_PCM_NONBLOCK 标志。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;alsa/asoundlib.h\&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">snd_pcm_t</span> *pcm_handle;  </span><br><span class="line"><span class="type">const</span> <span class="type">char</span> *device = <span class="string">&quot;default&quot;</span>;  </span><br><span class="line"><span class="type">int</span> err;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用 SND\_PCM\_NONBLOCK 标志  </span></span><br><span class="line"><span class="keyword">if</span> ((err = snd_pcm_open(&amp;pcm_handle, device, SND\_PCM\_STREAM_PLAYBACK, SND_PCM_NONBLOCK)) &lt; <span class="number">0</span>) &#123;  </span><br><span class="line">    <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">&quot;无法以非阻塞模式打开 PCM 设备: %s\n&quot;</span>, snd_strerror(err));  </span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="2-获取与-ALSA-相关的-文件描述符-File-Descriptors"><a href="#2-获取与-ALSA-相关的-文件描述符-File-Descriptors" class="headerlink" title="2. 获取与 ALSA 相关的 文件描述符(File Descriptors)"></a><strong>2. 获取与 ALSA 相关的 文件描述符(File Descriptors)</strong></h4><p><code>poll()</code> 函数是作用于文件描述符上的。需要从 ALSA 获取与当前 PCM 流关联的所有文件描述符。</p>
+<h3 id="借助poll-实现非阻塞写入">借助<code>poll()</code>实现非阻塞写入</h3>
+<h4 id="1-以非阻塞模式打开-PCM-设备"><strong>1. 以非阻塞模式打开 PCM 设备</strong></h4>
+<p>这是最关键的前提。在调用 snd_pcm_open() 时，必须包含 SND_PCM_NONBLOCK 标志。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;alsa/asoundlib.h\&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">snd_pcm_t</span> *pcm_handle;  </span><br><span class="line"><span class="type">const</span> <span class="type">char</span> *device = <span class="string">&quot;default&quot;</span>;  </span><br><span class="line"><span class="type">int</span> err;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用 SND\_PCM\_NONBLOCK 标志  </span></span><br><span class="line"><span class="keyword">if</span> ((err = snd_pcm_open(&amp;pcm_handle, device, SND_PCM_STREAM_PLAYBACK, SND_PCM_NONBLOCK)) &lt; <span class="number">0</span>) &#123;  </span><br><span class="line">    <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">&quot;无法以非阻塞模式打开 PCM 设备: %s\n&quot;</span>, snd_strerror(err));  </span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="2-获取与-ALSA-相关的-文件描述符-File-Descriptors"><strong>2. 获取与 ALSA 相关的 文件描述符(File Descriptors)</strong></h4>
+<p><code>poll()</code> 函数是作用于文件描述符上的。需要从 ALSA 获取与当前 PCM 流关联的所有文件描述符。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">int</span> nfds;  </span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">pollfd</span> *<span class="title">pfds</span>;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取需要的 pollfd 结构的数量  </span></span><br><span class="line">nfds = snd_pcm_poll_descriptors_count(pcm_handle);  </span><br><span class="line"><span class="keyword">if</span> (nfds &lt;= <span class="number">0</span>) &#123;  </span><br><span class="line">    <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">&quot;获取 poll aescriptors 数量无效\\n&quot;</span>);  </span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>;  </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 分配内存  </span></span><br><span class="line">pfds = (<span class="keyword">struct</span> pollfd *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="keyword">struct</span> pollfd) * nfds);  </span><br><span class="line"><span class="keyword">if</span> (pfds == <span class="literal">NULL</span>) &#123;  </span><br><span class="line">    <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">&quot;内存分配失败\n&quot;</span>);  </span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>;  </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 填充 pollfd 结构  </span></span><br><span class="line"><span class="keyword">if</span> ((err = snd_pcm_poll_descriptors(pcm_handle, pfds, nfds)) &lt; <span class="number">0</span>) &#123;  </span><br><span class="line">    <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">&quot;无法填充 poll descriptors: %s\n&quot;</span>, snd_strerror(err));  </span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="3-在写入循环中使用-poll"><a href="#3-在写入循环中使用-poll" class="headerlink" title="3. 在写入循环中使用 poll()"></a><strong>3. 在写入循环中使用 poll()</strong></h4><p>现在，在你的主写入循环中，不要直接调用 <code>snd_pcm_writei()</code>，而是先调用 <code>poll()</code> 来等待设备可写。</p>
+<h4 id="3-在写入循环中使用-poll"><strong>3. 在写入循环中使用 poll()</strong></h4>
+<p>现在，在你的主写入循环中，不要直接调用 <code>snd_pcm_writei()</code>，而是先调用 <code>poll()</code> 来等待设备可写。</p>
 <p><strong>完整循环逻辑示例：</strong></p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 假设已经设置好了 hw_params (采样率, 格式等)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// (在循环外部) 设置我们关心的事件：POLLOUT 表示我们想知道何时可以写入  </span></span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; nfds; i++) &#123;  </span><br><span class="line">    pfds[i].events = POLLOUT;  </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> (<span class="number">1</span>) &#123; <span class="comment">// 你的主音频循环  </span></span><br><span class="line">    <span class="comment">// ... 在这里准备你的音频数据 (例如，从文件读取或生成) ...  </span></span><br><span class="line">    <span class="comment">// char *audio_buffer;  </span></span><br><span class="line">    <span class="comment">// snd_pcm_uframes_t frames_to_write;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 首先，检查 PCM 状态，确保它处于可运行状态  </span></span><br><span class="line">    <span class="type">snd_pcm_state_t</span> state = snd_pcm_state(pcm_handle);  </span><br><span class="line">    <span class="keyword">if</span> (state == SND_PCM_STATE_XRUN) &#123;  </span><br><span class="line">        <span class="comment">// 如果发生了 underrun，进行恢复  </span></span><br><span class="line">        <span class="keyword">if</span> ((err = snd_pcm_recover(pcm_handle, -EPIPE, <span class="number">0</span>)) &lt; <span class="number">0</span>) &#123;  </span><br><span class="line">            <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">&quot;Underrun 后恢复失败: %s\n&quot;</span>, snd_strerror(err));  </span><br><span class="line">            <span class="keyword">break</span>; <span class="comment">// 退出循环  </span></span><br><span class="line">        &#125;  </span><br><span class="line">        <span class="keyword">continue</span>; <span class="comment">// 恢复后继续下一次循环  </span></span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (state == SND_PCM_STATE_SUSPENDED) &#123;  </span><br><span class="line">        <span class="comment">// 如果被挂起 (例如，系统休眠)  </span></span><br><span class="line">        <span class="keyword">if</span> ((err = snd_pcm_resume(pcm_handle)) &lt; <span class="number">0</span>) &#123;  </span><br><span class="line">            <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">&quot;从挂起状态恢复失败: %s\n&quot;</span>, snd_strerror(err));  </span><br><span class="line">            <span class="keyword">break</span>;  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用 poll() 等待设备可写  </span></span><br><span class="line">    <span class="comment">// 第二个参数是文件描述符的数量  </span></span><br><span class="line">    <span class="comment">// 第三个参数是超时时间 (毫秒)，-1 表示无限等待，0 表示不等待，\&gt;0 表示等待特定时间  </span></span><br><span class="line">    err = poll(pfds, nfds, <span class="number">200</span>); <span class="comment">// 等待最多 200ms</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (err &lt; <span class="number">0</span>) &#123;  </span><br><span class="line">        <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">&quot;poll 错误: %s\n&quot;</span>, strerror(errno));  </span><br><span class="line">        <span class="keyword">break</span>;  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="keyword">if</span> (err == <span class="number">0</span>) &#123;  </span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;poll 超时，继续等待...\n&quot;</span>);  </span><br><span class="line">        <span class="keyword">continue</span>; <span class="comment">// 没有设备就绪，继续下一次循环等待  </span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 检查 poll 返回的事件  </span></span><br><span class="line">    <span class="type">unsigned</span> <span class="type">short</span> revents;  </span><br><span class="line">    <span class="comment">// snd_pcm_poll_descriptors_revents() 将内核返回的 revents 转换为 ALSA 事件  </span></span><br><span class="line">    <span class="keyword">if</span> ((err = snd_pcm_poll_descriptors_revents(pcm_handle, pfds, nfds, &amp;revents)) &lt; <span class="number">0</span>) &#123;  </span><br><span class="line">        <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">&quot;获取 revents 错误: %s\n&quot;</span>, snd_strerror(err));  </span><br><span class="line">        <span class="keyword">break</span>;  </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 检查是否真的可写 (POLLOUT)  </span></span><br><span class="line">    <span class="keyword">if</span> (revents &amp; POLLOUT) &#123;  </span><br><span class="line">        <span class="comment">// 设备可写，现在可以调用 snd\_pcm\_writei()  </span></span><br><span class="line">          </span><br><span class="line">        <span class="comment">// (可选但推荐) 检查有多少空间可用  </span></span><br><span class="line">        snd\_pcm\_sframes\<span class="type">_t</span> avail\_frames \= snd\_pcm\_avail\_update(pcm\_handle);  </span><br><span class="line">        <span class="keyword">if</span> (avail\_frames \&lt; <span class="number">0</span>) &#123;  </span><br><span class="line">            <span class="comment">// 可能又发生了 underrun，进行恢复  </span></span><br><span class="line">            <span class="keyword">if</span> ((err \= snd\_pcm\_recover(pcm\_handle, avail\_frames, <span class="number">0</span>)) \&lt; <span class="number">0</span>) &#123;  </span><br><span class="line">                 <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">&quot;avail\_update 后恢复失败: %s\\n&quot;</span>, snd\_strerror(err));  </span><br><span class="line">                 <span class="keyword">break</span>;  </span><br><span class="line">            &#125;  </span><br><span class="line">            <span class="keyword">continue</span>;  </span><br><span class="line">        &#125;  </span><br><span class="line">          </span><br><span class="line">        <span class="comment">// 只写入可用空间那么多数据，避免阻塞或返回 \-EAGAIN  </span></span><br><span class="line">        <span class="type">snd_pcm_sframes_t</span> frames_written = <span class="number">0</span>;  </span><br><span class="line">        <span class="keyword">if</span> (avail_frames &gt;= frames_to_write) &#123;  </span><br><span class="line">            frames_written = snd_pcm_writei(pcm_handle, audio_buffer, frames_to_write);  </span><br><span class="line">            <span class="keyword">if</span> (frames_written &lt; <span class="number">0</span>) &#123;  </span><br><span class="line">                 <span class="comment">// 写入时发生错误 (可能是 underrun)  </span></span><br><span class="line">                 <span class="keyword">if</span> ((err = snd_pcm_recover(pcm_handle, frames_written, <span class="number">0</span>)) &lt; <span class="number">0</span>) &#123;  </span><br><span class="line">                     <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">&quot;writei 后恢复失败: %s\n&quot;</span>, snd_strerror(err));  </span><br><span class="line">                     <span class="keyword">break</span>;  </span><br><span class="line">                 &#125;  </span><br><span class="line">            &#125;  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="comment">// ... 更新你的 audio_buffer 和 frames_to_write，准备下一次循环 ...  </span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 清理  </span></span><br><span class="line"><span class="built_in">free</span>(pfds);  </span><br><span class="line">snd_pcm_close(pcm_handle);</span><br></pre></td></tr></table></figure>
-
-<h3 id="借助select-实现非阻塞写入"><a href="#借助select-实现非阻塞写入" class="headerlink" title="借助select()实现非阻塞写入"></a>借助<code>select()</code>实现非阻塞写入</h3><p>使用<code>select()</code>的步骤如下</p>
+<h3 id="借助select-实现非阻塞写入">借助<code>select()</code>实现非阻塞写入</h3>
+<p>使用<code>select()</code>的步骤如下</p>
 <ol>
-<li><strong>获取最大文件描述符</strong>: <code>snd_pcm_poll_descriptors()</code> 不直接适用。你需要手动遍历 pfds 数组来找到最大的 fd 值。  </li>
-<li><strong>设置 fd_set</strong>: 使用 <code>FD_ZERO()</code> 初始化一个 <code>fd_set</code>，然后使用 <code>FD_SET()</code> 将从 <code>snd_pcm_poll_descriptors()</code>得到的每个文件描述符加入到写集合 (writefds)中。  </li>
-<li>**调用 <code>select()</code>**。  </li>
-<li><strong>循环检查 <code>FD_ISSET()</code></strong>: 在 <code>select()</code> 返回后，你需要再次遍历所有文件描述符，用 FD_ISSET() 检查哪个是就绪的。  </li>
-<li><strong>重复设置 fd_set</strong>: <code>select()</code> 可能会修改传入的 fd_set，所以在每次循环调用 <code>select()</code> 之前，你都必须重新初始化和设置它。</li>
+<li class="lvl-3">
+<p><strong>获取最大文件描述符</strong>: <code>snd_pcm_poll_descriptors()</code> 不直接适用。你需要手动遍历 pfds 数组来找到最大的 fd 值。</p>
+</li>
+<li class="lvl-3">
+<p><strong>设置 fd_set</strong>: 使用 <code>FD_ZERO()</code> 初始化一个 <code>fd_set</code>，然后使用 <code>FD_SET()</code> 将从 <code>snd_pcm_poll_descriptors()</code>得到的每个文件描述符加入到写集合 (writefds)中。</p>
+</li>
+<li class="lvl-3">
+<p><strong>调用 <code>select()</code></strong>。</p>
+</li>
+<li class="lvl-3">
+<p><strong>循环检查 <code>FD_ISSET()</code></strong>: 在 <code>select()</code> 返回后，你需要再次遍历所有文件描述符，用 FD_ISSET() 检查哪个是就绪的。</p>
+</li>
+<li class="lvl-3">
+<p><strong>重复设置 fd_set</strong>: <code>select()</code> 可能会修改传入的 fd_set，所以在每次循环调用 <code>select()</code> 之前，你都必须重新初始化和设置它。</p>
+</li>
 </ol>
 <p><strong>关键步骤差异：</strong></p>
 <ol>
-<li><strong>数据结构</strong>：<code>select()</code> 使用 fd_set 类型来存储文件描述符集合，而不是 struct pollfd 数组。  </li>
-<li><strong>最大文件描述符</strong>：调用 <code>select()</code> 时，<code>snd_pcm_poll_descriptors()</code> 不直接适用。你需要手动遍历 pfds 数组来找到最大的 fd 值。</li>
-<li><strong>循环内重置</strong>：<code>select()</code> 会修改传入的 fd_set，因此在每次循环调用 select() 之前，你<strong>必须</strong>重新清空并设置 fd_set。超时 struct timeval 也可能被某些系统修改，所以也建议在循环内重置。</li>
+<li class="lvl-3">
+<p><strong>数据结构</strong>：<code>select()</code> 使用 fd_set 类型来存储文件描述符集合，而不是 struct pollfd 数组。</p>
+</li>
+<li class="lvl-3">
+<p><strong>最大文件描述符</strong>：调用 <code>select()</code> 时，<code>snd_pcm_poll_descriptors()</code> 不直接适用。你需要手动遍历 pfds 数组来找到最大的 fd 值。</p>
+</li>
+<li class="lvl-3">
+<p><strong>循环内重置</strong>：<code>select()</code> 会修改传入的 fd_set，因此在每次循环调用 select() 之前，你<strong>必须</strong>重新清空并设置 fd_set。超时 struct timeval 也可能被某些系统修改，所以也建议在循环内重置。</p>
+</li>
 </ol>
 <p>下面是一个借助select实现非阻塞写入的例子：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">non_blocking_write_select_example</span><span class="params">(<span class="type">snd_pcm_t</span> *pcm_handle)</span> &#123;  </span><br><span class="line">    <span class="type">int</span> nfds, max_fd, err;  </span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">pollfd</span> *<span class="title">pfds</span>;</span> <span class="comment">// 仍然使用 pollfd 结构来获取 FD 列表  </span></span><br><span class="line">    fd_set write_fds;  </span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">timeval</span> <span class="title">timeout</span>;</span>  </span><br><span class="line">      </span><br><span class="line">    <span class="comment">// 1. 从 ALSA 获取文件描述符信息  </span></span><br><span class="line">    nfds = snd_pcm_poll_descriptors_count(pcm_handle);  </span><br><span class="line">    <span class="keyword">if</span> (nfds &lt;= <span class="number">0</span>) &#123;  </span><br><span class="line">        <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">&quot;获取 poll descriptors 数量无效n&quot;</span>);  </span><br><span class="line">        <span class="keyword">return</span>;  </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    pfds = (<span class="keyword">struct</span> pollfd *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="keyword">struct</span> pollfd) * nfds);  </span><br><span class="line">    <span class="keyword">if</span> ((err = snd_pcm_poll_descriptors(pcm_handle, pfds, nfds)) &lt; <span class="number">0</span>) &#123;  </span><br><span class="line">        <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">&quot;无法填充 poll descriptors: %s\n&quot;</span>, snd_strerror(err));  </span><br><span class="line">        <span class="built_in">free</span>(pfds);  </span><br><span class="line">        <span class="keyword">return</span>;  </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. 找到最大的文件描述符  </span></span><br><span class="line">    max_fd = <span class="number">-1</span>;  </span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; nfds; i++) &#123;  </span><br><span class="line">        <span class="keyword">if</span> (pfds[i].fd &gt; max_fd) &#123;  </span><br><span class="line">            max_fd = pfds[i].fd;  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">      </span><br><span class="line">    <span class="comment">// 3. 主写入循环  </span></span><br><span class="line">    <span class="keyword">while</span> (<span class="number">1</span>) &#123; <span class="comment">// 你的主音频循环  </span></span><br><span class="line">        <span class="comment">// ... 在这里准备你的音频数据 (audio_buffer, frames_to_write) ...  </span></span><br><span class="line">          </span><br><span class="line">        <span class="comment">// 每次循环前都必须重置 fd_set  </span></span><br><span class="line">        FD_ZERO(&amp;write_fds);  </span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; nfds; i++) &#123;  </span><br><span class="line">            FD_SET(pfds[i].fd, &amp;write_fds);  </span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 每次循环前重置 timeout 结构体 (好的实践)  </span></span><br><span class="line">        timeout.tv_sec = <span class="number">0</span>;  </span><br><span class="line">        timeout.tv_usec = <span class="number">200000</span>; <span class="comment">// 等待 200ms</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 调用 select() 等待  </span></span><br><span class="line">        <span class="comment">// 第一个参数是 max_fd + 1  </span></span><br><span class="line">        <span class="comment">// 第二、四、五个参数分别是读、异常、超时  </span></span><br><span class="line">        err = select(max_fd + <span class="number">1</span>, <span class="literal">NULL</span>, &amp;write_fds, <span class="literal">NULL</span>, &amp;timeout);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (err &lt; <span class="number">0</span>) &#123;  </span><br><span class="line">            <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">&quot;select 错误: %s\n&quot;</span>, strerror(errno));  </span><br><span class="line">            <span class="keyword">break</span>;  </span><br><span class="line">        &#125;  </span><br><span class="line">        <span class="keyword">if</span> (err == <span class="number">0</span>) &#123;  </span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;select 超时，继续等待...n&quot;</span>);  </span><br><span class="line">            <span class="keyword">continue</span>;  </span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// select 返回 &gt; 0，表示至少有一个 FD 就绪  </span></span><br><span class="line">        <span class="comment">// 我们可以使用 snd_pcm_poll_descriptors_revents 来检查 ALSA 事件状态  </span></span><br><span class="line">        <span class="comment">// 尽管我们也可以用 FD_ISSET 检查，但这个函数更符合 ALSA 的抽象  </span></span><br><span class="line">        <span class="type">unsigned</span> <span class="type">short</span> revents;  </span><br><span class="line">        <span class="keyword">if</span> ((err = snd_pcm_poll_descriptors_revents(pcm_handle, pfds, nfds, &amp;revents)) &lt; <span class="number">0</span>) &#123;  </span><br><span class="line">            <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">&quot;获取 revents 错误: %s\n&quot;</span>, snd_strerror(err));  </span><br><span class="line">            <span class="keyword">break</span>;  </span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (revents &amp; POLLOUT) &#123; <span class="comment">// POLLOUT 宏可以用于 revents 的检查  </span></span><br><span class="line">            <span class="comment">// 设备可写，现在可以安全地写入数据  </span></span><br><span class="line">            <span class="comment">// ... 此处的写入和恢复逻辑与 poll() 的例子完全相同 ...  </span></span><br><span class="line">            <span class="comment">// snd_pcm_sframes_t avail = snd_pcm_avail_update(pcm_handle);  </span></span><br><span class="line">            <span class="comment">// ...  </span></span><br><span class="line">            <span class="comment">// snd_pcm_writei(pcm_handle, audio_buffer, frames_to_write);  </span></span><br><span class="line">            <span class="comment">// ...  </span></span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;select() 报告设备可写, 准备写入数据...n&quot;</span>);  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">free</span>(pfds);  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="poll-与-select-的对比"><a href="#poll-与-select-的对比" class="headerlink" title="poll() 与 select() 的对比"></a><strong><code>poll()</code> 与 <code>select()</code> 的对比</strong></h3><p>下面是这两个函数在一个表格中的详细对比：</p>
+<h3 id="poll-与-select-的对比"><strong><code>poll()</code> 与 <code>select()</code> 的对比</strong></h3>
+<p>下面是这两个函数在一个表格中的详细对比：</p>
 <table>
 <thead>
 <tr>
-<th align="left">特性</th>
-<th align="left">select()</th>
-<th align="left">poll()</th>
-<th align="left">优劣分析</th>
+<th style="text-align:left">特性</th>
+<th style="text-align:left">select()</th>
+<th style="text-align:left">poll()</th>
+<th style="text-align:left">优劣分析</th>
 </tr>
 </thead>
-<tbody><tr>
-<td align="left"><strong>文件描述符 (FD) 限制</strong></td>
-<td align="left"><strong>有</strong>。受 FD_SETSIZE 宏的限制（通常是1024）。如果需要监控超过这个数量的 FD，select() 无法胜任。</td>
-<td align="left"><strong>没有</strong>。只受限于系统资源（如内存和打开文件的最大数量）。</td>
-<td align="left">这是一个<strong>巨大的缺点</strong>，使得 select() 不适用于需要处理大量并发连接的现代服务器应用。对于只有少数FD的ALSA应用，这一点影响不大。</td>
+<tbody>
+<tr>
+<td style="text-align:left"><strong>文件描述符 (FD) 限制</strong></td>
+<td style="text-align:left"><strong>有</strong>。受 FD_SETSIZE 宏的限制（通常是1024）。如果需要监控超过这个数量的 FD，select() 无法胜任。</td>
+<td style="text-align:left"><strong>没有</strong>。只受限于系统资源（如内存和打开文件的最大数量）。</td>
+<td style="text-align:left">这是一个<strong>巨大的缺点</strong>，使得 select() 不适用于需要处理大量并发连接的现代服务器应用。对于只有少数FD的ALSA应用，这一点影响不大。</td>
 </tr>
 <tr>
-<td align="left"><strong>API 易用性</strong></td>
-<td align="left"><strong>较差</strong>。每次调用前都需要：&lt;br&gt;1. 手动找到 max_fd。&lt;br&gt;2. 清空并重新填充 fd_set。&lt;br&gt;3. 重新设置 timeout 结构体。</td>
-<td align="left"><strong>较好</strong>。你只需要初始化一次 struct pollfd 数组中的 fd 和 events 字段。内核不会修改它们，结果存储在 revents 字段中，输入和输出分离，更清晰。</td>
-<td align="left">poll() 的 API 设计更现代，代码更简洁，不易出错。select() 的“每次都要重置”特性是常见的bug来源。</td>
+<td style="text-align:left"><strong>API 易用性</strong></td>
+<td style="text-align:left"><strong>较差</strong>。每次调用前都需要：&lt;br&gt;1. 手动找到 max_fd。&lt;br&gt;2. 清空并重新填充 fd_set。&lt;br&gt;3. 重新设置 timeout 结构体。</td>
+<td style="text-align:left"><strong>较好</strong>。你只需要初始化一次 struct pollfd 数组中的 fd 和 events 字段。内核不会修改它们，结果存储在 revents 字段中，输入和输出分离，更清晰。</td>
+<td style="text-align:left">poll() 的 API 设计更现代，代码更简洁，不易出错。select() 的“每次都要重置”特性是常见的bug来源。</td>
 </tr>
 <tr>
-<td align="left"><strong>性能</strong></td>
-<td align="left"><strong>可能较低</strong>。内核需要遍历从0到max_fd的所有文件描述符来检查状态，即使你只关心其中的少数几个。当max_fd很大但实际监控的FD很少时，效率低下。</td>
-<td align="left"><strong>通常更高</strong>。内核只需要遍历你传入的 pollfd 数组中的那些FD，而不需要扫描整个范围。</td>
-<td align="left">对于FD数量多且分布稀疏的情况，poll() 的性能优势明显。对于少数几个FD，性能差异可以忽略不计。</td>
+<td style="text-align:left"><strong>性能</strong></td>
+<td style="text-align:left"><strong>可能较低</strong>。内核需要遍历从0到max_fd的所有文件描述符来检查状态，即使你只关心其中的少数几个。当max_fd很大但实际监控的FD很少时，效率低下。</td>
+<td style="text-align:left"><strong>通常更高</strong>。内核只需要遍历你传入的 pollfd 数组中的那些FD，而不需要扫描整个范围。</td>
+<td style="text-align:left">对于FD数量多且分布稀疏的情况，poll() 的性能优势明显。对于少数几个FD，性能差异可以忽略不计。</td>
 </tr>
 <tr>
-<td align="left"><strong>可移植性</strong></td>
-<td align="left"><strong>极好</strong>。是 POSIX 标准的一部分，几乎所有类 Unix 系统都支持，历史悠久。</td>
-<td align="left"><strong>也很好</strong>。也是 POSIX 标准的一部分（SUSv2, POSIX.1-2001），所有现代的类 Unix 系统（Linux, macOS, BSDs 等）都支持。</td>
-<td align="left">在今天的开发环境中，两者在可移植性上的差异已经微乎其微。select() 的可移植性优势主要体现在一些非常古老或嵌入式的小众系统上。</td>
+<td style="text-align:left"><strong>可移植性</strong></td>
+<td style="text-align:left"><strong>极好</strong>。是 POSIX 标准的一部分，几乎所有类 Unix 系统都支持，历史悠久。</td>
+<td style="text-align:left"><strong>也很好</strong>。也是 POSIX 标准的一部分（SUSv2, POSIX.1-2001），所有现代的类 Unix 系统（Linux, macOS, BSDs 等）都支持。</td>
+<td style="text-align:left">在今天的开发环境中，两者在可移植性上的差异已经微乎其微。select() 的可移植性优势主要体现在一些非常古老或嵌入式的小众系统上。</td>
 </tr>
 <tr>
-<td align="left"><strong>返回信息</strong></td>
-<td align="left">只能告诉你 FD 是否“就绪”（可读、可写、异常），但不能区分更具体的事件。</td>
-<td align="left">revents 字段可以返回更丰富的事件信息，如 POLLHUP (挂起), POLLERR (错误), POLLNVAL (无效FD) 等，与你监听的 POLLIN&#x2F;POLLOUT 事件是分开的。</td>
-<td align="left">poll() 提供了更详细的诊断信息。</td>
+<td style="text-align:left"><strong>返回信息</strong></td>
+<td style="text-align:left">只能告诉你 FD 是否“就绪”（可读、可写、异常），但不能区分更具体的事件。</td>
+<td style="text-align:left">revents 字段可以返回更丰富的事件信息，如 POLLHUP (挂起), POLLERR (错误), POLLNVAL (无效FD) 等，与你监听的 POLLIN/POLLOUT 事件是分开的。</td>
+<td style="text-align:left">poll() 提供了更详细的诊断信息。</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p><strong>结论</strong>:</p>
-<ul>
-<li><strong>对于新开发的应用程序，几乎在所有情况下都应该优先选择 poll() 而不是 select()。</strong> poll() 的 API 更友好，没有 select() 的硬性限制，并且通常有更好的性能。  </li>
-<li>只有在你需要代码在一些非常陈旧、只支持 select() 的平台上运行时，才有理由使用 select()。  </li>
-<li><strong>Linux 上的终极选择</strong>: 如果你的应用只针对 Linux，并且需要处理成千上万的并发连接（这在音频应用中不常见），那么 epoll() 是性能最好的选择。它使用事件通知机制，避免了每次调用时内核都要遍历所有被监控的FD，效率最高。但 epoll() 不是可移植的 POSIX 标准。</li>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><strong>对于新开发的应用程序，几乎在所有情况下都应该优先选择 poll() 而不是 select()。</strong> poll() 的 API 更友好，没有 select() 的硬性限制，并且通常有更好的性能。</p>
+</li>
+<li class="lvl-2">
+<p>只有在你需要代码在一些非常陈旧、只支持 select() 的平台上运行时，才有理由使用 select()。</p>
+</li>
+<li class="lvl-2">
+<p><strong>Linux 上的终极选择</strong>: 如果你的应用只针对 Linux，并且需要处理成千上万的并发连接（这在音频应用中不常见），那么 epoll() 是性能最好的选择。它使用事件通知机制，避免了每次调用时内核都要遍历所有被监控的FD，效率最高。但 epoll() 不是可移植的 POSIX 标准。</p>
+</li>
 </ul>
 <p>对于 ALSA 编程，poll() 是功能、性能和可移植性三者之间的最佳平衡点。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/695919368">https://zhuanlan.zhihu.com/p/695919368</a></p>
+<h2 id="参考">参考</h2>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/695919368">https://zhuanlan.zhihu.com/p/695919368</a></p>
 
     </div>
 

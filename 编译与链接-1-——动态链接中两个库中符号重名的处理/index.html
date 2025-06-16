@@ -63,6 +63,8 @@
   </noscript>
 <!-- hexo injector head_end start -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
 <!-- hexo injector head_end end --></head>
 
 <body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
@@ -122,7 +124,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">问题描述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B0%83%E8%AF%95%E7%BB%93%E6%9E%9C%E5%8F%8A%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D"><span class="nav-number">1.1.</span> <span class="nav-text">调试结果及问题定位</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E5%8E%9F%E5%9B%A0%EF%BC%88%E5%BE%85%E4%BF%AE%E6%94%B9%EF%BC%89"><span class="nav-number">1.2.</span> <span class="nav-text">分析原因（待修改）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">1.3.</span> <span class="nav-text">解决方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">1.4.</span> <span class="nav-text">参考</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%90%86%E8%A7%A3%E7%AC%A6%E5%8F%B7%E8%A1%A8"><span class="nav-number">2.</span> <span class="nav-text">理解符号表</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%A6%E5%8F%B7%E7%B1%BB%E5%9E%8B%E5%92%8C%E7%BB%91%E5%AE%9A%E4%BF%A1%E6%81%AF"><span class="nav-number">2.1.</span> <span class="nav-text">符号类型和绑定信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%A6%E5%8F%B7%E5%80%BC"><span class="nav-number">2.2.</span> <span class="nav-text">符号值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#C-%E7%AC%A6%E5%8F%B7%E4%BF%AE%E9%A5%B0"><span class="nav-number">2.3.</span> <span class="nav-text">C++符号修饰</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9B%B4%E6%B8%85%E6%99%B0%E5%9C%B0%E5%AE%9A%E4%B9%89%E6%8E%A5%E5%8F%A3"><span class="nav-number">3.</span> <span class="nav-text">更清晰地定义接口</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B1%BBC%E6%8E%A5%E5%8F%A3"><span class="nav-number">3.1.</span> <span class="nav-text">类C接口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E7%AC%A6%E5%8F%B7%E7%B1%BB%E5%9E%8B"><span class="nav-number">3.2.</span> <span class="nav-text">定义符号类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A8%8B%E5%BA%8F%E4%B8%AD%E5%AE%9A%E4%B9%89"><span class="nav-number">3.2.1.</span> <span class="nav-text">程序中定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E9%80%89%E9%A1%B9"><span class="nav-number">3.2.2.</span> <span class="nav-text">编译选项</span></a></li></ol></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">问题描述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B0%83%E8%AF%95%E7%BB%93%E6%9E%9C%E5%8F%8A%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D"><span class="nav-number">1.1.</span> <span class="nav-text">调试结果及问题定位</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E5%8E%9F%E5%9B%A0%EF%BC%88%E5%BE%85%E4%BF%AE%E6%94%B9%EF%BC%89"><span class="nav-number">1.2.</span> <span class="nav-text">分析原因（待修改）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">1.3.</span> <span class="nav-text">解决方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">1.4.</span> <span class="nav-text">参考</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">理解符号表</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%A6%E5%8F%B7%E7%B1%BB%E5%9E%8B%E5%92%8C%E7%BB%91%E5%AE%9A%E4%BF%A1%E6%81%AF"><span class="nav-number">2.1.</span> <span class="nav-text">符号类型和绑定信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%A6%E5%8F%B7%E5%80%BC"><span class="nav-number">2.2.</span> <span class="nav-text">符号值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#C-%E7%AC%A6%E5%8F%B7%E4%BF%AE%E9%A5%B0"><span class="nav-number">2.3.</span> <span class="nav-text">C++符号修饰</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">3.</span> <span class="nav-text">更清晰地定义接口</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B1%BBC%E6%8E%A5%E5%8F%A3"><span class="nav-number">3.1.</span> <span class="nav-text">类C接口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E7%AC%A6%E5%8F%B7%E7%B1%BB%E5%9E%8B"><span class="nav-number">3.2.</span> <span class="nav-text">定义符号类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A8%8B%E5%BA%8F%E4%B8%AD%E5%AE%9A%E4%B9%89"><span class="nav-number">3.2.1.</span> <span class="nav-text">程序中定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E9%80%89%E9%A1%B9"><span class="nav-number">3.2.2.</span> <span class="nav-text">编译选项</span></a></li></ol></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -225,31 +227,43 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><h1 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h1><h2 id="调试结果及问题定位"><a href="#调试结果及问题定位" class="headerlink" title="调试结果及问题定位"></a>调试结果及问题定位</h2><p>本人将先前调试完成的asr模块（libasr.so）和tn模块（libtext_normalizer.so）结合，开发了一个正则化结果asr程序，但在文本正则化过程中会崩溃，经gdb调试发现结果如下：<br><img src="/img_folder/compiler_and_link_1/gdb_error.png"></p>
+    <div class="post-body" itemprop="articleBody"><h1>问题描述</h1>
+<h2 id="调试结果及问题定位">调试结果及问题定位</h2>
+<p>本人将先前调试完成的asr模块（<a target="_blank" rel="noopener" href="http://libasr.so">libasr.so</a>）和tn模块（libtext_normalizer.so）结合，开发了一个正则化结果asr程序，但在文本正则化过程中会崩溃，经gdb调试发现结果如下：<br>
+<img src="/img_folder/compiler_and_link_1/gdb_error.png" alt=""></p>
 <p>其中text_normalizer中的函数调用到了libasr.so中的符号，但是这两个模块在结构上应该是完全独立的，说明此处出现了符号错乱的问题，查看两个库的符号表，的确是存在重名符号</p>
-<p><img src="/img_folder/compiler_and_link_1/symbol_asr.png"></p>
+<p><img src="/img_folder/compiler_and_link_1/symbol_asr.png" alt=""></p>
 <center style="font-size:14px;color:#C0C0C0;text-decoration:underline">图1.libasr符号表</center>
-
-<p><img src="/img_folder/compiler_and_link_1/symbol_libtext.png"></p>
+<p><img src="/img_folder/compiler_and_link_1/symbol_libtext.png" alt=""></p>
 <center style="font-size:14px;color:#C0C0C0;text-decoration:underline">图1.libtext_normalizer符号表</center>
-
 <p>再使用c++filt解码符号，发现重复部分的确包含是上面报错的函数，且两个符号的大小不同，到此基本可以判断，是因为两个相同名称的函数实现方法不同，执行的时候选择了错误的函数，故造成了非法内存访问，产生了段错误。</p>
-<h2 id="分析原因（待修改）"><a href="#分析原因（待修改）" class="headerlink" title="分析原因（待修改）"></a>分析原因（待修改）</h2><p>正常情况下，在 linux 平台上 (不使用任何参数)，不论是定义在静态可执行部分，还是在动态目标文件中出现的符号，加载的目标文件中第一次出现的符号将在程序中一直被使用，也就是所谓的“符号抢占”机制。</p>
+<h2 id="分析原因（待修改）">分析原因（待修改）</h2>
+<p>正常情况下，在 linux 平台上 (不使用任何参数)，不论是定义在静态可执行部分，还是在动态目标文件中出现的符号，加载的目标文件中第一次出现的符号将在程序中一直被使用，也就是所谓的“符号抢占”机制。</p>
 <p>在linux平台上，如果在动态链接过程中遇到两个名称相同的弱符号，默认情况下动态链接器会选择符号大小更大的加载，故在此处出现了加载错乱的情况。</p>
-<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>gnu链接器有一个选项-Bsymbolic，官方是这样描述的：</p>
+<h2 id="解决方案">解决方案</h2>
+<p>gnu链接器有一个选项-Bsymbolic，官方是这样描述的：</p>
 <pre><code>Binds references to all global symbols in a program to the definitions within a user’s shared library.
 </code></pre>
 <p>即将所有程序中的全局符号绑定到用户共享库的定义中，即使用该命令链接时，当前库中的所有符号都不可被抢占，强制采用本地的全局符号定义和实现</p>
 <p>在编译时，使用-Wl选项，将该参数传递给链接器即可，即在编译libtext_normalizer.so时，加入</p>
 <figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="deletion">-Wl,Bsymbolic</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://winddoing.github.io/post/2a74814.html">gcc 编译参数：-Wl,-Bsymbolic 与 - Bsymbolic</a></p>
+<h2 id="参考">参考</h2>
+<p><a target="_blank" rel="noopener" href="https://winddoing.github.io/post/2a74814.html">gcc 编译参数：-Wl,-Bsymbolic 与 - Bsymbolic</a></p>
 <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/liangzhao_jay/article/details/74942163">linux下动态库的符号冲突、隐藏和强制优先使用库内符号</a></p>
-<h1 id="理解符号表"><a href="#理解符号表" class="headerlink" title="理解符号表"></a>理解符号表</h1><h2 id="符号类型和绑定信息"><a href="#符号类型和绑定信息" class="headerlink" title="符号类型和绑定信息"></a>符号类型和绑定信息</h2><h2 id="符号值"><a href="#符号值" class="headerlink" title="符号值"></a>符号值</h2><h2 id="C-符号修饰"><a href="#C-符号修饰" class="headerlink" title="C++符号修饰"></a>C++符号修饰</h2><p>c++filt，c++符号修饰规则</p>
-<h1 id="更清晰地定义接口"><a href="#更清晰地定义接口" class="headerlink" title="更清晰地定义接口"></a>更清晰地定义接口</h1><p>C和C++接口的区别</p>
-<h2 id="类C接口"><a href="#类C接口" class="headerlink" title="类C接口"></a>类C接口</h2><p>将类改成void*，不使用c++直接写.h</p>
-<h2 id="定义符号类型"><a href="#定义符号类型" class="headerlink" title="定义符号类型"></a>定义符号类型</h2><h3 id="程序中定义"><a href="#程序中定义" class="headerlink" title="程序中定义"></a>程序中定义</h3><p>使用__attribute__(())</p>
-<h3 id="编译选项"><a href="#编译选项" class="headerlink" title="编译选项"></a>编译选项</h3><p>加入-visibility&#x3D;”hidden”</p>
+<h1>理解符号表</h1>
+<h2 id="符号类型和绑定信息">符号类型和绑定信息</h2>
+<h2 id="符号值">符号值</h2>
+<h2 id="C-符号修饰">C++符号修饰</h2>
+<p>c<ins>filt，c</ins>符号修饰规则</p>
+<h1>更清晰地定义接口</h1>
+<p>C和C++接口的区别</p>
+<h2 id="类C接口">类C接口</h2>
+<p>将类改成void*，不使用c++直接写.h</p>
+<h2 id="定义符号类型">定义符号类型</h2>
+<h3 id="程序中定义">程序中定义</h3>
+<p>使用__attribute__(())</p>
+<h3 id="编译选项">编译选项</h3>
+<p>加入-visibility=“hidden”</p>
 
     </div>
 

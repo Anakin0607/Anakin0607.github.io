@@ -58,6 +58,8 @@
   </noscript>
 <!-- hexo injector head_end start -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
 <!-- hexo injector head_end end --></head>
 
 <body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
@@ -117,7 +119,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Ubuntu"><span class="nav-number">1.</span> <span class="nav-text">安装Ubuntu</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8rufus%E5%88%B6%E4%BD%9C%E5%90%AF%E5%8A%A8%E7%9B%98"><span class="nav-number">1.1.</span> <span class="nav-text">使用rufus制作启动盘</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.2.</span> <span class="nav-text">安装系统</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9B%B4%E6%8D%A2KDE%E6%A1%8C%E9%9D%A2%E7%8E%AF%E5%A2%83"><span class="nav-number">2.</span> <span class="nav-text">更换KDE桌面环境</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E4%B8%AD%E6%96%87%E8%BE%93%E5%85%A5%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">安装中文输入法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91"><span class="nav-number">4.</span> <span class="nav-text">科学上网</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E8%AE%BE%E7%BD%AE"><span class="nav-number">5.</span> <span class="nav-text">网络设置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E9%85%8D%E7%BD%AE"><span class="nav-number">6.</span> <span class="nav-text">环境变量配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BF%9C%E7%A8%8B%E4%BC%A0%E8%BE%93%E6%96%87%E4%BB%B6"><span class="nav-number">7.</span> <span class="nav-text">远程传输文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#shell%E8%84%9A%E6%9C%AC%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95"><span class="nav-number">8.</span> <span class="nav-text">shell脚本常用方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%86%E5%91%BD%E4%BB%A4%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C%E8%B5%8B%E5%80%BC%E7%BB%99%E5%8F%98%E9%87%8F"><span class="nav-number">8.1.</span> <span class="nav-text">将命令运行结果赋值给变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8%E6%8C%87%E5%AE%9A%E5%AD%97%E7%AC%A6%E5%88%86%E5%89%B2%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="nav-number">8.2.</span> <span class="nav-text">用指定字符分割字符串</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AF%94%E8%BE%83%E4%B8%A4%E4%B8%AA%E6%96%87%E4%BB%B6%E7%9A%84%E5%B7%AE%E5%BC%82"><span class="nav-number">8.3.</span> <span class="nav-text">比较两个文件的差异</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E8%B5%84%E6%BA%90%E5%8D%A0%E7%94%A8%E7%9A%84%E5%B7%A5%E5%85%B7"><span class="nav-number">9.</span> <span class="nav-text">查看资源占用的工具</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#CPU"><span class="nav-number">9.1.</span> <span class="nav-text">CPU</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E5%AD%98"><span class="nav-number">9.2.</span> <span class="nav-text">内存</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A3%81%E7%9B%98"><span class="nav-number">9.3.</span> <span class="nav-text">磁盘</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C"><span class="nav-number">9.4.</span> <span class="nav-text">网络</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%A8%E9%83%A8IO"><span class="nav-number">9.5.</span> <span class="nav-text">全部IO</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B7%91%E5%88%86"><span class="nav-number">9.6.</span> <span class="nav-text">跑分</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CPU-1"><span class="nav-number">9.6.1.</span> <span class="nav-text">CPU</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A3%81%E7%9B%98-1"><span class="nav-number">9.6.2.</span> <span class="nav-text">磁盘</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GPU"><span class="nav-number">9.7.</span> <span class="nav-text">GPU</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CPU%E8%AE%BE%E7%BD%AE"><span class="nav-number">10.</span> <span class="nav-text">CPU设置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%86%85%E6%A0%B8%E7%BC%96%E8%AF%91%E9%85%8D%E7%BD%AE%E8%AE%BE%E7%BD%AE"><span class="nav-number">11.</span> <span class="nav-text">内核编译配置设置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E8%BD%AF%E4%BB%B6"><span class="nav-number">12.</span> <span class="nav-text">常用软件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8D%87%E7%BA%A7glibc%E7%89%88%E6%9C%AC"><span class="nav-number">13.</span> <span class="nav-text">升级glibc版本</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">安装Ubuntu</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8rufus%E5%88%B6%E4%BD%9C%E5%90%AF%E5%8A%A8%E7%9B%98"><span class="nav-number">1.1.</span> <span class="nav-text">使用rufus制作启动盘</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.2.</span> <span class="nav-text">安装系统</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">更换KDE桌面环境</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">3.</span> <span class="nav-text">安装中文输入法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">4.</span> <span class="nav-text">科学上网</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">5.</span> <span class="nav-text">网络设置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">6.</span> <span class="nav-text">环境变量配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">7.</span> <span class="nav-text">远程传输文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">8.</span> <span class="nav-text">shell脚本常用方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%86%E5%91%BD%E4%BB%A4%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C%E8%B5%8B%E5%80%BC%E7%BB%99%E5%8F%98%E9%87%8F"><span class="nav-number">8.1.</span> <span class="nav-text">将命令运行结果赋值给变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8%E6%8C%87%E5%AE%9A%E5%AD%97%E7%AC%A6%E5%88%86%E5%89%B2%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="nav-number">8.2.</span> <span class="nav-text">用指定字符分割字符串</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AF%94%E8%BE%83%E4%B8%A4%E4%B8%AA%E6%96%87%E4%BB%B6%E7%9A%84%E5%B7%AE%E5%BC%82"><span class="nav-number">8.3.</span> <span class="nav-text">比较两个文件的差异</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">9.</span> <span class="nav-text">查看资源占用的工具</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#CPU"><span class="nav-number">9.1.</span> <span class="nav-text">CPU</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E5%AD%98"><span class="nav-number">9.2.</span> <span class="nav-text">内存</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A3%81%E7%9B%98"><span class="nav-number">9.3.</span> <span class="nav-text">磁盘</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C"><span class="nav-number">9.4.</span> <span class="nav-text">网络</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%A8%E9%83%A8IO"><span class="nav-number">9.5.</span> <span class="nav-text">全部IO</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B7%91%E5%88%86"><span class="nav-number">9.6.</span> <span class="nav-text">跑分</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CPU-2"><span class="nav-number">9.6.1.</span> <span class="nav-text">CPU</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A3%81%E7%9B%98-2"><span class="nav-number">9.6.2.</span> <span class="nav-text">磁盘</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GPU"><span class="nav-number">9.7.</span> <span class="nav-text">GPU</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">10.</span> <span class="nav-text">CPU设置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">11.</span> <span class="nav-text">内核编译配置设置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">12.</span> <span class="nav-text">常用软件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">13.</span> <span class="nav-text">升级glibc版本</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -226,43 +228,77 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><h1 id="安装Ubuntu"><a href="#安装Ubuntu" class="headerlink" title="安装Ubuntu"></a>安装Ubuntu</h1><h2 id="使用rufus制作启动盘"><a href="#使用rufus制作启动盘" class="headerlink" title="使用rufus制作启动盘"></a>使用rufus制作启动盘</h2><h2 id="安装系统"><a href="#安装系统" class="headerlink" title="安装系统"></a>安装系统</h2><h1 id="更换KDE桌面环境"><a href="#更换KDE桌面环境" class="headerlink" title="更换KDE桌面环境"></a>更换KDE桌面环境</h1><p>安装kubuntu桌面</p>
+    <div class="post-body" itemprop="articleBody"><h1>安装Ubuntu</h1>
+<h2 id="使用rufus制作启动盘">使用rufus制作启动盘</h2>
+<h2 id="安装系统">安装系统</h2>
+<h1>更换KDE桌面环境</h1>
+<p>安装kubuntu桌面</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> add-apt-repository ppa:kubuntu-ppa/backports <span class="comment"># 添加源</span></span><br><span class="line"><span class="built_in">sudo</span> apt-get update <span class="comment"># 更新源</span></span><br><span class="line"><span class="built_in">sudo</span> apt-get install kubuntu-desktop</span><br><span class="line"><span class="built_in">sudo</span> apt-get install kde</span><br></pre></td></tr></table></figure>
-
 <p>安装kde软件包：</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get install kde-full <span class="comment"># 也可以根据需求选择kde-standard或者kde-plasma-desktop</span></span><br></pre></td></tr></table></figure>
-
 <p>卸载gnome桌面</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt purge *gnome*</span><br><span class="line"><span class="built_in">sudo</span> aptitude purge ubuntu-desktop</span><br><span class="line"><span class="built_in">sudo</span> apt autoremove</span><br></pre></td></tr></table></figure>
-<h1 id="安装中文输入法"><a href="#安装中文输入法" class="headerlink" title="安装中文输入法"></a>安装中文输入法</h1><p>Ubuntu下通常有几个常用的输入法框架，ibus，fcix等，Ubuntu自带ibus，因此只需安装其支持的拼音输入法即可<br>如果需要使用中文输入法，安装搜狗输入法Linux版即可</p>
-<h1 id="科学上网"><a href="#科学上网" class="headerlink" title="科学上网"></a>科学上网</h1><p>Clash现在没有了，使用<a target="_blank" rel="noopener" href="https://www.clashverge.dev/install.html">Clash-Verge</a></p>
-<h1 id="网络设置"><a href="#网络设置" class="headerlink" title="网络设置"></a>网络设置</h1><p>netplan</p>
-<h1 id="环境变量配置"><a href="#环境变量配置" class="headerlink" title="环境变量配置"></a>环境变量配置</h1><p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1174426">https://cloud.tencent.com/developer/article/1174426</a></p>
-<h1 id="远程传输文件"><a href="#远程传输文件" class="headerlink" title="远程传输文件"></a>远程传输文件</h1><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rsync -avz [<span class="built_in">source</span>] [user@ip]:[dist]</span><br></pre></td></tr></table></figure>
-<p>确定本地主机可以通过ssh登录远程主机后，可以将文件从本地传输到远程<br>例：</p>
+<h1>安装中文输入法</h1>
+<p>Ubuntu下通常有几个常用的输入法框架，ibus，fcix等，Ubuntu自带ibus，因此只需安装其支持的拼音输入法即可如果需要使用中文输入法，安装搜狗输入法Linux版即可</p>
+<h1>科学上网</h1>
+<p>Clash现在没有了，使用<a target="_blank" rel="noopener" href="https://www.clashverge.dev/install.html">Clash-Verge</a></p>
+<h1>网络设置</h1>
+<p>netplan</p>
+<h1>环境变量配置</h1>
+<p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1174426">https://cloud.tencent.com/developer/article/1174426</a></p>
+<h1>远程传输文件</h1>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rsync -avz [<span class="built_in">source</span>] [user@ip]:[dist]</span><br></pre></td></tr></table></figure>
+<p>确定本地主机可以通过ssh登录远程主机后，可以将文件从本地传输到远程例：</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rsync -avz /home user@192.168.1.2:/home</span><br></pre></td></tr></table></figure>
 <p>参数中a代表递归模式，v代表显示过程，z代表传输时压缩文件</p>
-<h1 id="shell脚本常用方法"><a href="#shell脚本常用方法" class="headerlink" title="shell脚本常用方法"></a>shell脚本常用方法</h1><h2 id="将命令运行结果赋值给变量"><a href="#将命令运行结果赋值给变量" class="headerlink" title="将命令运行结果赋值给变量"></a>将命令运行结果赋值给变量</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var=$(<span class="built_in">command</span>)</span><br></pre></td></tr></table></figure>
-
-<h2 id="用指定字符分割字符串"><a href="#用指定字符分割字符串" class="headerlink" title="用指定字符分割字符串"></a>用指定字符分割字符串</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">string=<span class="string">&quot;hello,shell,split,test&quot;</span>  </span><br><span class="line">array=(<span class="variable">$&#123;string//,/ &#125;</span>)</span><br><span class="line"><span class="comment"># 第二句的意思是：$&#123;parameter//pattern/string&#125; </span></span><br><span class="line"><span class="comment"># 即用string来替换parameter变量中所有匹配的pattern，并把结果存在数组中</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> var <span class="keyword">in</span> <span class="variable">$&#123;array[@]&#125;</span> <span class="comment">#将分割出来的字符打印出来</span></span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">   <span class="built_in">echo</span> <span class="variable">$var</span></span><br><span class="line"><span class="keyword">done</span> </span><br></pre></td></tr></table></figure>
-
-<h2 id="比较两个文件的差异"><a href="#比较两个文件的差异" class="headerlink" title="比较两个文件的差异"></a>比较两个文件的差异</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">diff [file1] [file2] -y --supress-common-lines</span><br></pre></td></tr></table></figure>
-<p>参数含义：<br>-y或–side-by-side 　以并列的方式显示文件的异同之处。<br>–suppress-common-lines 　在使用-y参数时，仅显示不同之处。<br>–left-column 　在使用-y参数时，若两个文件某一行内容相同，则仅在左侧的栏位显示该行内容。</p>
-<h1 id="查看资源占用的工具"><a href="#查看资源占用的工具" class="headerlink" title="查看资源占用的工具"></a>查看资源占用的工具</h1><h2 id="CPU"><a href="#CPU" class="headerlink" title="CPU"></a>CPU</h2><p>top，htop</p>
-<h2 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h2><p>free，valgrind，htop</p>
-<h2 id="磁盘"><a href="#磁盘" class="headerlink" title="磁盘"></a>磁盘</h2><p>df：读取文件系统，查看文件系统（分区）剩余空间<br>du: 递归读取所有文件信息，查看文件使用的空间<br>fdisk：查看磁盘硬件信息，分区表信息<br>lsblk：查看分区以及挂载位置<br>类似CrystalDiskInfo的软件：QDiskInfo<br>iotop，实时监测磁盘读写情况</p>
-<h2 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h2><p>ifstat：统计网络活动状态<br>iftop：实时流量监控</p>
-<h2 id="全部IO"><a href="#全部IO" class="headerlink" title="全部IO"></a>全部IO</h2><p>lsof</p>
-<h2 id="跑分"><a href="#跑分" class="headerlink" title="跑分"></a>跑分</h2><h3 id="CPU-1"><a href="#CPU-1" class="headerlink" title="CPU"></a>CPU</h3><p>压力测试：s-tui stress</p>
-<h3 id="磁盘-1"><a href="#磁盘-1" class="headerlink" title="磁盘"></a>磁盘</h3><p>类似CrystalDiskMark的软件：kdiskmark<br>基于fio开发</p>
-<h2 id="GPU"><a href="#GPU" class="headerlink" title="GPU"></a>GPU</h2><p>nvidia-smi，nvtop</p>
-<h1 id="CPU设置"><a href="#CPU设置" class="headerlink" title="CPU设置"></a>CPU设置</h1><p>使用工具cpufrequtils<br>也可以直接写&#x2F;sys&#x2F;devices&#x2F;system&#x2F;cpu&#x2F;相应文件来完成设置</p>
-<h1 id="内核编译配置设置"><a href="#内核编译配置设置" class="headerlink" title="内核编译配置设置"></a>内核编译配置设置</h1><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/bestechshare/p/16447779.html">1</a></p>
-<h1 id="常用软件"><a href="#常用软件" class="headerlink" title="常用软件"></a>常用软件</h1><p>修图：<a target="_blank" rel="noopener" href="https://www.rawtherapee.com/">rawtherapee</a></p>
+<h1>shell脚本常用方法</h1>
+<h2 id="将命令运行结果赋值给变量">将命令运行结果赋值给变量</h2>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var=$(<span class="built_in">command</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="用指定字符分割字符串">用指定字符分割字符串</h2>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">string=<span class="string">&quot;hello,shell,split,test&quot;</span>  </span><br><span class="line">array=(<span class="variable">$&#123;string//,/ &#125;</span>)</span><br><span class="line"><span class="comment"># 第二句的意思是：$&#123;parameter//pattern/string&#125; </span></span><br><span class="line"><span class="comment"># 即用string来替换parameter变量中所有匹配的pattern，并把结果存在数组中</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> var <span class="keyword">in</span> <span class="variable">$&#123;array[@]&#125;</span> <span class="comment">#将分割出来的字符打印出来</span></span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">   <span class="built_in">echo</span> <span class="variable">$var</span></span><br><span class="line"><span class="keyword">done</span> </span><br></pre></td></tr></table></figure>
+<h2 id="比较两个文件的差异">比较两个文件的差异</h2>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">diff [file1] [file2] -y --supress-common-lines</span><br></pre></td></tr></table></figure>
+<p>参数含义：<br>
+-y或–side-by-side 　以并列的方式显示文件的异同之处。<br>
+–suppress-common-lines 　在使用-y参数时，仅显示不同之处。<br>
+–left-column 　在使用-y参数时，若两个文件某一行内容相同，则仅在左侧的栏位显示该行内容。</p>
+<h1>查看资源占用的工具</h1>
+<h2 id="CPU">CPU</h2>
+<p>top，htop</p>
+<h2 id="内存">内存</h2>
+<p>free，valgrind，htop</p>
+<h2 id="磁盘">磁盘</h2>
+<p>df：读取文件系统，查看文件系统（分区）剩余空间<br>
+du: 递归读取所有文件信息，查看文件使用的空间<br>
+fdisk：查看磁盘硬件信息，分区表信息<br>
+lsblk：查看分区以及挂载位置类似CrystalDiskInfo的软件：QDiskInfo<br>
+iotop，实时监测磁盘读写情况</p>
+<h2 id="网络">网络</h2>
+<p>ifstat：统计网络活动状态<br>
+iftop：实时流量监控</p>
+<h2 id="全部IO">全部IO</h2>
+<p>lsof</p>
+<h2 id="跑分">跑分</h2>
+<h3 id="CPU-2">CPU</h3>
+<p>压力测试：s-tui stress</p>
+<h3 id="磁盘-2">磁盘</h3>
+<p>类似CrystalDiskMark的软件：kdiskmark<br>
+基于fio开发</p>
+<h2 id="GPU">GPU</h2>
+<p>nvidia-smi，nvtop</p>
+<h1>CPU设置</h1>
+<p>使用工具cpufrequtils<br>
+也可以直接写/sys/devices/system/cpu/相应文件来完成设置</p>
+<h1>内核编译配置设置</h1>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/bestechshare/p/16447779.html">1</a></p>
+<h1>常用软件</h1>
+<p>修图：<a target="_blank" rel="noopener" href="https://www.rawtherapee.com/">rawtherapee</a></p>
 <p>office: <a target="_blank" rel="noopener" href="https://www.libreoffice.org/">libreoffice</a></p>
 <p>剪视频：<a target="_blank" rel="noopener" href="https://kdenlive.org/zh/">kdenlive</a></p>
-<h1 id="升级glibc版本"><a href="#升级glibc版本" class="headerlink" title="升级glibc版本"></a>升级glibc版本</h1><p><a target="_blank" rel="noopener" href="https://github.com/apernet/tcp-brutal/issues/7">https://github.com/apernet/tcp-brutal/issues/7</a></p>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/youban_47/article/details/125420758">安装conda</a><br><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1611042">创建用户</a></p>
+<h1>升级glibc版本</h1>
+<p><a target="_blank" rel="noopener" href="https://github.com/apernet/tcp-brutal/issues/7">https://github.com/apernet/tcp-brutal/issues/7</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/youban_47/article/details/125420758">安装conda</a><br>
+<a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1611042">创建用户</a></p>
 
     </div>
 

@@ -29,7 +29,7 @@
 <meta property="og:site_name" content="Anakin0607">
 <meta property="og:description" content="这篇文章提供了在树莓派4B上以32位模式启动官方系统以及分析系统架构的方法。如果直接安装树莓派官方32位镜像到树莓派4B，其会启动64位内核，但以兼容模式运行32位文件系统，故在此平台上测试程序可能会出现bug，故本文提供方法运行32位内核和文件系统，以便在树莓派4B上测试arm32程序。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://anakin0607.github.io/img_folder/Raspberry/ssh.png">
+<meta property="og:image" content="https://anakin0607.github.io//img_folder/Raspberry/ssh.png">
 <meta property="og:image" content="https://anakin0607.github.io/img_folder/Raspberry/v8-uname.png">
 <meta property="og:image" content="https://anakin0607.github.io/img_folder/Raspberry/v8-cpu.png">
 <meta property="og:image" content="https://anakin0607.github.io/img_folder/Raspberry/v7-uname.png">
@@ -41,7 +41,7 @@
 <meta property="article:tag" content="嵌入式">
 <meta property="article:tag" content="树莓派">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://anakin0607.github.io/img_folder/Raspberry/ssh.png">
+<meta name="twitter:image" content="https://anakin0607.github.io//img_folder/Raspberry/ssh.png">
 
 
 <link rel="canonical" href="https://anakin0607.github.io/%E5%9C%A8%E6%A0%91%E8%8E%93%E6%B4%BE4B%E4%B8%8A%E8%BF%90%E8%A1%8C32%E4%BD%8D%E7%B3%BB%E7%BB%9F/">
@@ -66,6 +66,8 @@
   </noscript>
 <!-- hexo injector head_end start -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
 <!-- hexo injector head_end end --></head>
 
 <body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
@@ -125,7 +127,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A0%91%E8%8E%93%E6%B4%BE4B%E5%90%AF%E5%8A%A832%E4%BD%8D%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.</span> <span class="nav-text">树莓派4B启动32位系统</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.1.</span> <span class="nav-text">安装系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%A0%E5%A4%B4%E6%A8%A1%E5%BC%8F%E5%90%AF%E5%8A%A8"><span class="nav-number">1.2.</span> <span class="nav-text">无头模式启动</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E5%90%AFssh%E6%9C%8D%E5%8A%A1"><span class="nav-number">1.2.1.</span> <span class="nav-text">开启ssh服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E9%BB%98%E8%AE%A4%E7%94%A8%E6%88%B7%E5%90%8D%E5%92%8C%E5%AF%86%E7%A0%81"><span class="nav-number">1.2.2.</span> <span class="nav-text">设置默认用户名和密码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9E%E6%8E%A5%E6%A0%91%E8%8E%93%E6%B4%BE"><span class="nav-number">1.2.3.</span> <span class="nav-text">连接树莓派</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E8%AE%BE%E7%BD%AE"><span class="nav-number">1.2.3.1.</span> <span class="nav-text">网络设置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8E%A2%E6%B5%8BIP%E5%B9%B6%E8%BF%9E%E6%8E%A5%E6%A0%91%E8%8E%93%E6%B4%BE"><span class="nav-number">1.2.3.2.</span> <span class="nav-text">探测IP并连接树莓派</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E5%90%AF%E5%8A%A8%E5%8F%82%E6%95%B0"><span class="nav-number">1.3.</span> <span class="nav-text">修改启动参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E4%BA%9B%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">1.4.</span> <span class="nav-text">一些参考资料</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E6%A0%91%E8%8E%93%E6%B4%BE%E7%B3%BB%E7%BB%9F%E5%86%85%E6%A0%B8"><span class="nav-number">2.</span> <span class="nav-text">编译树莓派系统内核</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">树莓派4B启动32位系统</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.1.</span> <span class="nav-text">安装系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%A0%E5%A4%B4%E6%A8%A1%E5%BC%8F%E5%90%AF%E5%8A%A8"><span class="nav-number">1.2.</span> <span class="nav-text">无头模式启动</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E5%90%AFssh%E6%9C%8D%E5%8A%A1"><span class="nav-number">1.2.1.</span> <span class="nav-text">开启ssh服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E9%BB%98%E8%AE%A4%E7%94%A8%E6%88%B7%E5%90%8D%E5%92%8C%E5%AF%86%E7%A0%81"><span class="nav-number">1.2.2.</span> <span class="nav-text">设置默认用户名和密码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9E%E6%8E%A5%E6%A0%91%E8%8E%93%E6%B4%BE"><span class="nav-number">1.2.3.</span> <span class="nav-text">连接树莓派</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E8%AE%BE%E7%BD%AE"><span class="nav-number">1.2.3.1.</span> <span class="nav-text">网络设置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8E%A2%E6%B5%8BIP%E5%B9%B6%E8%BF%9E%E6%8E%A5%E6%A0%91%E8%8E%93%E6%B4%BE"><span class="nav-number">1.2.3.2.</span> <span class="nav-text">探测IP并连接树莓派</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E5%90%AF%E5%8A%A8%E5%8F%82%E6%95%B0"><span class="nav-number">1.3.</span> <span class="nav-text">修改启动参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E4%BA%9B%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">1.4.</span> <span class="nav-text">一些参考资料</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">编译树莓派系统内核</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -228,62 +230,100 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><h1 id="树莓派4B启动32位系统"><a href="#树莓派4B启动32位系统" class="headerlink" title="树莓派4B启动32位系统"></a>树莓派4B启动32位系统</h1><h2 id="安装系统"><a href="#安装系统" class="headerlink" title="安装系统"></a>安装系统</h2><p>树莓派官网可以直接下载<a target="_blank" rel="noopener" href="https://www.raspberrypi.com/software/operating-systems/#raspberry-pi-os-32-bit">系统</a>，也可以用官网给的<a target="_blank" rel="noopener" href="https://downloads.raspberrypi.org/imager/imager_latest.exe">一键安装软件</a>安装，这两种方式都需要选择镜像版本，其中withdesktop是带桌面的版本，lite是纯命令行的版本，写32bit的是32位版本，其他的是64位版本。用win32diskmanager直接写入内存卡后，如果有显示器和键盘，可以直接插入树莓派即可启动，如果不想用显示器和键盘，想通过ssh连接方式使用，则不要着急将内存卡插入树莓派。</p>
-<h2 id="无头模式启动"><a href="#无头模式启动" class="headerlink" title="无头模式启动"></a>无头模式启动</h2><p>不连接任何外设，只通过网线连接电脑控制树莓派的方式，叫做无头模式，使用这种模式需要对树莓派进行一些配置</p>
-<h3 id="开启ssh服务"><a href="#开启ssh服务" class="headerlink" title="开启ssh服务"></a>开启ssh服务</h3><p>树莓派中ssh服务是默认关闭的，因此我们需要手动开启，手动开启的方式为，在bootfs目录下新建一个文件，文件名为ssh（不带任何后缀）</p>
-<p><img src="/../img_folder/Raspberry/ssh.png"></p>
-<h3 id="设置默认用户名和密码"><a href="#设置默认用户名和密码" class="headerlink" title="设置默认用户名和密码"></a>设置默认用户名和密码</h3><p>注意现在的树莓派系统出于安全考虑，已不再预设用户名和密码（2022年之前的版本有默认用户名pi和默认密码raspberry），所以安装好系统后，第一次启动有两种方法：</p>
+    <div class="post-body" itemprop="articleBody"><h1>树莓派4B启动32位系统</h1>
+<h2 id="安装系统">安装系统</h2>
+<p>树莓派官网可以直接下载<a target="_blank" rel="noopener" href="https://www.raspberrypi.com/software/operating-systems/#raspberry-pi-os-32-bit">系统</a>，也可以用官网给的<a target="_blank" rel="noopener" href="https://downloads.raspberrypi.org/imager/imager_latest.exe">一键安装软件</a>安装，这两种方式都需要选择镜像版本，其中withdesktop是带桌面的版本，lite是纯命令行的版本，写32bit的是32位版本，其他的是64位版本。用win32diskmanager直接写入内存卡后，如果有显示器和键盘，可以直接插入树莓派即可启动，如果不想用显示器和键盘，想通过ssh连接方式使用，则不要着急将内存卡插入树莓派。</p>
+<h2 id="无头模式启动">无头模式启动</h2>
+<p>不连接任何外设，只通过网线连接电脑控制树莓派的方式，叫做无头模式，使用这种模式需要对树莓派进行一些配置</p>
+<h3 id="开启ssh服务">开启ssh服务</h3>
+<p>树莓派中ssh服务是默认关闭的，因此我们需要手动开启，手动开启的方式为，在bootfs目录下新建一个文件，文件名为ssh（不带任何后缀）</p>
+<p><img src="..//img_folder/Raspberry/ssh.png" alt=""></p>
+<h3 id="设置默认用户名和密码">设置默认用户名和密码</h3>
+<p>注意现在的树莓派系统出于安全考虑，已不再预设用户名和密码（2022年之前的版本有默认用户名pi和默认密码raspberry），所以安装好系统后，第一次启动有两种方法：</p>
 <ol>
-<li>连接显示器和键盘，根据系统引导自己设定用户名和密码</li>
-<li>新建一个文件userconf，然后设置密码</li>
+<li class="lvl-3">
+<p>连接显示器和键盘，根据系统引导自己设定用户名和密码</p>
+</li>
+<li class="lvl-3">
+<p>新建一个文件userconf，然后设置密码</p>
+</li>
 </ol>
 <p>显然在此处我们选择第二种方式，具体操作步骤为：</p>
 <ol>
-<li>在bootfs目录下，新建一个文件，文件名为userconf，不带任何后缀名</li>
-<li>打开文件，填入文件内容，文件内容就一行，格式为：<strong>用户名:加密后的密码</strong>，假设要使用祖传账号密码：<strong>pi:raspberry</strong>，则内容为：<figure class="highlight gams"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">pi</span>:<span class="symbol">$</span><span class="number">6</span><span class="symbol">$</span>zzRu/pqLm1DA1RkF<span class="symbol">$</span>jivj4Eij82S1cFimYFlBEbPXxKZbRHI6sGhwd3MlwzOhxthk1uaifNIkpIR75MP/<span class="number">5</span>Wf4yBhjt6DGZU9AzbSM31</span><br></pre></td></tr></table></figure>
-如果需要自己设置密码，加密后的密码获取方式为使用如下命令：<figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &#x27;password&#x27; <span class="string">| openssl passwd -6 -stdin</span></span><br></pre></td></tr></table></figure>
-其中password替换为你想要使用的密码</li>
+<li class="lvl-3">
+<p>在bootfs目录下，新建一个文件，文件名为userconf，不带任何后缀名</p>
+</li>
+<li class="lvl-3">
+<p>打开文件，填入文件内容，文件内容就一行，格式为：<strong>用户名:加密后的密码</strong>，假设要使用祖传账号密码：<strong>pi:raspberry</strong>，则内容为：</p>
+</li>
 </ol>
-<h3 id="连接树莓派"><a href="#连接树莓派" class="headerlink" title="连接树莓派"></a>连接树莓派</h3><h4 id="网络设置"><a href="#网络设置" class="headerlink" title="网络设置"></a>网络设置</h4><p>如果此时你想使用有线网络连接电脑和树莓派，可以略过本节。</p>
+<figure class="highlight gams"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">pi</span>:<span class="symbol">$</span><span class="number">6</span><span class="symbol">$</span>zzRu/pqLm1DA1RkF<span class="symbol">$</span>jivj4Eij82S1cFimYFlBEbPXxKZbRHI6sGhwd3MlwzOhxthk1uaifNIkpIR75MP/<span class="number">5</span>Wf4yBhjt6DGZU9AzbSM31</span><br></pre></td></tr></table></figure>
+<p>如果需要自己设置密码，加密后的密码获取方式为使用如下命令：</p>
+<figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &#x27;password&#x27; <span class="string">| openssl passwd -6 -stdin</span></span><br></pre></td></tr></table></figure>
+<p>其中password替换为你想要使用的密码</p>
+<h3 id="连接树莓派">连接树莓派</h3>
+<h4 id="网络设置">网络设置</h4>
+<p>如果此时你想使用有线网络连接电脑和树莓派，可以略过本节。</p>
 <p>如果想使用无线网络连接的话，还需要再添加一个配置文件wpa_supplicant.conf，内容是：</p>
 <figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">ctrl_interface<span class="operator">=</span>DIR<span class="operator">=/</span>var/run/wpa_supplicant GROUP<span class="operator">=</span>netdev</span><br><span class="line">update_config<span class="operator">=</span><span class="number">1</span></span><br><span class="line"><span class="attribute">country</span><span class="operator">=</span>CN</span><br><span class="line"><span class="attribute">network</span><span class="operator">=</span>&#123;</span><br><span class="line"><span class="attribute">ssid</span><span class="operator">=</span><span class="string">&quot;你的SSID&quot;</span></span><br><span class="line"><span class="attribute">psk</span><span class="operator">=</span><span class="string">&quot;你的密码&quot;</span></span><br><span class="line">key_mgmt<span class="operator">=</span>WPA-PSK</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>注意：</strong>一定要保证等号两边没有空格，否则可能连接不上。</p>
+<p>**注意：**一定要保证等号两边没有空格，否则可能连接不上。</p>
 <p>完成设置后，就可以将SD卡插入树莓派然后启动了。（如果需要在启动32位系统，不要着急，<a href="#%E4%BF%AE%E6%94%B9%E5%90%AF%E5%8A%A8%E5%8F%82%E6%95%B0">还得再配置一步</a>）</p>
-<h4 id="探测IP并连接树莓派"><a href="#探测IP并连接树莓派" class="headerlink" title="探测IP并连接树莓派"></a>探测IP并连接树莓派</h4><p>这个步骤是比较常规的操作，网上资料比较多，且步骤比较繁琐，就直接贴几个好用的参考吧：</p>
+<h4 id="探测IP并连接树莓派">探测IP并连接树莓派</h4>
+<p>这个步骤是比较常规的操作，网上资料比较多，且步骤比较繁琐，就直接贴几个好用的参考吧：</p>
 <p><a target="_blank" rel="noopener" href="https://www.waveshare.net/study/article-741-1.html">有线连接</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.waveshare.net/study/portal.php?mod=view&aid=743">无线连接</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.waveshare.net/study/portal.php?mod=view&amp;aid=743">无线连接</a></p>
 <p>如果用ssh连接过相同的ip地址，会出现ssh认证失败的提示，此时使用命令移除之前的密钥，重新接受新的密钥即可。</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -R <span class="tag">&lt;<span class="name">hostname</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="修改启动参数"><a href="#修改启动参数" class="headerlink" title="修改启动参数"></a>修改启动参数</h2><p>这一步是为了启动一个真正的32位系统，更真实的模拟软件运行的环境。<br>树莓派4B使用的是Arm Cortex-72内核，其基于armv8架构，如果直接用默认的配置启动系统，其会默认启动一个64位的内核，然后运行一个32位的地址空间（指令集还是64位的），不能很好的模拟一个真正的32位环境，因此需要做一些修改，来让其启动一个真正的32位内核。<br>方法为打开bootfs目录下的config.txt，在文件末尾加入下面两句</p>
+<h2 id="修改启动参数">修改启动参数</h2>
+<p>这一步是为了启动一个真正的32位系统，更真实的模拟软件运行的环境。树莓派4B使用的是Arm Cortex-72内核，其基于armv8架构，如果直接用默认的配置启动系统，其会默认启动一个64位的内核，然后运行一个32位的地址空间（指令集还是64位的），不能很好的模拟一个真正的32位环境，因此需要做一些修改，来让其启动一个真正的32位内核。方法为打开bootfs目录下的config.txt，在文件末尾加入下面两句</p>
 <figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">arm_64bit</span>=<span class="number">0</span></span><br><span class="line"><span class="attr">kernel</span>=kernel7l.img</span><br></pre></td></tr></table></figure>
 <p>即可以启动真正的32位内核。</p>
 <p>这两句设置的具体含义可以参考<a target="_blank" rel="noopener" href="https://pidoc.cn/docs/computers/config-txt">树莓派官方文档</a></p>
 <p><strong>一些分析</strong>：</p>
 <p>如果不添加上面两句设置，直接启动官方的32位树莓派系统，查看cpu架构和系统内核，可以得到以下结果</p>
-<p><img src="/img_folder/Raspberry/v8-uname.png"><br><img src="/img_folder/Raspberry/v8-cpu.png"></p>
+<p><img src="/img_folder/Raspberry/v8-uname.png" alt=""><br>
+<img src="/img_folder/Raspberry/v8-cpu.png" alt=""></p>
 <ol>
-<li>使用uname命令查看内核版本，发现架构为aarch64，即armv8的64位执行模式</li>
-<li>使用getconf LONG_BIT查看操作系统位数，为32位</li>
-<li>查看包管理器的运行架构，得到armhf，带有硬件浮点的armv7（32位）指令集</li>
-<li>查看cpu版本，发现架构为v8（64位）</li>
+<li class="lvl-3">
+<p>使用uname命令查看内核版本，发现架构为aarch64，即armv8的64位执行模式</p>
+</li>
+<li class="lvl-3">
+<p>使用getconf LONG_BIT查看操作系统位数，为32位</p>
+</li>
+<li class="lvl-3">
+<p>查看包管理器的运行架构，得到armhf，带有硬件浮点的armv7（32位）指令集</p>
+</li>
+<li class="lvl-3">
+<p>查看cpu版本，发现架构为v8（64位）</p>
+</li>
 </ol>
 <p>如果添加了命令，则得到以下结果：</p>
-<p><img src="/img_folder/Raspberry/v7-uname.png"><br><img src="/img_folder/Raspberry/v7-cpu.png"></p>
+<p><img src="/img_folder/Raspberry/v7-uname.png" alt=""><br>
+<img src="/img_folder/Raspberry/v7-cpu.png" alt=""></p>
 <ol>
-<li>使用uname命令查看内核版本，发现架构为armv7l，即armv7（32位）的小端序指令集</li>
-<li>使用getconf LONG_BIT查看操作系统位数，为32位</li>
-<li>查看系统配置文件，发现其运行的为32位ELF文件</li>
-<li>查看cpu版本，发现架构为armv7l（32位）</li>
+<li class="lvl-3">
+<p>使用uname命令查看内核版本，发现架构为armv7l，即armv7（32位）的小端序指令集</p>
+</li>
+<li class="lvl-3">
+<p>使用getconf LONG_BIT查看操作系统位数，为32位</p>
+</li>
+<li class="lvl-3">
+<p>查看系统配置文件，发现其运行的为32位ELF文件</p>
+</li>
+<li class="lvl-3">
+<p>查看cpu版本，发现架构为armv7l（32位）</p>
+</li>
 </ol>
 <p>总结：如果不加启动选项，树莓派会启动一个在armv8（64位）指令集下运行的内核，但运行32位地址空间，所有的软件都在32位模式下运行，即64位硬件运行32位软件，如果添加启动选项，树莓派会启动一个在armv7l指令集下运行的内核，其软件硬件的运行模式都为32位。因此，添加启动选项后，树莓派的运行模式才是真正的32位模式，也可以更真实的模拟开发所用的运行环境。</p>
-<h2 id="一些参考资料"><a href="#一些参考资料" class="headerlink" title="一些参考资料"></a>一些参考资料</h2><p><a target="_blank" rel="noopener" href="http://icing.fun/2023/12/09/raspberrypi_boot/">树莓派的启动流程</a></p>
+<h2 id="一些参考资料">一些参考资料</h2>
+<p><a target="_blank" rel="noopener" href="http://icing.fun/2023/12/09/raspberrypi_boot/">树莓派的启动流程</a></p>
 <p><a target="_blank" rel="noopener" href="https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#raspberry-pi-4-boot-flow">树莓派文档</a></p>
 <p><a target="_blank" rel="noopener" href="https://pidoc.cn/docs/computers/getting-started">树莓派中文文档</a></p>
 <p><a target="_blank" rel="noopener" href="https://www.163.com/dy/article/F8BVU5JM0531AFNT.html">arm几个指令集的区别</a></p>
 <p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/kin-zhang/p/15031633.html">arm指令集的区别（另外一篇）</a></p>
 <p><a target="_blank" rel="noopener" href="https://github.com/1021683053/awesome-raspberry-pi-zh">树莓派资源大全</a></p>
-<h1 id="编译树莓派系统内核"><a href="#编译树莓派系统内核" class="headerlink" title="编译树莓派系统内核"></a>编译树莓派系统内核</h1><p>参考<a target="_blank" rel="noopener" href="https://www.raspberrypi.com/documentation/computers/linux_kernel.html#cross-compile-the-kernel">官方文档</a>拉通一遍流程即可</p>
+<h1>编译树莓派系统内核</h1>
+<p>参考<a target="_blank" rel="noopener" href="https://www.raspberrypi.com/documentation/computers/linux_kernel.html#cross-compile-the-kernel">官方文档</a>拉通一遍流程即可</p>
 
     </div>
 
