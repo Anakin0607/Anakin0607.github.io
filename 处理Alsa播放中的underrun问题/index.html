@@ -31,7 +31,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://anakin0607.github.io/img_folder/alsa.png">
 <meta property="article:published_time" content="2025-06-09T06:29:37.000Z">
-<meta property="article:modified_time" content="2025-06-11T08:29:03.902Z">
+<meta property="article:modified_time" content="2025-06-16T07:47:16.252Z">
 <meta property="article:author" content="Anakin">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="Media">
@@ -118,7 +118,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFUnderrun"><span class="nav-number">1.</span> <span class="nav-text">什么是Underrun</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Underrun%E7%9A%84%E8%A7%A6%E5%8F%91"><span class="nav-number">2.</span> <span class="nav-text">Underrun的触发</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E8%83%8C%E6%99%AF%EF%BC%9A%E5%A3%B0%E5%8D%A1%E5%BC%80%E5%90%AF"><span class="nav-number">2.1.</span> <span class="nav-text">1. 背景：声卡开启</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Underrun%E8%A7%A6%E5%8F%91%E6%97%B6%E9%97%B4"><span class="nav-number">2.2.</span> <span class="nav-text">2. Underrun触发时间</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B%E8%AE%A1%E7%AE%97%EF%BC%9A"><span class="nav-number">2.2.1.</span> <span class="nav-text">示例计算：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E7%A4%BA%E4%BE%8B%EF%BC%9A"><span class="nav-number">2.2.2.</span> <span class="nav-text">其他示例：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3Underrun"><span class="nav-number">3.</span> <span class="nav-text">解决Underrun</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ALSA-%E5%8F%82%E6%95%B0%E9%85%8D%E7%BD%AE"><span class="nav-number">3.1.</span> <span class="nav-text">ALSA 参数配置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E5%91%A8%E6%9C%9F%E5%A4%A7%E5%B0%8F%E5%92%8C%E7%BC%93%E5%86%B2%E5%8C%BA%E5%A4%A7%E5%B0%8F"><span class="nav-number">3.1.0.1.</span> <span class="nav-text">(1) 周期大小和缓冲区大小</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFUnderrun"><span class="nav-number">1.</span> <span class="nav-text">什么是Underrun</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Underrun%E7%9A%84%E8%A7%A6%E5%8F%91"><span class="nav-number">2.</span> <span class="nav-text">Underrun的触发</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E8%83%8C%E6%99%AF%EF%BC%9A%E5%A3%B0%E5%8D%A1%E6%92%AD%E6%94%BE%E8%BF%87%E7%A8%8B"><span class="nav-number">2.1.</span> <span class="nav-text">1. 背景：声卡播放过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Underrun%E8%A7%A6%E5%8F%91%E6%97%B6%E9%97%B4"><span class="nav-number">2.2.</span> <span class="nav-text">2. Underrun触发时间</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B%E8%AE%A1%E7%AE%97%EF%BC%9A"><span class="nav-number">2.2.1.</span> <span class="nav-text">示例计算：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E7%A4%BA%E4%BE%8B%EF%BC%9A"><span class="nav-number">2.2.2.</span> <span class="nav-text">其他示例：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3Underrun"><span class="nav-number">3.</span> <span class="nav-text">解决Underrun</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ALSA-%E5%8F%82%E6%95%B0%E9%85%8D%E7%BD%AE"><span class="nav-number">3.1.</span> <span class="nav-text">ALSA 参数配置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E5%91%A8%E6%9C%9F%E5%A4%A7%E5%B0%8F%E5%92%8C%E7%BC%93%E5%86%B2%E5%8C%BA%E5%A4%A7%E5%B0%8F"><span class="nav-number">3.1.0.1.</span> <span class="nav-text">(1) 周期大小和缓冲区大小</span></a></li></ol></li></ol></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -205,7 +205,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-11 16:29:03" itemprop="dateModified" datetime="2025-06-11T16:29:03+08:00">2025-06-11</time>
+      <time title="修改时间：2025-06-16 15:47:16" itemprop="dateModified" datetime="2025-06-16T15:47:16+08:00">2025-06-16</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -227,14 +227,14 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><p>在 ALSA (Advanced Linux Sound Architecture) 中处理 underrun（缓冲区下溢）问题是音频编程中的一个常见状况。Underrun 发生在应用程序向声卡提供音频数据的速度跟不上声卡播放数据的速度时，导致声卡缓冲区变空时，当音频抛出“UnderRun”异常时，或在音频播放出现音频播放出现<strong>爆音 (clicks&#x2F;pops)、卡顿 (stuttering)、断断续续或短暂的静音</strong>时，考虑出现了underrun问题。</p>
+    <div class="post-body" itemprop="articleBody"><p>在 ALSA (Advanced Linux Sound Architecture) 中, underrun（缓冲区下溢）问题是音频编程中的一个常见状况。Underrun 发生在应用程序向声卡提供音频数据的速度跟不上声卡播放数据的速度时，导致声卡缓冲区变空。此时程序会抛出“UnderRun”异常，或在音频播放出现音频播放出现<strong>爆音 (clicks&#x2F;pops)、卡顿 (stuttering)、断断续续或短暂的静音</strong>。</p>
 <h1 id="什么是Underrun"><a href="#什么是Underrun" class="headerlink" title="什么是Underrun"></a>什么是Underrun</h1><p><strong>一个形象的比喻描述Underrun</strong></p>
 <p>想象一下声卡的播放缓冲区是一条匀速前进的传送带，而你的应用程序负责往传送带上放产品（音频数据）。</p>
 <ul>
 <li><strong>正常情况</strong>：你总是能及时地在传送带到达末端前放上新的产品，传送带持续运转，声音连续播放。  </li>
 <li><strong>Underrun 发生时</strong>：你因为某些原因（比如正在忙别的事情，或者拿产品的速度太慢）没能及时放上新产品，传送带上出现了空缺。当这个空缺到达末端时，机器（声卡）无事可做，就会发出一声“咔嗒”（爆音），然后等待下一个产品的到来。</li>
 </ul>
-<h1 id="Underrun的触发"><a href="#Underrun的触发" class="headerlink" title="Underrun的触发"></a>Underrun的触发</h1><h2 id="1-背景：声卡开启"><a href="#1-背景：声卡开启" class="headerlink" title="1. 背景：声卡开启"></a>1. <strong>背景：声卡开启</strong></h2><ul>
+<h1 id="Underrun的触发"><a href="#Underrun的触发" class="headerlink" title="Underrun的触发"></a>Underrun的触发</h1><h2 id="1-背景：声卡播放过程"><a href="#1-背景：声卡播放过程" class="headerlink" title="1. 背景：声卡播放过程"></a>1. <strong>背景：声卡播放过程</strong></h2><ul>
 <li><strong>声卡开启</strong>：<ul>
 <li>在ALSA中，声卡通过<code>snd_pcm_open</code>打开，并通过<code>snd_pcm_hw_params</code>配置硬件参数（如采样率、周期大小、周期数等）。</li>
 <li>声卡开始播放通常由以下操作触发：<ul>
@@ -255,8 +255,11 @@
 </ul>
 </li>
 </ul>
-<h2 id="2-Underrun触发时间"><a href="#2-Underrun触发时间" class="headerlink" title="2. Underrun触发时间"></a>2. <strong>Underrun触发时间</strong></h2><p>Underrun触发的时间取决于<strong>缓冲区耗尽的时间</strong>，当缓冲区中的数据被播放完毕后，Underrun会被触发，可以通过以下公式计算：</p>
-<p>[<br>\text{欠载时间（秒）} &#x3D; \frac{\text{缓冲区大小（帧）}}{\text{采样率（Hz）}}<br>]</p>
+<h2 id="2-Underrun触发时间"><a href="#2-Underrun触发时间" class="headerlink" title="2. Underrun触发时间"></a>2. <strong>Underrun触发时间</strong></h2><p>在声卡开启后，Alsa驱动以周期（period）为单位，以恒定速率（取决于采样率）每次从缓冲区中取一个周期的数据，送入声卡。而周期的大小以帧（frame）为单位，每个帧包含所有声道的一个采样点（sample）。<br><strong>一个双声道，16bit位深音频的播放过程如下图所示：</strong></p>
+<p><img src="/../img_folder/alsa.png"></p>
+<p>因此当缓冲区中的数据被取尽，但在声卡下一次取数据前缓冲区没有新数据进入，Underrun会被触发。故可以通过以下公式计算出，如果程序处理一帧数据的时间大于：</p>
+<p>$$<br>\text{欠载时间（秒）} &#x3D; \frac{\text{缓冲区大小（帧）}}{\text{采样率（Hz）}}<br>$$</p>
+<p>则Underrun迟早会被触发。或如果声卡开启后，这一段时间没有数据送入，则会触发Underrun。<br>故Underrun的触发时间涉及到如下参数：</p>
 <ul>
 <li><strong>缓冲区大小</strong>：<ul>
 <li>缓冲区大小 &#x3D; 周期大小（period size） × 周期数（periods），以帧为单位。</li>
@@ -291,10 +294,15 @@
 <li><strong>更大缓冲区</strong>（2048帧 × 3周期，44100Hz）：<br>$$<br>\text{欠载时间} &#x3D; \frac{2048 \times 3}{44100} \approx 0.13932 , \text{秒} \approx 139.32 , \text{毫秒}<br>$$</li>
 </ul>
 <h1 id="解决Underrun"><a href="#解决Underrun" class="headerlink" title="解决Underrun"></a>解决Underrun</h1><h2 id="ALSA-参数配置"><a href="#ALSA-参数配置" class="headerlink" title="ALSA 参数配置"></a>ALSA 参数配置</h2><p>通过调整缓冲区（buffer）和周期（period）的大小，可以为应用程序争取更多的时间来准备数据，从而减少 Underrun 的风险。</p>
-<h4 id="1-周期大小和缓冲区大小"><a href="#1-周期大小和缓冲区大小" class="headerlink" title="(1) 周期大小和缓冲区大小"></a>(1) <strong>周期大小和缓冲区大小</strong></h4><p>Alsa播放中，<br><img src="/../img_folder/alsa.png"></p>
+<h4 id="1-周期大小和缓冲区大小"><a href="#1-周期大小和缓冲区大小" class="headerlink" title="(1) 周期大小和缓冲区大小"></a>(1) <strong>周期大小和缓冲区大小</strong></h4><p>alsa中通常有两种设定方法：</p>
+<ol>
+<li>先设定buffer_size，然后再设置periods，即缓冲区中包含多少个周期，在完成这两个参数设置后，period_size会被自动确定（buffer_size &#x2F; periods）</li>
+<li>先设定period_size，然后再设置periods，在完成这两个参数后，buffer_size会被自动确定（period_size * periods）</li>
+</ol>
+<p>下面是设定这些参数以及读取缓冲区大小的方法：</p>
 <ul>
 <li><strong>周期大小（Period Size）</strong>：<ul>
-<li>较大的周期大小（如2048帧）增加缓冲区容量，延长欠载时间。</li>
+<li>较大的周期大小（如2048帧）可以增加缓冲区容量，延长Underrun时间。</li>
 <li>设置方法：<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">snd_pcm_uframes_t</span> period_size = <span class="number">2048</span>;</span><br><span class="line">snd_pcm_hw_params_set_period_size_near(pcm_handle, params, &amp;period_size, &amp;dir);</span><br></pre></td></tr></table></figure></li>
 </ul>
 </li>
@@ -303,10 +311,15 @@
 <li>设置方法：<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">unsigned</span> <span class="type">int</span> periods = <span class="number">3</span>;</span><br><span class="line">snd_pcm_hw_params_set_periods_near(pcm_handle, params, &amp;periods, &amp;dir);</span><br></pre></td></tr></table></figure></li>
 </ul>
 </li>
-<li><strong>查询缓冲区大小</strong>：<pre><code class="c">snd_pcm_uframes_t buffer_size;
-snd_pcm_hw_params_get_buffer_size(params, &amp;buffer_size);
-printf(&quot;Buffer size: %zd frames, Underrun time: %.2f ms\n&quot;,
-       buffer_size, (double)buffer_size / rate * 1000);
+<li><strong>缓冲区大小（Buffer Size）</strong>：<ul>
+<li>较大的周期大小（如2048帧）增加缓冲区容量，延长欠载时间。</li>
+<li>设置方法：<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">snd_pcm_uframes_t</span> buffer_size = <span class="number">2048</span>;</span><br><span class="line">snd_pcm_hw_params_set_period_size_near(pcm_handle, params, &amp;buffer_size);</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><strong>查询缓冲区大小</strong>：<pre><code class="c">  snd_pcm_uframes_t buffer_size;
+  snd_pcm_hw_params_get_buffer_size(params, &amp;buffer_size);
+  printf(&quot;Buffer size: %zd frames, Underrun time: %.2f ms\n&quot;,
+         buffer_size, (double)buffer_size / rate * 1000);
 </code></pre>
 </li>
 </ul>
