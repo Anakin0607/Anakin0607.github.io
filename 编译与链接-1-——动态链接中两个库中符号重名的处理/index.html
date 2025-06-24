@@ -33,7 +33,7 @@
 <meta property="og:image" content="https://anakin0607.github.io/img_folder/compiler_and_link_1/symbol_asr.png">
 <meta property="og:image" content="https://anakin0607.github.io/img_folder/compiler_and_link_1/symbol_libtext.png">
 <meta property="article:published_time" content="2025-02-21T06:59:34.000Z">
-<meta property="article:modified_time" content="2025-02-21T08:08:46.548Z">
+<meta property="article:modified_time" content="2025-06-24T09:49:14.646Z">
 <meta property="article:author" content="Anakin">
 <meta property="article:tag" content="C++">
 <meta property="article:tag" content="CMake">
@@ -203,9 +203,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2025-02-21 14:59:34 / 修改时间：16:08:46" itemprop="dateCreated datePublished" datetime="2025-02-21T14:59:34+08:00">2025-02-21</time>
+      <time title="创建时间：2025-02-21 14:59:34" itemprop="dateCreated datePublished" datetime="2025-02-21T14:59:34+08:00">2025-02-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-24 17:49:14" itemprop="dateModified" datetime="2025-06-24T17:49:14+08:00">2025-06-24</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -246,7 +252,7 @@
 </code></pre>
 <p>即将所有程序中的全局符号绑定到用户共享库的定义中，即使用该命令链接时，当前库中的所有符号都不可被抢占，强制采用本地的全局符号定义和实现</p>
 <p>在编译时，使用-Wl选项，将该参数传递给链接器即可，即在编译libtext_normalizer.so时，加入</p>
-<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="deletion">-Wl,Bsymbolic</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="deletion">-Wl,-Bsymbolic</span></span><br></pre></td></tr></table></figure>
 <h2 id="参考">参考</h2>
 <p><a target="_blank" rel="noopener" href="https://winddoing.github.io/post/2a74814.html">gcc 编译参数：-Wl,-Bsymbolic 与 - Bsymbolic</a></p>
 <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/liangzhao_jay/article/details/74942163">linux下动态库的符号冲突、隐藏和强制优先使用库内符号</a></p>
